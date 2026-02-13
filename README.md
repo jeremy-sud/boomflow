@@ -30,35 +30,15 @@ Bloomflow transforms invisible recognition into public professional assets. It a
 3.  Configure with your `BLOOMFLOW_TOKEN`.
 
 <!-- BLOOMFLOW-BADGES-START -->
+### 🛠️ Logros en SistemasUrsol
 
-### 🏆 Bloomflow Achievements
+* 🥈 **Mentor de Plata** | *Nivel 2* | "Siempre dispuesto a explicar el código."
+* 🔥 **Resolución de Crisis** | *Nivel 5* | "Salvó el despliegue del último Sprint."
+* 🤝 **Espíritu de Equipo** | *Nivel 3* | "Mantiene la moral alta en el equipo."
+* 🦉 **Sabio del Código** | *Nivel 3* | "Arquitectura sólida y escalable."
+* 🚀 **Despliegue Impecable** | *Nivel 1* | "Primer despliegue sin errores en producción."
 
-<div align="center">
-  <img src="https://raw.githubusercontent.com/dawnweaber/BOOMFLOW/main/assets/badge-mentor.svg" width="120" alt="Master Mentor" />
-  <h4>Master Mentor</h4>
-  <p><em>"Awarded for guiding 20+ colleagues to success"</em></p>
-</div>
-
-**Total Kudos:** 45 | **Current Streak:** 12 days
-
-<div align="center">
-  <img src="https://raw.githubusercontent.com/dawnweaber/BOOMFLOW/main/assets/badge-helper.svg" width="60" title="Ayudante (L1)" alt="Ayudante" style="margin: 5px;" />
-  <img src="https://raw.githubusercontent.com/dawnweaber/BOOMFLOW/main/assets/badge-resilience.svg" width="60" title="Resiliencia (L2)" alt="Resiliencia" style="margin: 5px;" />
-  <img src="https://raw.githubusercontent.com/dawnweaber/BOOMFLOW/main/assets/badge-first-pr.svg" width="60" title="First PR (L1)" alt="First PR" style="margin: 5px;" />
-  <img src="https://raw.githubusercontent.com/dawnweaber/BOOMFLOW/main/assets/badge-bug-scout.svg" width="60" title="Bug Scout (L1)" alt="Bug Scout" style="margin: 5px;" />
-  <img src="https://raw.githubusercontent.com/dawnweaber/BOOMFLOW/main/assets/badge-hello-world.svg" width="60" title="Hello World (L1)" alt="Hello World" style="margin: 5px;" />
-  <img src="https://raw.githubusercontent.com/dawnweaber/BOOMFLOW/main/assets/badge-code-ninja.svg" width="60" title="Code Ninja (L2)" alt="Code Ninja" style="margin: 5px;" />
-  <img src="https://raw.githubusercontent.com/dawnweaber/BOOMFLOW/main/assets/badge-reviewer.svg" width="60" title="Reviewer (L2)" alt="Reviewer" style="margin: 5px;" />
-  <img src="https://raw.githubusercontent.com/dawnweaber/BOOMFLOW/main/assets/badge-docs-hero.svg" width="60" title="Docs Hero (L2)" alt="Docs Hero" style="margin: 5px;" />
-  <img src="https://raw.githubusercontent.com/dawnweaber/BOOMFLOW/main/assets/badge-architect.svg" width="60" title="Architect (L3)" alt="Architect" style="margin: 5px;" />
-  <img src="https://raw.githubusercontent.com/dawnweaber/BOOMFLOW/main/assets/badge-crisis-averted.svg" width="60" title="Crisis Averted (L3)" alt="Crisis Averted" style="margin: 5px;" />
-  <img src="https://raw.githubusercontent.com/dawnweaber/BOOMFLOW/main/assets/badge-mentor-master.svg" width="60" title="Mentor Master (L3)" alt="Mentor Master" style="margin: 5px;" />
-
-</div>
-
-> " Siempre explica los PRs con mucha paciencia. "  
-> — *johndoe, 2023-10-27*
-
+> Verificado por Bloomflow @ SistemasUrsol
 <!-- BLOOMFLOW-BADGES-END -->
 
 ## Monetization (Pro Version)
