@@ -1,0 +1,85 @@
+{
+  "username": "dawnweaber",
+  "top_badge": {
+    "name": "Master Mentor",
+    "description": "Awarded for guiding 20+ colleagues to success",
+    "image_url": "https://raw.githubusercontent.com/dawnweaber/BOOMFLOW/main/assets/badge-mentor.svg"
+  },
+  "stats": {
+    "total_kudos": 45,
+    "current_streak": 12
+  },
+  "recent_comment": {
+    "text": "Siempre explica los PRs con mucha paciencia.",
+    "author": "johndoe",
+    "date": "2023-10-27"
+  },
+  "badges": [
+    {
+      "id": "helper",
+      "name": "Ayudante",
+      "level": 1,
+      "image_url": "https://raw.githubusercontent.com/dawnweaber/BOOMFLOW/main/assets/badge-helper.svg"
+    },
+    {
+      "id": "resilience",
+      "name": "Resiliencia",
+      "level": 2,
+      "image_url": "https://raw.githubusercontent.com/dawnweaber/BOOMFLOW/main/assets/badge-resilience.svg"
+    },
+    {
+      "id": "first-pr",
+      "name": "First PR",
+      "level": 1,
+      "image_url": "https://raw.githubusercontent.com/dawnweaber/BOOMFLOW/main/assets/badge-first-pr.svg"
+    },
+    {
+      "id": "bug-scout",
+      "name": "Bug Scout",
+      "level": 1,
+      "image_url": "https://raw.githubusercontent.com/dawnweaber/BOOMFLOW/main/assets/badge-bug-scout.svg"
+    },
+    {
+      "id": "hello-world",
+      "name": "Hello World",
+      "level": 1,
+      "image_url": "https://raw.githubusercontent.com/dawnweaber/BOOMFLOW/main/assets/badge-hello-world.svg"
+    },
+    {
+      "id": "code-ninja",
+      "name": "Code Ninja",
+      "level": 2,
+      "image_url": "https://raw.githubusercontent.com/dawnweaber/BOOMFLOW/main/assets/badge-code-ninja.svg"
+    },
+    {
+      "id": "reviewer",
+      "name": "Reviewer",
+      "level": 2,
+      "image_url": "https://raw.githubusercontent.com/dawnweaber/BOOMFLOW/main/assets/badge-reviewer.svg"
+    },
+    {
+      "id": "docs-hero",
+      "name": "Docs Hero",
+      "level": 2,
+      "image_url": "https://raw.githubusercontent.com/dawnweaber/BOOMFLOW/main/assets/badge-docs-hero.svg"
+    },
+    {
+      "id": "architect",
+      "name": "Architect",
+      "level": 3,
+      "image_url": "https://raw.githubusercontent.com/dawnweaber/BOOMFLOW/main/assets/badge-architect.svg"
+    },
+    {
+      "id": "crisis-averted",
+      "name": "Crisis Averted",
+      "level": 3,
+      "image_url": "https://raw.githubusercontent.com/dawnweaber/BOOMFLOW/main/assets/badge-crisis-averted.svg"
+    },
+    {
+      "id": "mentor-master",
+      "name": "Mentor Master",
+      "level": 3,
+      "image_url": "https://raw.githubusercontent.com/dawnweaber/BOOMFLOW/main/assets/badge-mentor-master.svg"
+    }
+  ]
+}

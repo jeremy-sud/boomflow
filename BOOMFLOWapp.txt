@@ -1,0 +1,40 @@
+Nombre Sugerido: Bloomflow
+Slogan: Donde el talento no se gestiona, se cultiva.
+
+1. El Concepto Humanista
+En lugar de medir "productividad" (cuántas horas estás sentado), la app mide el flujo y el propósito. Se trata de crear un ecosistema donde el colega no sea un número, sino un individuo con metas, miedos y talentos ocultos.
+
+2. Funcionalidades "Generosas" y Empáticas
+Reconocimiento entre Pares (Micro-Kudos):
+Un espacio donde cualquier compañero puede enviar un "Kudo" (un agradecimiento público o privado) por una ayuda específica. Estos puntos no se canjean por dinero necesariamente, sino por "tiempo para proyectos personales" o formación.
+
+Check-in de Estado de Ánimo (Safe Space):
+Cada mañana, la app pregunta: "¿Cómo está tu energía hoy?". Si un empleado marca niveles bajos varios días seguidos, la app alerta al manager, no para reprender, sino para sugerir: "Oye, esta persona podría necesitar un día libre o apoyo en su carga actual".
+
+Mentoría Interna Cruzada:
+Un algoritmo que conecta a alguien que quiere aprender Python con alguien del equipo técnico que quiere mejorar su liderazgo. Fomenta la comunidad en lugar de la jerarquía.
+
+El "Curriculum de Fracasos" y Aprendizajes:
+Una sección donde los líderes comparten en qué se equivocaron y qué aprendieron, normalizando el error y reduciendo la ansiedad laboral.
+
+3. Modelo de Negocio (Monetización Ética)
+Para que genere dinero sin traicionar su esencia, pueden aplicar estas estrategias:
+
+Suscripción por "Felicidad y Retención": Las empresas pagan porque un empleado feliz es un 30% más productivo y, sobre todo, porque perder un talento les cuesta miles de dólares en nuevas contrataciones.
+
+Marketplace de Beneficios de Bienestar: Integrar servicios de terceros (terapia online, sesiones de yoga, cursos) y llevarse una comisión por cada servicio contratado a través de la app.
+
+Data Insights (Anonimizados): Vender a la empresa reportes de "puntos ciegos". Ejemplo: "Tu equipo de diseño está agotado los jueves, considera reducir reuniones ese día".
+
+4. Arquitectura para construir en GitHub
+Como van a trabajar con su colega, así podrían dividir el corazón del proyecto:
+
+Backend (API de Empatía): Desarrollar un motor que procese el sentimiento de los mensajes y gestione las conexiones de mentoría.
+
+Frontend (Dashboard Humano): Una interfaz limpia, con colores suaves (psicología del color), lejos de las tablas de Excel grises y aburridas.
+
+Seguridad y Privacidad: Esto es vital. Deben implementar encriptación de extremo a extremo para los comentarios anónimos, para que el usuario confíe plenamente en la herramienta.
+
+Reflexión Pro: El verdadero dinero hoy en día está en resolver la crisis de salud mental y la desconexión laboral. Si construyen algo que haga que la gente no odie los lunes, las empresas se pelearán por comprárselo.
+
+¿Qué stack tecnológico dominan tú y tu colega? (Por ejemplo: React/Node, Python/Django, Flutter...) Así puedo darte una hoja de ruta técnica para su primer Sprint.

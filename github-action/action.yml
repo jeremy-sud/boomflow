@@ -1,0 +1,9 @@
+name: "Bloomflow Badge Sync"
+description: "Actualiza tu perfil de GitHub con tus logros y medallas de cultura de Bloomflow"
+inputs:
+  bloomflow_token:
+    description: "Tu token personal de Bloomflow"
+    required: true
+runs:
+  using: "node16"
+  main: "dist/index.js"
