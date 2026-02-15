@@ -33,7 +33,7 @@ export default function Sidebar({ user, badgeCount = 0 }: SidebarProps) {
       {/* Logo */}
       <div className="p-6 border-b border-white/10">
         <Link href="/" className="flex items-center gap-3">
-          <span className="text-3xl">🚀</span>
+          <span className="text-3xl">🌸</span>
           <div>
             <h1 className="text-xl font-bold text-gradient">BOOMFLOW</h1>
             <p className="text-xs text-zinc-500">Sistemas Ursol</p>

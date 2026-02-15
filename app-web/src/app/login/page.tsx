@@ -15,7 +15,7 @@ export default async function LoginPage() {
       <div className="max-w-md w-full mx-4">
         {/* Logo */}
         <div className="text-center mb-8">
-          <span className="text-6xl">🚀</span>
+          <span className="text-6xl">🌸</span>
           <h1 className="text-4xl font-bold mt-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500">
             BOOMFLOW
           </h1>
