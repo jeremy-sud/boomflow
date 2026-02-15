@@ -153,7 +153,7 @@ La medalla se convierte en un **recibo** de que "Ursol y yo ayudamos".
 │                  🎫 PASE DE DESCONEXIÓN                         │
 ├─────────────────────────────────────────────────────────────────┤
 │                                                                 │
-│   Este pase otorga 1 tarde libre (4 horas) al mes              │
+│   Este pase otorga 1 día libre (24 horas) al mes              │
 │                                                                 │
 │   Válido para: Patrons Growth y Bloom                          │
 │   Uso: Cualquier viernes del mes                               │
