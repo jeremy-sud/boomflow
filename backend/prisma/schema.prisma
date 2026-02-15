@@ -1,0 +1,294 @@
+// BOOMFLOW Database Schema
+// PostgreSQL + Prisma ORM
+// Version: 2.0
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================
+// ENUMS
+// ============================================
+
+enum Role {
+  ADMIN
+  MANAGER
+  MEMBER
+}
+
+enum Plan {
+  FREE
+  PRO
+  ENTERPRISE
+}
+
+enum Category {
+  ONBOARDING
+  CODING
+  DEVOPS
+  COLLABORATION
+  LEADERSHIP
+  DOCUMENTATION
+}
+
+enum Tier {
+  BRONZE
+  SILVER
+  GOLD
+}
+
+enum TriggerType {
+  KUDO_COUNT      // Acumular X kudos totales
+  KUDO_CATEGORY   // Acumular X kudos en una categoría
+  MANUAL          // Otorgado manualmente por admin
+  SYSTEM          // Auto-otorgado (primer commit, etc.)
+}
+
+// ============================================
+// MODELS
+// ============================================
+
+/// Usuario del sistema
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  username      String    @unique
+  displayName   String?
+  avatarUrl     String?
+  bio           String?
+  
+  // GitHub integration
+  githubId      String?   @unique
+  githubToken   String?   // Encrypted
+  
+  // Role in the system
+  role          Role      @default(MEMBER)
+  
+  // Organization membership
+  organizationId String?
+  organization   Organization? @relation(fields: [organizationId], references: [id], onDelete: SetNull)
+  
+  // Team membership
+  teamId         String?
+  team           Team?     @relation(fields: [teamId], references: [id], onDelete: SetNull)
+  
+  // Kudos given and received
+  kudosGiven     Kudo[]    @relation("KudosGiven")
+  kudosReceived  Kudo[]    @relation("KudosReceived")
+  
+  // Badges earned
+  badges         UserBadge[]
+  
+  // Activity tracking
+  lastActiveAt   DateTime?
+  
+  // Timestamps
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  @@index([organizationId])
+  @@index([teamId])
+  @@index([githubId])
+}
+
+/// Organización (tenant)
+model Organization {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique
+  description String?
+  logoUrl     String?
+  website     String?
+  
+  // Billing
+  plan        Plan     @default(FREE)
+  stripeCustomerId String?
+  
+  // Settings
+  settings    Json     @default("{}")
+  
+  // Relations
+  users       User[]
+  teams       Team[]
+  badges      Badge[]  // Custom badges for this org
+  invites     Invite[]
+  
+  // Timestamps
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@index([slug])
+}
+
+/// Equipo dentro de una organización
+model Team {
+  id             String       @id @default(cuid())
+  name           String
+  description    String?
+  color          String?      // Hex color for UI
+  
+  // Parent organization
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  
+  // Members
+  members        User[]
+  
+  // Timestamps
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  
+  @@unique([organizationId, name])
+  @@index([organizationId])
+}
+
+/// Kudo (reconocimiento entre pares)
+model Kudo {
+  id          String   @id @default(cuid())
+  message     String   @db.Text
+  category    Category
+  isPublic    Boolean  @default(true)
+  
+  // Who gave the kudo
+  giverId     String
+  giver       User     @relation("KudosGiven", fields: [giverId], references: [id], onDelete: Cascade)
+  
+  // Who received the kudo
+  receiverId  String
+  receiver    User     @relation("KudosReceived", fields: [receiverId], references: [id], onDelete: Cascade)
+  
+  // Optional: reaction emoji
+  reactions   Json     @default("[]") // [{userId, emoji}]
+  
+  // Timestamps
+  createdAt   DateTime @default(now())
+  
+  @@index([giverId])
+  @@index([receiverId])
+  @@index([category])
+  @@index([createdAt])
+}
+
+/// Badge (medalla)
+model Badge {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  name        String
+  description String
+  category    Category
+  tier        Tier
+  svgUrl      String   // URL or path to SVG
+  
+  // Trigger rules for auto-awarding
+  triggerType    TriggerType
+  triggerCount   Int         @default(1)  // How many kudos needed
+  triggerCategory Category?  // Optional: only count kudos of this category
+  
+  // Organization scope
+  organizationId String?
+  organization   Organization? @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  isGlobal       Boolean      @default(true)
+  
+  // Is this badge active?
+  isActive       Boolean      @default(true)
+  
+  // Users who have this badge
+  userBadges     UserBadge[]
+  
+  // Timestamps
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  
+  @@index([category])
+  @@index([tier])
+  @@index([organizationId])
+}
+
+/// Junction table: User <-> Badge
+model UserBadge {
+  id        String   @id @default(cuid())
+  
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  badgeId   String
+  badge     Badge    @relation(fields: [badgeId], references: [id], onDelete: Cascade)
+  
+  // Who awarded this badge
+  awardedBy String?  // user id or "system"
+  awardedAt DateTime @default(now())
+  
+  // Optional: reason/message
+  reason    String?
+  
+  @@unique([userId, badgeId])
+  @@index([userId])
+  @@index([badgeId])
+  @@index([awardedAt])
+}
+
+/// Invitación a una organización
+model Invite {
+  id             String       @id @default(cuid())
+  email          String
+  token          String       @unique @default(cuid())
+  role           Role         @default(MEMBER)
+  
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  
+  // Who sent the invite
+  invitedBy      String
+  
+  // Status
+  acceptedAt     DateTime?
+  expiresAt      DateTime
+  
+  createdAt      DateTime     @default(now())
+  
+  @@index([email])
+  @@index([token])
+  @@index([organizationId])
+}
+
+/// Notification queue
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  type      String   // 'kudo_received', 'badge_unlocked', 'invite'
+  title     String
+  body      String
+  data      Json     @default("{}")
+  
+  isRead    Boolean  @default(false)
+  readAt    DateTime?
+  
+  createdAt DateTime @default(now())
+  
+  @@index([userId])
+  @@index([isRead])
+  @@index([createdAt])
+}
+
+/// Audit log for compliance
+model AuditLog {
+  id        String   @id @default(cuid())
+  userId    String
+  action    String   // 'kudo_created', 'badge_awarded', etc.
+  resource  String   // 'Kudo', 'Badge', etc.
+  resourceId String
+  metadata  Json     @default("{}")
+  ipAddress String?
+  userAgent String?
+  
+  createdAt DateTime @default(now())
+  
+  @@index([userId])
+  @@index([action])
+  @@index([createdAt])
+}

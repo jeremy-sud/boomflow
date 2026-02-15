@@ -1,0 +1,32 @@
+name: BOOMFLOW Badge Sync
+
+on:
+  schedule:
+    - cron: "0 0 * * *"
+  workflow_dispatch:
+
+# IMPORTANT: These permissions are required for git-auto-commit to push
+permissions:
+  contents: write
+
+jobs:
+  sync-badges:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout profile repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.BOOMFLOW_TOKEN }}
+      
+      - name: Sync BOOMFLOW badges
+        uses: jeremy-sud/boomflow/github-action@main
+        with:
+          boomflow_token: ${{ secrets.BOOMFLOW_TOKEN }}
+          github_username: ${{ github.actor }}
+      
+      - name: Commit and push changes
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "🏅 Update BOOMFLOW badges"
+          commit_user_name: github-actions[bot]
+          commit_user_email: 41898282+github-actions[bot]@users.noreply.github.com

@@ -4,42 +4,5 @@
   "role": "Co-Fundador & Dev Lead",
   "org": "SistemasUrsol",
   "joinedAt": "2024-01-15",
-  "badges": [
-    { "id": "hello-world", "awardedAt": "2024-01-15", "awardedBy": "system" },
-    { "id": "first-commit", "awardedAt": "2024-01-16", "awardedBy": "system" },
-    { "id": "first-pr", "awardedAt": "2024-01-18", "awardedBy": "system" },
-    { "id": "first-review", "awardedAt": "2024-01-20", "awardedBy": "ursolcr" },
-    { "id": "code-ninja", "awardedAt": "2024-02-10", "awardedBy": "ursolcr" },
-    { "id": "bug-hunter", "awardedAt": "2024-03-05", "awardedBy": "ursolcr" },
-    { "id": "clean-code", "awardedAt": "2024-03-20", "awardedBy": "ursolcr" },
-    { "id": "full-stack", "awardedAt": "2024-04-15", "awardedBy": "ursolcr" },
-    { "id": "pipeline-pro", "awardedAt": "2024-05-01", "awardedBy": "system" },
-    {
-      "id": "docker-captain",
-      "awardedAt": "2024-05-20",
-      "awardedBy": "system"
-    },
-    { "id": "mentor", "awardedAt": "2024-06-01", "awardedBy": "ursolcr" },
-    {
-      "id": "mentor-master",
-      "awardedAt": "2024-09-15",
-      "awardedBy": "ursolcr"
-    },
-    { "id": "team-spirit", "awardedAt": "2024-07-10", "awardedBy": "ursolcr" },
-    {
-      "id": "code-reviewer",
-      "awardedAt": "2024-04-25",
-      "awardedBy": "ursolcr"
-    },
-    {
-      "id": "crisis-averted",
-      "awardedAt": "2024-08-30",
-      "awardedBy": "ursolcr"
-    },
-    { "id": "architect", "awardedAt": "2024-10-01", "awardedBy": "ursolcr" },
-    { "id": "tech-lead", "awardedAt": "2024-11-15", "awardedBy": "ursolcr" },
-    { "id": "docs-hero", "awardedAt": "2024-06-20", "awardedBy": "system" },
-    { "id": "api-designer", "awardedAt": "2024-07-05", "awardedBy": "ursolcr" },
-    { "id": "open-source", "awardedAt": "2024-08-01", "awardedBy": "system" }
-  ]
+  "badges": []
 }
