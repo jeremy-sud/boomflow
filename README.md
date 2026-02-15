@@ -12,8 +12,10 @@
 
 <p align="center">
   <img src="https://img.shields.io/badge/🔒_Uso_Exclusivo-Sistemas_Ursol-8B5CF6.svg" alt="Exclusivo"/>
-  <img src="https://img.shields.io/badge/version-2.1.0-blue.svg" alt="Version"/>
+  <img src="https://img.shields.io/badge/version-3.0.0-blue.svg" alt="Version"/>
   <img src="https://img.shields.io/badge/badges-89-gold.svg" alt="Badges"/>
+  <img src="https://img.shields.io/badge/Next.js-16-black.svg" alt="Next.js"/>
+  <img src="https://img.shields.io/badge/Prisma-7-2D3748.svg" alt="Prisma"/>
   <img src="https://img.shields.io/badge/license-MIT-green.svg" alt="License"/>
 </p>
 
@@ -157,8 +159,12 @@ BOOMFLOW/
 ├── 🔗 GitHub Action
 │   └── github-action/         # Action para sincronizar perfiles
 │
-└── 🌐 Web App (en desarrollo)
-    └── app-web/               # Dashboard Next.js
+└── 🌐 Dashboard Web (MVP Completo)
+    └── app-web/               # Next.js 16 + Prisma + NextAuth
+        ├── src/app/           # Páginas: Dashboard, Perfil, Catálogo, Feed, Leaderboard
+        ├── src/lib/           # Badge Engine, Prisma Client
+        ├── src/components/    # UI Components
+        └── prisma/            # Schema y Seeds
 ```
 
 ### Flujo de Datos
@@ -203,6 +209,77 @@ BOOMFLOW/
 | [CATALOGO.md](CATALOGO.md) | Significado de las 89 medallas | 👤 Todos |
 | [DOCS.md](DOCS.md) | Referencia técnica completa | 👨‍💻 Desarrolladores |
 | [ARQUITECTURA.md](ARQUITECTURA.md) | Diseño del sistema | 👨‍💻 Desarrolladores |
+
+---
+
+## 🌐 Dashboard Web (v3.0)
+
+BOOMFLOW incluye un **Dashboard Web completo** con:
+
+### Stack Tecnológico
+
+| Tecnología | Versión | Uso |
+|------------|---------|-----|
+| Next.js | 16.1.6 | Framework React con App Router |
+| Prisma | 7.4.0 | ORM y migraciones de BD |
+| PostgreSQL | 15+ | Base de datos |
+| NextAuth | 5 (beta) | Autenticación GitHub OAuth |
+| Tailwind CSS | 4 | Estilos con glassmorphism |
+
+### Páginas Incluidas
+
+| Ruta | Descripción |
+|------|-------------|
+| `/` | Dashboard principal con stats y actividad |
+| `/profile` | Perfil del usuario con badges |
+| `/catalog` | Catálogo completo de 89 badges |
+| `/feed` | Feed de kudos y formulario |
+| `/leaderboard` | Rankings por badges/kudos |
+| `/login` | Autenticación con GitHub |
+
+### APIs REST
+
+```
+GET/POST  /api/kudos              # Feed y crear kudos
+GET       /api/kudos/user/:user   # Kudos de usuario
+GET       /api/kudos/categories   # Categorías de kudos
+GET       /api/badges             # Catálogo de badges
+GET       /api/badges/user/:user  # Badges de usuario
+POST/DEL  /api/badges/award       # Otorgar/revocar badge
+GET       /api/badges/progress    # Progreso hacia badges
+POST      /api/badges/evaluate    # Evaluar badges automáticos
+GET       /api/leaderboard        # Rankings
+```
+
+### Badge Engine
+
+Sistema de **otorgamiento automático** de badges basado en triggers:
+
+| Trigger | Descripción | Ejemplo |
+|---------|-------------|--------|
+| `KUDOS_RECEIVED` | Recibir X kudos | Team Spirit (50 kudos) |
+| `KUDOS_SENT` | Enviar X kudos | Feedback Friend (20 kudos) |
+| `CODE_REVIEWS` | Hacer X reviews | Code Reviewer (100 reviews) |
+| `PULL_REQUESTS` | Crear X PRs | First PR (1 PR) |
+| `STREAK_DAYS` | X días activo | 1 Year (365 días) |
+
+### Instalación del Dashboard
+
+```bash
+cd app-web
+npm install
+
+# Configurar variables de entorno
+cp env.example .env.local
+# Editar: DATABASE_URL, GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET, AUTH_SECRET
+
+# Inicializar BD
+npm run db:push
+npm run db:seed
+
+# Desarrollo
+npm run dev
+```
 
 ---
 

@@ -2,7 +2,7 @@
 
 <p align="center">
   <img src="https://img.shields.io/badge/🔒_Uso_Exclusivo-Sistemas_Ursol-8B5CF6.svg" alt="Exclusivo"/>
-  <img src="https://img.shields.io/badge/version-2.1.0-blue.svg" alt="Version"/>
+  <img src="https://img.shields.io/badge/version-3.0.0-blue.svg" alt="Version"/>
 </p>
 
 > Referencia técnica completa del Sistema de Reconocimiento Profesional BOOMFLOW
@@ -12,14 +12,17 @@
 ## 📖 Índice
 
 1. [Conceptos Fundamentales](#conceptos-fundamentales)
-2. [Catálogo de Medallas](#catálogo-de-medallas)
-3. [Sistema de Auto-Award](#sistema-de-auto-award)
-4. [Webhooks en Tiempo Real](#webhooks-en-tiempo-real)
-5. [CLI de Administración](#cli-de-administración)
-6. [GitHub Action](#github-action)
-7. [API Reference](#api-reference)
-8. [Modelos de Datos](#modelos-de-datos)
-9. [Especificación SVG](#especificación-svg)
+2. [Dashboard Web](#dashboard-web)
+3. [API REST Reference](#api-rest-reference)
+4. [Badge Engine](#badge-engine)
+5. [Base de Datos](#base-de-datos)
+6. [Catálogo de Medallas](#catálogo-de-medallas)
+7. [Sistema de Auto-Award](#sistema-de-auto-award)
+8. [Webhooks en Tiempo Real](#webhooks-en-tiempo-real)
+9. [CLI de Administración](#cli-de-administración)
+10. [GitHub Action](#github-action)
+11. [Modelos de Datos](#modelos-de-datos)
+12. [Especificación SVG](#especificación-svg)
 
 ---
 
@@ -64,6 +67,412 @@ Una medalla en BOOMFLOW representa un **logro profesional verificado**. Cada med
   - Webhook          métricas       a user/        README.md
   - Admin CLI      - Validar        *.json
                      permisos
+```
+
+---
+
+## Dashboard Web
+
+### Stack Tecnológico
+
+| Componente | Tecnología | Versión |
+|------------|------------|---------|
+| Framework | Next.js | 16.1.6 |
+| Runtime | React | 19.2.3 |
+| ORM | Prisma | 7.4.0 |
+| Auth | NextAuth | 5.0.0-beta |
+| CSS | Tailwind CSS | 4.x |
+| DB | PostgreSQL | 15+ |
+
+### Estructura del Proyecto
+
+```
+app-web/
+├── prisma/
+│   ├── schema.prisma      # Schema de BD (10 modelos)
+│   └── seed.ts            # Datos iniciales (89 badges)
+├── src/
+│   ├── app/
+│   │   ├── api/           # API Routes
+│   │   │   ├── badges/    # CRUD badges
+│   │   │   ├── kudos/     # CRUD kudos
+│   │   │   └── leaderboard/
+│   │   ├── catalog/       # Catálogo de badges
+│   │   ├── feed/          # Feed de actividad
+│   │   ├── leaderboard/   # Rankings
+│   │   ├── login/         # Auth con GitHub
+│   │   └── profile/       # Perfil de usuario
+│   ├── components/        # UI Components
+│   ├── generated/prisma/  # Cliente Prisma generado
+│   └── lib/
+│       ├── badge-engine.ts # Motor de badges automáticos
+│       ├── data.ts        # Datos mock/constantes
+│       └── prisma.ts      # Cliente Prisma singleton
+├── package.json
+└── env.example            # Variables de entorno
+```
+
+### Configuración
+
+```bash
+# Variables de entorno requeridas (.env.local)
+DATABASE_URL=postgresql://user:pass@localhost:5432/boomflow
+AUTH_SECRET=openssl-rand-base64-32
+GITHUB_CLIENT_ID=tu-client-id
+GITHUB_CLIENT_SECRET=tu-client-secret
+NEXTAUTH_URL=http://localhost:3000
+```
+
+---
+
+## API REST Reference
+
+### Autenticación
+
+Todas las APIs que modifican datos requieren autenticación via NextAuth.
+El token se maneja automáticamente por cookies de sesión.
+
+### Kudos
+
+#### `GET /api/kudos`
+
+Obtiene el feed de kudos públicos.
+
+**Query Params:**
+- `limit` (int, default: 20) - Cantidad de kudos
+- `cursor` (string) - ID para paginación
+
+**Response:**
+```json
+{
+  "kudos": [
+    {
+      "id": "clxyz...",
+      "message": "¡Excelente trabajo!",
+      "from": { "id": "...", "username": "ursolcr", "image": "..." },
+      "to": { "id": "...", "username": "jeremy-sud", "image": "..." },
+      "category": { "name": "Trabajo en equipo", "emoji": "🤝" },
+      "createdAt": "2026-02-15T10:00:00Z"
+    }
+  ],
+  "nextCursor": "clxyz..."
+}
+```
+
+#### `POST /api/kudos`
+
+Crea un nuevo kudo. **Requiere autenticación.**
+
+**Body:**
+```json
+{
+  "toUsername": "jeremy-sud",
+  "message": "¡Excelente trabajo en el PR!",
+  "categoryId": "clxyz...",
+  "isPublic": true
+}
+```
+
+**Response (201):**
+```json
+{
+  "kudo": { ... },
+  "badgesAwarded": {
+    "receiver": [{ "id": "...", "name": "Team Spirit", "slug": "team-spirit" }],
+    "sender": []
+  }
+}
+```
+
+#### `GET /api/kudos/user/:username`
+
+Kudos de un usuario específico.
+
+**Query Params:**
+- `type` (string: "received" | "sent" | "all", default: "received")
+
+#### `GET /api/kudos/categories`
+
+Lista de categorías de kudos disponibles.
+
+### Badges
+
+#### `GET /api/badges`
+
+Catálogo completo de badges.
+
+**Query Params:**
+- `category` (string) - Filtrar por categoría (ej: "COLABORACION")
+- `tier` (string) - Filtrar por tier (ej: "GOLD")
+
+**Response:**
+```json
+{
+  "total": 89,
+  "badges": [...],
+  "grouped": {
+    "COLABORACION": [...],
+    "CODIGO": [...]
+  }
+}
+```
+
+#### `GET /api/badges/user/:username`
+
+Badges de un usuario con estadísticas.
+
+**Response:**
+```json
+{
+  "user": { "id": "...", "username": "jeremy-sud", ... },
+  "badges": [...],
+  "badgesByCategory": { ... },
+  "stats": {
+    "total": 6,
+    "gold": 0,
+    "silver": 2,
+    "bronze": 4
+  }
+}
+```
+
+#### `POST /api/badges/award`
+
+Otorga un badge manualmente. **Requiere autenticación.**
+
+**Body:**
+```json
+{
+  "toUsername": "jeremy-sud",
+  "badgeSlug": "code-ninja",
+  "reason": "Excelente calidad de código en el proyecto X"
+}
+```
+
+#### `DELETE /api/badges/award`
+
+Revoca un badge. **Requiere autenticación.**
+
+**Body:**
+```json
+{
+  "username": "jeremy-sud",
+  "badgeSlug": "code-ninja"
+}
+```
+
+#### `GET /api/badges/progress`
+
+Progreso hacia badges no obtenidos.
+
+**Query Params:**
+- `username` (string) - Usuario a consultar (default: usuario autenticado)
+
+**Response:**
+```json
+{
+  "stats": {
+    "kudosReceived": 45,
+    "kudosSent": 32,
+    "codeReviews": 0,
+    "pullRequests": 0
+  },
+  "progress": [
+    {
+      "badge": { "name": "Team Spirit", "slug": "team-spirit", "tier": "SILVER" },
+      "progress": 45,
+      "target": 50,
+      "percentage": 90
+    }
+  ],
+  "nextBadges": [...]
+}
+```
+
+#### `POST /api/badges/evaluate`
+
+Evalúa y otorga badges automáticos pendientes.
+
+**Body:**
+```json
+{
+  "username": "jeremy-sud"  // Optional
+}
+```
+
+### Leaderboard
+
+#### `GET /api/leaderboard`
+
+Rankings de usuarios.
+
+**Query Params:**
+- `type` (string: "badges" | "kudos_received" | "kudos_sent", default: "badges")
+- `limit` (int, default: 10)
+
+**Response:**
+```json
+{
+  "type": "badges",
+  "leaderboard": [
+    {
+      "rank": 1,
+      "user": { "id": "...", "username": "ursolcr", "image": "..." },
+      "count": 10
+    }
+  ]
+}
+```
+
+---
+
+## Badge Engine
+
+### Arquitectura
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                        BADGE ENGINE                             │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│   EVENTO                   EVALUACIÓN              RESULTADO    │
+│   ──────                   ──────────              ─────────    │
+│                                                                 │
+│   Kudo enviado ──────►  evaluateTrigger()  ──────► Badge?      │
+│   Kudo recibido ─────►  KUDOS_RECEIVED     ──────► team-spirit │
+│   PR mergeado ───────►  PULL_REQUESTS      ──────► first-pr    │
+│   Code review ───────►  CODE_REVIEWS       ──────► code-reviewer│
+│                                                                 │
+│              ┌──────────────────────────────┐                   │
+│              │     getUserStats(userId)     │                   │
+│              │  ─────────────────────────   │                   │
+│              │  kudosReceived: 45           │                   │
+│              │  kudosSent: 32               │                   │
+│              │  codeReviews: 0              │                   │
+│              │  pullRequests: 0             │                   │
+│              └──────────────────────────────┘                   │
+│                            │                                    │
+│                            ▼                                    │
+│              checkTrigger(type, value, stats)                   │
+│              stats.kudosReceived >= 50 ? → award "team-spirit"  │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### Triggers Soportados
+
+| Trigger | Descripción | Ejemplo Badge |
+|---------|-------------|---------------|
+| `KUDOS_RECEIVED` | Recibir X kudos | Team Spirit (50) |
+| `KUDOS_SENT` | Enviar X kudos | Feedback Friend (20) |
+| `CODE_REVIEWS` | Hacer X code reviews | Code Reviewer (100) |
+| `PULL_REQUESTS` | Crear X PRs | First PR (1), Code Ninja (10) |
+| `ISSUES_CLOSED` | Cerrar X issues | Bug Hunter (20) |
+| `STREAK_DAYS` | X días activo | 1 Year (365), 3 Years (1095) |
+| `FIRST_ACTION` | Primera acción | Hello World, First Commit |
+| `MANUAL` | Solo manual | Tech Lead, Architect |
+
+### Uso Programático
+
+```typescript
+import { BadgeEngine } from '@/lib/badge-engine'
+
+// Evaluar todos los badges automáticos de un usuario
+const results = await BadgeEngine.evaluateUserBadges(userId)
+
+// Evaluar un trigger específico
+const badges = await BadgeEngine.evaluateTrigger(userId, TriggerType.KUDOS_RECEIVED)
+
+// Otorgar badge manualmente
+const result = await BadgeEngine.awardBadge(userId, 'code-ninja', 'admin', 'Razón')
+
+// Obtener progreso hacia badges
+const progress = await BadgeEngine.getBadgeProgress(userId)
+```
+
+---
+
+## Base de Datos
+
+### Schema (Prisma)
+
+```prisma
+// Usuarios y Organizaciones
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  username      String    @unique
+  // ... relaciones con badges, kudos, org, team
+}
+
+model Organization {
+  id    String @id @default(cuid())
+  name  String
+  slug  String @unique
+  users User[]
+  teams Team[]
+}
+
+// Sistema de Kudos
+model Kudo {
+  id        String @id @default(cuid())
+  message   String
+  from      User   @relation("KudosSent")
+  to        User   @relation("KudosReceived")
+  category  KudoCategory?
+}
+
+// Sistema de Badges
+model Badge {
+  id           String        @id @default(cuid())
+  slug         String        @unique
+  name         String
+  category     BadgeCategory
+  tier         BadgeTier
+  triggerType  TriggerType?
+  triggerValue Int?
+}
+
+model UserBadge {
+  user      User   @relation
+  badge     Badge  @relation
+  awardedAt DateTime
+  awardedBy String?
+  reason    String?
+}
+
+// Enums
+enum BadgeCategory {
+  COLABORACION, CODIGO, LIDERAZGO, INNOVACION, 
+  CULTURA, ONBOARDING, COMUNICACION, CALIDAD, ESPECIALES
+}
+
+enum BadgeTier { BRONZE, SILVER, GOLD }
+
+enum TriggerType {
+  KUDOS_RECEIVED, KUDOS_SENT, CODE_REVIEWS, 
+  PULL_REQUESTS, ISSUES_CLOSED, STREAK_DAYS, 
+  FIRST_ACTION, MANUAL
+}
+```
+
+### Comandos de BD
+
+```bash
+# Generar cliente Prisma
+npm run db:generate
+
+# Aplicar schema a la BD
+npm run db:push
+
+# Ejecutar migraciones
+npm run db:migrate
+
+# Poblar con datos iniciales (89 badges)
+npm run db:seed
+
+# Abrir Prisma Studio (GUI)
+npm run db:studio
 ```
 
 ---
