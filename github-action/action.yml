@@ -2,19 +2,18 @@ name: "BOOMFLOW Badge Sync"
 description: "Sincroniza tus medallas de BOOMFLOW a tu perfil README de GitHub - Verificado por Sistemas Ursol"
 branding:
   icon: "award"
-    color: "purple"
-    inputs:
-      boomflow_token:
-          description: "Tu token personal de BOOMFLOW"
-              required: true
-                github_username:
-                    description: "Tu nombre de usuario de GitHub"
-                        required: false
-                          org_name:
-                              description: "Nombre de la organizacion"
-                                  required: false
-                                      default: "SistemasUrsol"
-                                      runs:
-                                        using: "node20"
-                                          main: "index.js"
-                                          
+  color: "purple"
+inputs:
+  boomflow_token:
+    description: "Tu token personal de BOOMFLOW"
+    required: true
+  github_username:
+    description: "Tu nombre de usuario de GitHub"
+    required: false
+  org_name:
+    description: "Nombre de la organizacion"
+    required: false
+    default: "SistemasUrsol"
+runs:
+  using: "node20"
+  main: "index.js"
