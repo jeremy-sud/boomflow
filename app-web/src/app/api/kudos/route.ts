@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/auth'
 import prisma from '@/lib/prisma'
+import { BadgeEngine } from '@/lib/badge-engine'
+import { TriggerType } from '@/generated/prisma'
 
 // GET /api/kudos - Obtener feed de kudos
 export async function GET(request: NextRequest) {
@@ -107,10 +109,25 @@ export async function POST(request: NextRequest) {
       },
     })
 
-    // TODO: Verificar triggers de badges automáticos
-    // Por ejemplo: si el usuario recibió X kudos, otorgar badge "team-spirit"
+    // Badge Engine: Evaluar triggers automáticos
+    // Para quien recibe el kudo
+    const receiverBadges = await BadgeEngine.evaluateTrigger(
+      toUser.id, 
+      TriggerType.KUDOS_RECEIVED
+    )
+    // Para quien envía el kudo
+    const senderBadges = await BadgeEngine.evaluateTrigger(
+      session.user.id, 
+      TriggerType.KUDOS_SENT
+    )
 
-    return NextResponse.json(kudo, { status: 201 })
+    return NextResponse.json({
+      kudo,
+      badgesAwarded: {
+        receiver: receiverBadges.filter(b => b.awarded),
+        sender: senderBadges.filter(b => b.awarded),
+      }
+    }, { status: 201 })
   } catch (error) {
     console.error('Error creating kudo:', error)
     return NextResponse.json(
