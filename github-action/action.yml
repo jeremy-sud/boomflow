@@ -1,11 +1,11 @@
-name: "Bloomflow Badge Sync"
+name: "Boomflow Badge Sync"
 description: "Sincroniza tus medallas de Bloomflow a tu perfil README de GitHub — Verificado por Sistemas Ursol"
 branding:
   icon: "award"
   color: "purple"
 inputs:
   bloomflow_token:
-    description: "Tu token personal de Bloomflow"
+    description: "Tu token personal de Boomflow"
     required: true
   github_username:
     description: "Tu nombre de usuario de GitHub"
@@ -16,4 +16,4 @@ inputs:
     default: "SistemasUrsol"
 runs:
   using: "node20"
-  main: "dist/index.js"
+  main: "dist/i
