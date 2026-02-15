@@ -5,25 +5,57 @@
   "org": "SistemasUrsol",
   "joinedAt": "2024-01-15",
   "badges": [
-    { "id": "hello-world", "awardedAt": "2024-01-15", "awardedBy": "system" },
-    { "id": "first-commit", "awardedAt": "2024-01-22", "awardedBy": "system" },
-    { "id": "first-pr", "awardedAt": "2024-02-05", "awardedBy": "system" },
+    {
+      "id": "hello-world",
+      "awardedAt": "2024-01-15",
+      "awardedBy": "system"
+    },
+    {
+      "id": "first-commit",
+      "awardedAt": "2024-01-22",
+      "awardedBy": "system"
+    },
+    {
+      "id": "first-pr",
+      "awardedAt": "2024-02-05",
+      "awardedBy": "system"
+    },
     {
       "id": "first-review",
       "awardedAt": "2024-02-12",
       "awardedBy": "jeremy-sud"
     },
-    { "id": "mentor", "awardedAt": "2024-03-01", "awardedBy": "jeremy-sud" },
+    {
+      "id": "mentor",
+      "awardedAt": "2024-03-01",
+      "awardedBy": "jeremy-sud"
+    },
     {
       "id": "team-spirit",
       "awardedAt": "2024-04-10",
       "awardedBy": "jeremy-sud"
     },
-    { "id": "docs-hero", "awardedAt": "2024-05-15", "awardedBy": "jeremy-sud" },
+    {
+      "id": "docs-hero",
+      "awardedAt": "2024-05-15",
+      "awardedBy": "jeremy-sud"
+    },
     {
       "id": "sprint-hero",
       "awardedAt": "2024-06-20",
       "awardedBy": "jeremy-sud"
+    },
+    {
+      "id": "tech-lead",
+      "awardedAt": "2026-02-15",
+      "awardedBy": "jeremy-sud",
+      "meta": "Nivel 3"
+    },
+    {
+      "id": "architect",
+      "awardedAt": "2026-02-15",
+      "awardedBy": "jeremy-sud",
+      "meta": "Nivel 3"
     }
   ]
 }

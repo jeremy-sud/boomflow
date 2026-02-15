@@ -25,6 +25,24 @@
       "awardedBy": "auto-award-system",
       "autoAwarded": true,
       "reason": "50+ commits"
+    },
+    {
+      "id": "tech-lead",
+      "awardedAt": "2026-02-15",
+      "awardedBy": "ursolcr",
+      "meta": "Nivel 3"
+    },
+    {
+      "id": "architect",
+      "awardedAt": "2026-02-15",
+      "awardedBy": "ursolcr",
+      "meta": "Nivel 3"
+    },
+    {
+      "id": "mentor",
+      "awardedAt": "2026-02-15",
+      "awardedBy": "ursolcr",
+      "meta": "Nivel 1"
     }
   ]
 }
