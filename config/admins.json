@@ -12,8 +12,8 @@
     },
     {
       "username": "ursolcr",
-      "displayName": "Ursol CR",
-      "role": "Organización Principal",
+      "displayName": "Eduardo Ureña",
+      "role": "Fundador",
       "permissions": ["grant_badges", "revoke_badges", "manage_users", "manage_admins"],
       "addedAt": "2024-01-15",
       "addedBy": "system"

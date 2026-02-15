@@ -313,7 +313,7 @@ Solo estos usuarios pueden otorgar medallas:
 | Usuario | Rol | Permisos |
 |---------|-----|----------|
 | [@jeremy-sud](https://github.com/jeremy-sud) | Co-Fundador & Dev Lead | Todos |
-| [@ursolcr](https://github.com/ursolcr) | Organización Principal | Todos |
+| [@ursolcr](https://github.com/ursolcr) | Fundador | Todos |
 
 ### Sistema de Protección
 
