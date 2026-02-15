@@ -13,9 +13,11 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Bloomflow | Sistemas Ursol — Medallas de Desarrollo",
+  title: "BOOMFLOW | Sistemas Ursol — Medallas de Desarrollo",
   description: "Plataforma de reconocimiento profesional. Medallas verificadas para desarrolladores de Sistemas Ursol.",
 };
+
+import Sidebar from "@/components/Sidebar";
 
 export default function RootLayout({
   children,
@@ -23,11 +25,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="es">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+        <Sidebar />
+        <main className="ml-64 min-h-screen p-8">
+          {children}
+        </main>
       </body>
     </html>
   );
