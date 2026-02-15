@@ -5,51 +5,295 @@
 <h1 align="center">🌸 BOOMFLOW</h1>
 
 <p align="center">
-  <strong>Professional Recognition System for Development Teams</strong>
+  <strong>Sistema de Reconocimiento Profesional de Sistemas Ursol</strong>
   <br/>
   <em>Donde el talento no se gestiona, se cultiva.</em>
 </p>
 
 <p align="center">
-  <a href="#-quick-start">Quick Start</a> •
-  <a href="#-features">Features</a> •
-  <a href="#-badge-catalog">Badges</a> •
-  <a href="#-api">API</a> •
-  <a href="#-contributing">Contributing</a>
-</p>
-
-<p align="center">
-  <img src="https://img.shields.io/badge/version-1.0.0-blue.svg" alt="Version"/>
+  <img src="https://img.shields.io/badge/🔒_Uso_Exclusivo-Sistemas_Ursol-8B5CF6.svg" alt="Exclusivo"/>
+  <img src="https://img.shields.io/badge/version-2.0.0-blue.svg" alt="Version"/>
+  <img src="https://img.shields.io/badge/badges-89-gold.svg" alt="Badges"/>
   <img src="https://img.shields.io/badge/license-MIT-green.svg" alt="License"/>
-  <img src="https://img.shields.io/badge/node-%3E%3D20.0.0-brightgreen.svg" alt="Node"/>
-  <img src="https://img.shields.io/badge/verified-Sistemas%20Ursol-purple.svg" alt="Verified"/>
 </p>
 
 ---
 
-## 🎯 The Problem
+## ⚠️ Aviso Importante
 
-**70% of employees feel undervalued.** Soft skills like mentoring, crisis resolution, and team collaboration are invisible in traditional metrics and CVs.
-
-## ✅ The Solution
-
-BOOMFLOW transforms peer recognition into **verified professional assets**. Colleagues send Kudos that evolve into **Dynamic Badges**, automatically synced to your GitHub profile.
+> **BOOMFLOW es una herramienta de uso exclusivo de [Sistemas Ursol](https://www.ursol.com).**
+> 
+> Aunque el código fuente es público bajo licencia MIT, el sistema de reconocimiento y las medallas **solo pueden ser otorgadas a colaboradores oficiales, contratistas y asociados de Sistemas Ursol**.
+> 
+> Si no eres parte de nuestro equipo y deseas utilizar este sistema, contáctanos para explorar opciones de licenciamiento o colaboración.
 
 ---
 
-## ⚡ Quick Start
+## 🎯 ¿Qué es BOOMFLOW?
 
-### 1. Add the workflow to your profile repository
+BOOMFLOW es el **sistema oficial de reconocimiento profesional** de Sistemas Ursol. Transforma el reconocimiento entre compañeros en **activos profesionales verificados** que se muestran automáticamente en tu perfil de GitHub.
 
-Create `.github/workflows/boomflow.yml` in your `username/username` repo:
+### Para Colaboradores de Ursol
+
+| Beneficio | Descripción |
+|-----------|-------------|
+| **89 Medallas** | Reconocimientos en 9 categorías profesionales |
+| **3 Niveles** | 🥉 Bronce → 🥈 Plata → 🥇 Oro |
+| **Auto-Sync** | Las medallas se actualizan automáticamente en tu GitHub |
+| **Verificado** | Todas las medallas están verificadas por Sistemas Ursol |
+| **Portafolio Vivo** | Tus logros se convierten en parte de tu perfil profesional |
+
+---
+
+## 🏅 Catálogo de Medallas (89 total)
+
+### 🟢 Onboarding (10 medallas)
+Reconocimientos para nuevos colaboradores que se integran al equipo.
+
+<table>
+<tr>
+<td align="center" width="100">
+<img src="https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-hello-world.svg" width="64"/><br/>
+<sub><b>Hello World</b></sub>
+</td>
+<td align="center" width="100">
+<img src="https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-first-commit.svg" width="64"/><br/>
+<sub><b>First Commit</b></sub>
+</td>
+<td align="center" width="100">
+<img src="https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-week-one.svg" width="64"/><br/>
+<sub><b>Week One</b></sub>
+</td>
+<td align="center" width="100">
+<img src="https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-month-one.svg" width="64"/><br/>
+<sub><b>Month One</b></sub>
+</td>
+<td align="center" width="100">
+<img src="https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-year-one-diamond.svg" width="64"/><br/>
+<sub><b>Year One</b></sub>
+</td>
+</tr>
+</table>
+
+### 🔵 Coding (21 medallas)
+Excelencia técnica en desarrollo de software.
+
+<table>
+<tr>
+<td align="center" width="100">
+<img src="https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-code-ninja.svg" width="64"/><br/>
+<sub><b>Code Ninja</b></sub>
+</td>
+<td align="center" width="100">
+<img src="https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-bug-slayer.svg" width="64"/><br/>
+<sub><b>Bug Slayer</b></sub>
+</td>
+<td align="center" width="100">
+<img src="https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-full-stack-hero.svg" width="64"/><br/>
+<sub><b>Full Stack Hero</b></sub>
+</td>
+<td align="center" width="100">
+<img src="https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-security-champion.svg" width="64"/><br/>
+<sub><b>Security Champion</b></sub>
+</td>
+<td align="center" width="100">
+<img src="https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-ai-pioneer.svg" width="64"/><br/>
+<sub><b>AI Pioneer</b></sub>
+</td>
+</tr>
+</table>
+
+### 🟣 DevOps (10 medallas)
+Maestría en operaciones y despliegue.
+
+<table>
+<tr>
+<td align="center" width="100">
+<img src="https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-kubernetes-knight.svg" width="64"/><br/>
+<sub><b>K8s Knight</b></sub>
+</td>
+<td align="center" width="100">
+<img src="https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-terraform-titan.svg" width="64"/><br/>
+<sub><b>Terraform Titan</b></sub>
+</td>
+<td align="center" width="100">
+<img src="https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-incident-commander.svg" width="64"/><br/>
+<sub><b>Incident Commander</b></sub>
+</td>
+<td align="center" width="100">
+<img src="https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-deploy-master.svg" width="64"/><br/>
+<sub><b>Deploy Master</b></sub>
+</td>
+<td align="center" width="100">
+<img src="https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-sre-specialist.svg" width="64"/><br/>
+<sub><b>SRE Specialist</b></sub>
+</td>
+</tr>
+</table>
+
+### 🩷 Collaboration (16 medallas)
+Trabajo en equipo y colaboración.
+
+<table>
+<tr>
+<td align="center" width="100">
+<img src="https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-hackathon-hero.svg" width="64"/><br/>
+<sub><b>Hackathon Hero</b></sub>
+</td>
+<td align="center" width="100">
+<img src="https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-customer-champion.svg" width="64"/><br/>
+<sub><b>Customer Champion</b></sub>
+</td>
+<td align="center" width="100">
+<img src="https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-bridge-builder.svg" width="64"/><br/>
+<sub><b>Bridge Builder</b></sub>
+</td>
+<td align="center" width="100">
+<img src="https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-problem-solver.svg" width="64"/><br/>
+<sub><b>Problem Solver</b></sub>
+</td>
+<td align="center" width="100">
+<img src="https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-crisis-averted.svg" width="64"/><br/>
+<sub><b>Crisis Averted</b></sub>
+</td>
+</tr>
+</table>
+
+### 🟡 Leadership (10 medallas)
+Liderazgo técnico y mentoría.
+
+<table>
+<tr>
+<td align="center" width="100">
+<img src="https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-tech-lead.svg" width="64"/><br/>
+<sub><b>Tech Lead</b></sub>
+</td>
+<td align="center" width="100">
+<img src="https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-visionary.svg" width="64"/><br/>
+<sub><b>Visionary</b></sub>
+</td>
+<td align="center" width="100">
+<img src="https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-innovator.svg" width="64"/><br/>
+<sub><b>Innovator</b></sub>
+</td>
+<td align="center" width="100">
+<img src="https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-mvp-month.svg" width="64"/><br/>
+<sub><b>MVP of Month</b></sub>
+</td>
+<td align="center" width="100">
+<img src="https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-mentor-master.svg" width="64"/><br/>
+<sub><b>Mentor Master</b></sub>
+</td>
+</tr>
+</table>
+
+### 📚 Documentation (7 medallas)
+Documentación y conocimiento compartido.
+
+<table>
+<tr>
+<td align="center" width="100">
+<img src="https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-docs-hero.svg" width="64"/><br/>
+<sub><b>Docs Hero</b></sub>
+</td>
+<td align="center" width="100">
+<img src="https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-tutorial-creator.svg" width="64"/><br/>
+<sub><b>Tutorial Creator</b></sub>
+</td>
+<td align="center" width="100">
+<img src="https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-open-source-contributor.svg" width="64"/><br/>
+<sub><b>Open Source</b></sub>
+</td>
+<td align="center" width="100">
+<img src="https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-wiki-warrior.svg" width="64"/><br/>
+<sub><b>Wiki Warrior</b></sub>
+</td>
+<td align="center" width="100">
+<img src="https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-readme-ranger.svg" width="64"/><br/>
+<sub><b>README Ranger</b></sub>
+</td>
+</tr>
+</table>
+
+### 🌱 Growth (5 medallas)
+Crecimiento profesional continuo.
+
+<table>
+<tr>
+<td align="center" width="100">
+<img src="https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-fast-learner.svg" width="64"/><br/>
+<sub><b>Fast Learner</b></sub>
+</td>
+<td align="center" width="100">
+<img src="https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-conference-speaker.svg" width="64"/><br/>
+<sub><b>Conference Speaker</b></sub>
+</td>
+<td align="center" width="100">
+<img src="https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-lifelong-learner.svg" width="64"/><br/>
+<sub><b>Lifelong Learner</b></sub>
+</td>
+<td align="center" width="100">
+<img src="https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-skill-builder.svg" width="64"/><br/>
+<sub><b>Skill Builder</b></sub>
+</td>
+<td align="center" width="100">
+<img src="https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-eco-coder.svg" width="64"/><br/>
+<sub><b>Eco Coder</b></sub>
+</td>
+</tr>
+</table>
+
+### ❤️ Milestones (9 medallas)
+Hitos y logros acumulativos.
+
+<table>
+<tr>
+<td align="center" width="100">
+<img src="https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-kudo-starter.svg" width="64"/><br/>
+<sub><b>Kudo Starter</b></sub><br/>
+<sub>10 kudos</sub>
+</td>
+<td align="center" width="100">
+<img src="https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-kudo-collector.svg" width="64"/><br/>
+<sub><b>Kudo Collector</b></sub><br/>
+<sub>50 kudos</sub>
+</td>
+<td align="center" width="100">
+<img src="https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-kudo-legend.svg" width="64"/><br/>
+<sub><b>Kudo Legend</b></sub><br/>
+<sub>100 kudos</sub>
+</td>
+<td align="center" width="100">
+<img src="https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-badge-legend.svg" width="64"/><br/>
+<sub><b>Badge Legend</b></sub><br/>
+<sub>20 badges</sub>
+</td>
+<td align="center" width="100">
+<img src="https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-streak-master.svg" width="64"/><br/>
+<sub><b>Streak Master</b></sub><br/>
+<sub>30 días</sub>
+</td>
+</tr>
+</table>
+
+---
+
+## 🔧 Para Colaboradores de Ursol
+
+### Configuración del GitHub Action
+
+Si eres colaborador oficial de Sistemas Ursol, configura tu perfil de GitHub para mostrar tus medallas:
+
+#### 1. Crea el workflow en tu repositorio de perfil (`username/username`)
 
 ```yaml
+# .github/workflows/boomflow.yml
 name: BOOMFLOW Badge Sync
 
 on:
   schedule:
-    - cron: "0 0 * * *"  # Daily at midnight
-  workflow_dispatch:      # Manual trigger
+    - cron: "0 0 * * *"  # Diario a medianoche
+  workflow_dispatch:      # Trigger manual
 
 jobs:
   sync-badges:
@@ -64,313 +308,59 @@ jobs:
       
       - uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "🏅 Update BOOMFLOW badges"
+          commit_message: "🏅 Actualizar medallas BOOMFLOW"
 ```
 
-### 2. Add markers to your README.md
+#### 2. Agrega los marcadores a tu README.md
 
 ```markdown
-### 🏅 My Achievements
+### 🏅 Mis Logros en Sistemas Ursol
 
 <!-- BOOMFLOW-BADGES-START -->
 <!-- BOOMFLOW-BADGES-END -->
 ```
 
-### 3. Configure your token
+#### 3. Solicita tu token
 
-See [GUIA_TOKEN.md](GUIA_TOKEN.md) for detailed instructions on creating and configuring your `BOOMFLOW_TOKEN`.
+Contacta a tu líder de equipo o a RRHH para obtener tu `BOOMFLOW_TOKEN` personal.
 
----
-
-## 🏅 Features
-
-| Feature | Description |
-|---------|-------------|
-| **26 Badges** | Organized in 6 categories |
-| **3 Tiers** | 🥉 Bronze → 🥈 Silver → 🥇 Gold |
-| **Auto-Sync** | GitHub Action updates your profile automatically |
-| **Verified** | All badges verified by [Sistemas Ursol](https://www.ursol.com) |
-| **Beautiful SVGs** | Professional vector badges with gradients and effects |
+📖 Ver [GUIA_TOKEN.md](GUIA_TOKEN.md) para instrucciones detalladas.
 
 ---
 
-## 📦 Badge Catalog
+## 🏢 Sobre Sistemas Ursol
 
-### 🟢 Onboarding (4 badges)
+**Sistemas Ursol** es una empresa de tecnología comprometida con el desarrollo de software de alta calidad y el crecimiento profesional de su equipo.
 
-<table>
-<tr>
-<td align="center" width="120">
-<img src="https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-hello-world.svg" width="80"/><br/>
-<sub><b>Hello World</b></sub><br/>
-<sub>🥉 Bronze</sub>
-</td>
-<td align="center" width="120">
-<img src="https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-first-commit.svg" width="80"/><br/>
-<sub><b>First Commit</b></sub><br/>
-<sub>🥉 Bronze</sub>
-</td>
-<td align="center" width="120">
-<img src="https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-first-pr.svg" width="80"/><br/>
-<sub><b>First PR</b></sub><br/>
-<sub>🥉 Bronze</sub>
-</td>
-<td align="center" width="120">
-<img src="https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-first-review.svg" width="80"/><br/>
-<sub><b>First Review</b></sub><br/>
-<sub>🥉 Bronze</sub>
-</td>
-</tr>
-</table>
+BOOMFLOW es nuestra forma de:
+- ✨ **Reconocer** el trabajo excepcional de nuestros colaboradores
+- 📈 **Visibilizar** las habilidades blandas que los CVs tradicionales ignoran
+- 🤝 **Fomentar** una cultura de reconocimiento entre pares
+- 🎯 **Recompensar** la excelencia técnica y el trabajo en equipo
 
-### 🔵 Coding (6 badges)
+### Contacto
 
-<table>
-<tr>
-<td align="center" width="120">
-<img src="https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-code-ninja.svg" width="80"/><br/>
-<sub><b>Code Ninja</b></sub><br/>
-<sub>🥈 Silver</sub>
-</td>
-<td align="center" width="120">
-<img src="https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-bug-hunter.svg" width="80"/><br/>
-<sub><b>Bug Hunter</b></sub><br/>
-<sub>🥈 Silver</sub>
-</td>
-<td align="center" width="120">
-<img src="https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-refactor-master.svg" width="80"/><br/>
-<sub><b>Refactor Master</b></sub><br/>
-<sub>🥈 Silver</sub>
-</td>
-<td align="center" width="120">
-<img src="https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-clean-code.svg" width="80"/><br/>
-<sub><b>Clean Code</b></sub><br/>
-<sub>🥈 Silver</sub>
-</td>
-</tr>
-<tr>
-<td align="center" width="120">
-<img src="https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-algorithm-ace.svg" width="80"/><br/>
-<sub><b>Algorithm Ace</b></sub><br/>
-<sub>🥇 Gold</sub>
-</td>
-<td align="center" width="120">
-<img src="https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-full-stack.svg" width="80"/><br/>
-<sub><b>Full Stack</b></sub><br/>
-<sub>🥇 Gold</sub>
-</td>
-</tr>
-</table>
-
-### 🟣 DevOps (4 badges)
-
-<table>
-<tr>
-<td align="center" width="120">
-<img src="https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-pipeline-pro.svg" width="80"/><br/>
-<sub><b>Pipeline Pro</b></sub><br/>
-<sub>🥈 Silver</sub>
-</td>
-<td align="center" width="120">
-<img src="https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-docker-captain.svg" width="80"/><br/>
-<sub><b>Docker Captain</b></sub><br/>
-<sub>🥈 Silver</sub>
-</td>
-<td align="center" width="120">
-<img src="https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-cloud-deployer.svg" width="80"/><br/>
-<sub><b>Cloud Deployer</b></sub><br/>
-<sub>🥇 Gold</sub>
-</td>
-<td align="center" width="120">
-<img src="https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-cicd-master.svg" width="80"/><br/>
-<sub><b>CI/CD Master</b></sub><br/>
-<sub>🥇 Gold</sub>
-</td>
-</tr>
-</table>
-
-### 🟡 Collaboration (5 badges)
-
-<table>
-<tr>
-<td align="center" width="120">
-<img src="https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-mentor.svg" width="80"/><br/>
-<sub><b>Mentor</b></sub><br/>
-<sub>🥉 Bronze</sub>
-</td>
-<td align="center" width="120">
-<img src="https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-team-spirit.svg" width="80"/><br/>
-<sub><b>Team Spirit</b></sub><br/>
-<sub>🥈 Silver</sub>
-</td>
-<td align="center" width="120">
-<img src="https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-code-reviewer.svg" width="80"/><br/>
-<sub><b>Code Reviewer</b></sub><br/>
-<sub>🥈 Silver</sub>
-</td>
-<td align="center" width="120">
-<img src="https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-pair-programmer.svg" width="80"/><br/>
-<sub><b>Pair Programmer</b></sub><br/>
-<sub>🥈 Silver</sub>
-</td>
-</tr>
-<tr>
-<td align="center" width="120">
-<img src="https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-mentor-master.svg" width="80"/><br/>
-<sub><b>Mentor Master</b></sub><br/>
-<sub>🥇 Gold</sub>
-</td>
-</tr>
-</table>
-
-### 🔴 Leadership (4 badges)
-
-<table>
-<tr>
-<td align="center" width="120">
-<img src="https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-sprint-hero.svg" width="80"/><br/>
-<sub><b>Sprint Hero</b></sub><br/>
-<sub>🥈 Silver</sub>
-</td>
-<td align="center" width="120">
-<img src="https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-crisis-averted.svg" width="80"/><br/>
-<sub><b>Crisis Averted</b></sub><br/>
-<sub>🥇 Gold</sub>
-</td>
-<td align="center" width="120">
-<img src="https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-architect.svg" width="80"/><br/>
-<sub><b>Architect</b></sub><br/>
-<sub>🥇 Gold</sub>
-</td>
-<td align="center" width="120">
-<img src="https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-tech-lead.svg" width="80"/><br/>
-<sub><b>Tech Lead</b></sub><br/>
-<sub>🥇 Gold</sub>
-</td>
-</tr>
-</table>
-
-### ⚪ Documentation (3 badges)
-
-<table>
-<tr>
-<td align="center" width="120">
-<img src="https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-docs-hero.svg" width="80"/><br/>
-<sub><b>Docs Hero</b></sub><br/>
-<sub>🥉 Bronze</sub>
-</td>
-<td align="center" width="120">
-<img src="https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-api-designer.svg" width="80"/><br/>
-<sub><b>API Designer</b></sub><br/>
-<sub>🥈 Silver</sub>
-</td>
-<td align="center" width="120">
-<img src="https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-open-source.svg" width="80"/><br/>
-<sub><b>Open Source</b></sub><br/>
-<sub>🥈 Silver</sub>
-</td>
-</tr>
-</table>
+- 🌐 [www.ursol.com](https://www.ursol.com)
+- 📧 contacto@ursol.com
+- 💼 ¿Interesado en unirte? Consulta nuestras [vacantes](https://www.ursol.com/careers)
 
 ---
 
-## 🏗️ Project Structure
+## 📋 Licencia
 
-```
-BOOMFLOW/
-├── app-web/           # Frontend (Next.js + React + TailwindCSS)
-├── backend/           # API Server (Express + Node.js)
-├── github-action/     # GitHub Action for badge sync
-├── assets/            # 26 professional SVG badges
-├── users/             # User badge data (JSON)
-├── api-mock.json      # Badge catalog
-├── DOCS.md            # Technical documentation
-├── GUIA_TOKEN.md      # Token setup guide
-└── ONBOARDING.md      # Team onboarding guide
-```
+Este proyecto está bajo la licencia MIT. Sin embargo, **el uso del sistema de reconocimiento BOOMFLOW está reservado exclusivamente para colaboradores, contratistas y asociados de Sistemas Ursol**.
 
----
+El código es público para:
+- Transparencia sobre cómo funciona el sistema
+- Permitir contribuciones de nuestro equipo
+- Servir como referencia educativa
 
-## 🔌 API Reference
-
-### Endpoints
-
-| Method | Endpoint | Auth | Description |
-|--------|----------|------|-------------|
-| `GET` | `/api/health` | ❌ | Health check |
-| `GET` | `/api/badges/catalog` | ❌ | Full badge catalog |
-| `GET` | `/api/user/badges` | ✅ | Authenticated user's badges |
-| `GET` | `/auth/github` | ❌ | Start OAuth flow |
-| `GET` | `/auth/github/callback` | ❌ | OAuth callback |
-
-### Example: Get Badge Catalog
-
-```bash
-curl https://api.boomflow.dev/api/badges/catalog
-```
-
-```json
-[
-  {
-    "id": "code-ninja",
-    "label": "Code Ninja",
-    "category": "coding",
-    "tier": "silver",
-    "description": "Código limpio, rápido y eficiente.",
-    "svg": "badge-code-ninja.svg"
-  }
-]
-```
-
----
-
-## 🚀 Local Development
-
-### Prerequisites
-
-- Node.js >= 20.0.0
-- npm or yarn
-
-### Backend
-
-```bash
-cd backend
-npm install
-npm run dev
-# Server running at http://localhost:3001
-```
-
-### Frontend
-
-```bash
-cd app-web
-npm install
-npm run dev
-# App running at http://localhost:3000
-```
-
----
-
-## 🤝 Contributing
-
-We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
----
-
-## 📄 License
-
-MIT © [Sistemas Ursol](https://www.ursol.com)
+**El uso no autorizado de las medallas o la falsificación de reconocimientos está prohibido.**
 
 ---
 
 <p align="center">
-  <sub>Built with 💜 by the BOOMFLOW team</sub>
-  <br/>
-  <sub>Verified by <a href="https://www.ursol.com">Sistemas Ursol</a></sub>
+  <strong>🌸 BOOMFLOW</strong><br/>
+  <em>Un producto de Sistemas Ursol</em><br/>
+  <sub>Reconociendo el talento, una medalla a la vez.</sub>
 </p>

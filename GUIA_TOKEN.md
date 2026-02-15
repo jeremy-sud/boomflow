@@ -1,11 +1,27 @@
-# 🔑 Guía de Configuración: BLOOMFLOW_TOKEN
+# 🔑 Guía de Configuración: BOOMFLOW_TOKEN
 
-El `BLOOMFLOW_TOKEN` es esencialmente una **"llave maestra"** temporal. Permite que el proceso automático (GitHub Action) tenga permiso para:
+<p align="center">
+  <img src="https://img.shields.io/badge/🔒_Solo_para-Colaboradores_Ursol-8B5CF6.svg" alt="Solo Ursol"/>
+</p>
 
-1. Leer los datos de medallas del repositorio central.
-2. Modificar el archivo `README.md` de tu perfil.
+> **⚠️ Esta guía es exclusivamente para colaboradores, contratistas y asociados de Sistemas Ursol.**
 
-Aquí tienes los pasos detallados para obtenerla y configurarla:
+---
+
+El `BOOMFLOW_TOKEN` es esencialmente una **"llave maestra"** temporal. Permite que el proceso automático (GitHub Action) tenga permiso para:
+
+1. Leer los datos de medallas del repositorio central de BOOMFLOW.
+2. Modificar el archivo `README.md` de tu perfil de GitHub.
+
+---
+
+## Requisitos Previos
+
+Antes de configurar el token, asegúrate de:
+
+- ✅ Ser colaborador oficial de Sistemas Ursol
+- ✅ Tener tu perfil registrado en el sistema BOOMFLOW
+- ✅ Haber recibido confirmación de RRHH o tu líder de equipo
 
 ---
 

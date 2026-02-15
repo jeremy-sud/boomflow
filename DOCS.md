@@ -1,6 +1,21 @@
-# 📚 BOOMFLOW — Technical Documentation
+# 📚 BOOMFLOW — Documentación Técnica
 
-> Complete technical reference for the BOOMFLOW Professional Recognition System
+> Referencia técnica completa del Sistema de Reconocimiento Profesional BOOMFLOW
+
+<p align="center">
+  <img src="https://img.shields.io/badge/🔒_Uso_Exclusivo-Sistemas_Ursol-8B5CF6.svg" alt="Exclusivo"/>
+</p>
+
+---
+
+## ⚠️ Aviso de Uso Exclusivo
+
+**Este sistema es propiedad de Sistemas Ursol y está diseñado exclusivamente para uso interno.**
+
+El código es público bajo licencia MIT para transparencia, pero el sistema de reconocimiento solo puede ser utilizado por:
+- ✅ Colaboradores oficiales de Sistemas Ursol
+- ✅ Contratistas con acuerdo vigente
+- ✅ Asociados y partners autorizados
 
 ---
 

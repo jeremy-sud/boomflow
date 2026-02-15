@@ -1,6 +1,21 @@
-# 🚀 Guía de Integración — Bloomflow
+# 🚀 Guía de Onboarding — BOOMFLOW
 
-> Cómo agregar un nuevo integrante al sistema de medallas de Bloomflow en Sistemas Ursol
+<p align="center">
+  <img src="https://img.shields.io/badge/🔒_Documento_Interno-Sistemas_Ursol-8B5CF6.svg" alt="Interno"/>
+</p>
+
+> **Guía oficial para integrar nuevos colaboradores al sistema de reconocimiento BOOMFLOW de Sistemas Ursol**
+
+---
+
+## ⚠️ Acceso Restringido
+
+Este documento está destinado a:
+- 👤 Líderes de equipo de Sistemas Ursol
+- 👤 Personal de Recursos Humanos
+- 👤 Administradores del sistema BOOMFLOW
+
+Solo colaboradores oficiales de Sistemas Ursol pueden ser agregados al sistema.
 
 ---
 
