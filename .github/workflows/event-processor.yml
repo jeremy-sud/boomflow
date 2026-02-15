@@ -1,0 +1,165 @@
+name: "🎯 BOOMFLOW Event Processor"
+
+on:
+  # === PULL REQUESTS ===
+  pull_request:
+    types: [opened, closed]
+  
+  # === CODE REVIEWS ===
+  pull_request_review:
+    types: [submitted]
+  
+  # === ISSUES ===
+  issues:
+    types: [opened, closed]
+  
+  # === RELEASES ===
+  release:
+    types: [published]
+  
+  # === También ejecutar con push (para tracking de commits) ===
+  push:
+    branches: [main]
+  
+  # === Manual trigger para testing ===
+  workflow_dispatch:
+    inputs:
+      test_user:
+        description: 'Usuario para simular evento'
+        required: false
+        default: 'jeremy-sud'
+
+permissions:
+  contents: write
+
+jobs:
+  process-event:
+    name: "🏅 Procesar Evento → Medallas"
+    runs-on: ubuntu-latest
+    
+    # No ejecutar para bots
+    if: github.actor != 'dependabot[bot]' && github.actor != 'github-actions[bot]'
+    
+    steps:
+      - name: Checkout BOOMFLOW
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      
+      - name: Determinar tipo de evento
+        id: event_type
+        run: |
+          EVENT_NAME="${{ github.event_name }}"
+          ACTION="${{ github.event.action }}"
+          
+          echo "📝 Evento: $EVENT_NAME"
+          echo "🔄 Acción: $ACTION"
+          
+          # Construir el tipo de evento completo
+          if [ "$EVENT_NAME" == "pull_request" ]; then
+            if [ "$ACTION" == "closed" ] && [ "${{ github.event.pull_request.merged }}" == "true" ]; then
+              EVENT_TYPE="pull_request.merged"
+            else
+              EVENT_TYPE="pull_request.$ACTION"
+            fi
+          elif [ "$EVENT_NAME" == "pull_request_review" ]; then
+            EVENT_TYPE="pull_request_review.$ACTION"
+          elif [ "$EVENT_NAME" == "issues" ]; then
+            EVENT_TYPE="issues.$ACTION"
+          elif [ "$EVENT_NAME" == "release" ]; then
+            EVENT_TYPE="release.$ACTION"
+          elif [ "$EVENT_NAME" == "push" ]; then
+            EVENT_TYPE="push"
+          else
+            EVENT_TYPE="$EVENT_NAME"
+          fi
+          
+          echo "event_type=$EVENT_TYPE" >> $GITHUB_OUTPUT
+          echo "✅ Tipo de evento: $EVENT_TYPE"
+      
+      - name: Mostrar información del evento
+        run: |
+          echo "═══════════════════════════════════════════════════════"
+          echo "📋 INFORMACIÓN DEL EVENTO"
+          echo "═══════════════════════════════════════════════════════"
+          echo "🎯 Evento: ${{ steps.event_type.outputs.event_type }}"
+          echo "👤 Actor: ${{ github.actor }}"
+          echo "📦 Repo: ${{ github.repository }}"
+          echo "🔀 Ref: ${{ github.ref }}"
+          
+          # Info específica por tipo de evento
+          if [ "${{ github.event_name }}" == "pull_request" ]; then
+            echo "📝 PR: #${{ github.event.pull_request.number }}"
+            echo "📌 Título: ${{ github.event.pull_request.title }}"
+            echo "👤 Autor: ${{ github.event.pull_request.user.login }}"
+            echo "🔀 Merged: ${{ github.event.pull_request.merged }}"
+          elif [ "${{ github.event_name }}" == "pull_request_review" ]; then
+            echo "📝 PR: #${{ github.event.pull_request.number }}"
+            echo "👤 Reviewer: ${{ github.event.review.user.login }}"
+            echo "📊 Estado: ${{ github.event.review.state }}"
+          elif [ "${{ github.event_name }}" == "issues" ]; then
+            echo "📝 Issue: #${{ github.event.issue.number }}"
+            echo "📌 Título: ${{ github.event.issue.title }}"
+          fi
+          echo "═══════════════════════════════════════════════════════"
+      
+      - name: Procesar evento y otorgar medallas
+        id: process
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "🏅 Procesando evento..."
+          node scripts/process-event.js "${{ steps.event_type.outputs.event_type }}"
+      
+      - name: Verificar cambios
+        id: changes
+        run: |
+          if [[ -n $(git status --porcelain users/) ]]; then
+            echo "has_changes=true" >> $GITHUB_OUTPUT
+            echo "📝 Se detectaron cambios en archivos de usuarios:"
+            git diff --stat users/
+          else
+            echo "has_changes=false" >> $GITHUB_OUTPUT
+            echo "ℹ️ No hay cambios para commitear"
+          fi
+      
+      - name: Commit y Push medallas
+        if: steps.changes.outputs.has_changes == 'true'
+        run: |
+          git config user.name "BOOMFLOW Bot"
+          git config user.email "boomflow@ursol.com"
+          
+          # Info del evento para el commit
+          EVENT_TYPE="${{ steps.event_type.outputs.event_type }}"
+          ACTOR="${{ github.actor }}"
+          
+          git add users/
+          git commit -m "🏅 Webhook: Medallas otorgadas por $EVENT_TYPE
+          
+          Actor: @$ACTOR
+          Evento: $EVENT_TYPE
+          Workflow Run: ${{ github.run_id }}
+          
+          🤖 Otorgado automáticamente por BOOMFLOW Event Processor"
+          
+          git push
+          
+          echo "✅ Medallas pusheadas exitosamente"
+      
+      - name: Resumen
+        run: |
+          echo "═══════════════════════════════════════════════════════"
+          echo "📊 RESUMEN"
+          echo "═══════════════════════════════════════════════════════"
+          if [ "${{ steps.changes.outputs.has_changes }}" == "true" ]; then
+            echo "✅ Medallas otorgadas y sincronizadas"
+          else
+            echo "ℹ️ Sin nuevas medallas para este evento"
+          fi
+          echo "═══════════════════════════════════════════════════════"

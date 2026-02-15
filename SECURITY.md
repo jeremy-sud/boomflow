@@ -118,6 +118,36 @@ node scripts/auto-award.js
 # Ve a Actions > "BOOMFLOW Auto-Award (Diario)" > Run workflow
 ```
 
+### 6. Sistema de Webhooks de GitHub 🎯
+
+BOOMFLOW detecta eventos de GitHub **en tiempo real** y otorga medallas automáticamente.
+
+**Workflow:** `.github/workflows/event-processor.yml`
+
+**Eventos Detectados:**
+
+| Evento | Trigger | Medallas Posibles |
+|--------|---------|-------------------|
+| `pull_request.merged` | PR mergeado | first-pr, pr-champion, hotfix-hero, docs-contributor |
+| `pull_request_review.submitted` | Code review enviado | first-review, team-player, review-guru, code-guardian |
+| `issues.opened` | Issue creado | bug-reporter, feature-requester |
+| `issues.closed` | Issue cerrado | bug-slayer, issue-closer |
+| `release.published` | Release publicado | release-master |
+| `push` | Commits pusheados | code-ninja, commit-century, commit-500 |
+
+**Flujo:**
+```
+Evento de GitHub → Workflow se dispara → Procesa evento → Evalúa reglas → Otorga medallas → Commit & Push
+```
+
+**Script:** `scripts/process-event.js`
+
+```bash
+# Uso manual para testing
+echo '{"pull_request":{"user":{"login":"jeremy-sud"},"merged":true}}' | \
+  node scripts/process-event.js pull_request.merged
+```
+
 ---
 
 ## 🛠️ Herramientas de Administración
