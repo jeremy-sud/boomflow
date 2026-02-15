@@ -7,7 +7,7 @@ import { Router } from 'express'
 import { prisma } from '../lib/prisma.js'
 import { authenticate } from '../middleware/auth.js'
 import { asyncHandler } from '../middleware/errorHandler.js'
-import { syncUserBadgesToGitHub, getUserJsonForGitHub } from '../services/githubSync.js'
+import { syncUserBadgesToGitHub } from '../services/githubSync.js'
 
 const router = Router()
 

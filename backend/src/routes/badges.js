@@ -8,6 +8,8 @@ import { z } from 'zod'
 import { prisma } from '../lib/prisma.js'
 import { authenticate, optionalAuth, requireRole } from '../middleware/auth.js'
 import { asyncHandler } from '../middleware/errorHandler.js'
+import { notifyBadgeEarned } from '../services/notificationService.js'
+import { logBadgeAwarded } from '../services/auditLogService.js'
 
 const router = Router()
 
@@ -251,8 +253,27 @@ router.post('/award', authenticate, requireRole('ADMIN', 'MANAGER'), asyncHandle
     }
   })
 
-  // TODO: Send notification
-  // TODO: Sync to GitHub
+  // Send notification to user about their new badge
+  await notifyBadgeEarned({
+    userId: data.userId,
+    badge: {
+      id: userBadge.badge.id,
+      name: userBadge.badge.name,
+      slug: userBadge.badge.slug,
+      tier: userBadge.badge.tier,
+    },
+  })
+
+  // Log badge award to audit trail for compliance
+  await logBadgeAwarded({
+    awarderId: req.user.id,
+    userId: data.userId,
+    badgeId: data.badgeId,
+    userBadgeId: userBadge.id,
+    badgeName: userBadge.badge.name,
+    reason: data.reason,
+    req,
+  })
 
   res.status(201).json(userBadge)
 }))

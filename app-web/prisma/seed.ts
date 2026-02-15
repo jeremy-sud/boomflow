@@ -1,18 +1,22 @@
-import { PrismaClient, BadgeCategory, BadgeTier, TriggerType } from '../src/generated/prisma'
+import { PrismaClient, BadgeCategory, BadgeTier, TriggerType, SkinStyle } from '../src/generated/prisma'
 
 const prisma = new PrismaClient()
 
-// Mapeo de categorías del catálogo a enums de Prisma
+// Category mapping to Prisma enums
 const categoryMap: Record<string, BadgeCategory> = {
   'onboarding': BadgeCategory.ONBOARDING,
-  'coding': BadgeCategory.CODIGO,
-  'devops': BadgeCategory.CALIDAD, // Lo más cercano
-  'collaboration': BadgeCategory.COLABORACION,
-  'leadership': BadgeCategory.LIDERAZGO,
-  'documentation': BadgeCategory.COMUNICACION,
-  'quality': BadgeCategory.CALIDAD,
-  'innovation': BadgeCategory.INNOVACION,
-  'special': BadgeCategory.ESPECIALES,
+  'coding': BadgeCategory.CODING,
+  'devops': BadgeCategory.DEVOPS,
+  'collaboration': BadgeCategory.COLLABORATION,
+  'leadership': BadgeCategory.LEADERSHIP,
+  'documentation': BadgeCategory.DOCUMENTATION,
+  'quality': BadgeCategory.QUALITY,
+  'innovation': BadgeCategory.INNOVATION,
+  'special': BadgeCategory.SPECIAL,
+  'community': BadgeCategory.COMMUNITY,
+  'premium': BadgeCategory.PREMIUM,
+  'milestone': BadgeCategory.MILESTONE,
+  'growth': BadgeCategory.GROWTH,
 }
 
 const tierMap: Record<string, BadgeTier> = {
@@ -121,29 +125,50 @@ const BADGES = [
   { slug: 'disruptor', name: 'Disruptor', emoji: '💥', tier: 'gold', category: 'innovation', description: 'Ideas que cambian el juego.', triggerType: TriggerType.MANUAL },
   
   // SPECIAL (8)
-  { slug: 'ursol-founder', name: 'Ursol Founder', emoji: '⭐', tier: 'gold', category: 'special', description: 'Fundador de Sistemas Ursol.', triggerType: TriggerType.MANUAL },
-  { slug: 'anniversary-1', name: '1 Year', emoji: '🎂', tier: 'bronze', category: 'special', description: '1 año en Sistemas Ursol.', triggerType: TriggerType.STREAK_DAYS, triggerValue: 365 },
-  { slug: 'anniversary-3', name: '3 Years', emoji: '🎉', tier: 'silver', category: 'special', description: '3 años en Sistemas Ursol.', triggerType: TriggerType.STREAK_DAYS, triggerValue: 1095 },
-  { slug: 'anniversary-5', name: '5 Years', emoji: '🏅', tier: 'gold', category: 'special', description: '5 años en Sistemas Ursol.', triggerType: TriggerType.STREAK_DAYS, triggerValue: 1825 },
-  { slug: 'boomflow-creator', name: 'BOOMFLOW Creator', emoji: '🚀', tier: 'gold', category: 'special', description: 'Creador del sistema BOOMFLOW.', triggerType: TriggerType.MANUAL },
-  { slug: 'first-100', name: 'First 100', emoji: '💯', tier: 'silver', category: 'special', description: 'Entre los primeros 100 usuarios.', triggerType: TriggerType.MANUAL },
-  { slug: 'mvp', name: 'MVP', emoji: '🌟', tier: 'gold', category: 'special', description: 'Most Valuable Player del trimestre.', triggerType: TriggerType.MANUAL },
-  { slug: 'legend', name: 'Legend', emoji: '🏛️', tier: 'gold', category: 'special', description: 'Contribución legendaria al equipo.', triggerType: TriggerType.MANUAL },
+  { slug: 'ursol-founder', name: 'Ursol Founder', emoji: '⭐', tier: 'gold', category: 'special', description: 'Founder of Sistemas Ursol.', triggerType: TriggerType.MANUAL },
+  { slug: 'anniversary-1', name: '1 Year', emoji: '🎂', tier: 'bronze', category: 'special', description: '1 year at the organization.', triggerType: TriggerType.TENURE_DAYS, triggerValue: 365 },
+  { slug: 'anniversary-3', name: '3 Years', emoji: '🎉', tier: 'silver', category: 'special', description: '3 years at the organization.', triggerType: TriggerType.TENURE_DAYS, triggerValue: 1095 },
+  { slug: 'anniversary-5', name: '5 Years', emoji: '🏅', tier: 'gold', category: 'special', description: '5 years at the organization.', triggerType: TriggerType.TENURE_DAYS, triggerValue: 1825 },
+  { slug: 'boomflow-creator', name: 'BOOMFLOW Creator', emoji: '🚀', tier: 'gold', category: 'special', description: 'Creator of the BOOMFLOW system.', triggerType: TriggerType.MANUAL },
+  { slug: 'first-100', name: 'First 100', emoji: '💯', tier: 'silver', category: 'special', description: 'Among the first 100 users.', triggerType: TriggerType.MANUAL },
+  { slug: 'mvp', name: 'MVP', emoji: '🌟', tier: 'gold', category: 'special', description: 'Most Valuable Player of the quarter.', triggerType: TriggerType.MANUAL },
+  { slug: 'legend', name: 'Legend', emoji: '🏛️', tier: 'gold', category: 'special', description: 'Legendary contribution to the team.', triggerType: TriggerType.MANUAL },
+
+  // COMMUNITY - Peer-to-Peer Badges (4)
+  { slug: 'resonancia', name: 'Resonance', emoji: '🔔', tier: 'bronze', category: 'community', description: 'Received first peer-to-peer badge.', triggerType: TriggerType.PEER_AWARDS_COUNT, triggerValue: 1 },
+  { slug: 'vinculo-fuerte', name: 'Strong Bond', emoji: '🔗', tier: 'silver', category: 'community', description: 'Received 5+ peer badges from different colleagues.', triggerType: TriggerType.PEER_AWARDS_COUNT, triggerValue: 5 },
+  { slug: 'alma-del-equipo', name: 'Team Soul', emoji: '💎', tier: 'gold', category: 'community', description: 'Received 10+ peer badges. True team pillar.', triggerType: TriggerType.PEER_AWARDS_COUNT, triggerValue: 10 },
+  { slug: 'generous-spirit', name: 'Generous Spirit', emoji: '🎁', tier: 'silver', category: 'community', description: 'Awarded all available peer badges this year.', triggerType: TriggerType.MANUAL_PEER_AWARD },
+
+  // PREMIUM - Patron/Supporter Badges (4)
+  { slug: 'patron-seed', name: 'Patron Seed', emoji: '🌱', tier: 'bronze', category: 'premium', description: 'Early supporter of BOOMFLOW platform.', triggerType: TriggerType.INVESTMENT },
+  { slug: 'patron-growth', name: 'Patron Growth', emoji: '🌿', tier: 'silver', category: 'premium', description: 'Sustained supporter with continued investment.', triggerType: TriggerType.INVESTMENT },
+  { slug: 'patron-bloom', name: 'Patron Bloom', emoji: '🌸', tier: 'gold', category: 'premium', description: 'Major supporter enabling platform growth.', triggerType: TriggerType.INVESTMENT },
+  { slug: 'eco-champion', name: 'Eco Champion', emoji: '🌍', tier: 'gold', category: 'premium', description: 'Champion of the BOOMFLOW ecosystem.', triggerType: TriggerType.MANUAL },
 ]
 
-// Categorías de Kudos
+// Kudo Categories
 const KUDO_CATEGORIES = [
-  { name: 'Trabajo en equipo', emoji: '🤝', description: 'Colaboración y apoyo' },
-  { name: 'Innovación', emoji: '💡', description: 'Ideas creativas y soluciones' },
-  { name: 'Calidad', emoji: '✨', description: 'Excelencia en el trabajo' },
-  { name: 'Mentoría', emoji: '🎓', description: 'Enseñanza y guía' },
-  { name: 'Comunicación', emoji: '💬', description: 'Claridad y efectividad' },
-  { name: 'Liderazgo', emoji: '👑', description: 'Guiar y motivar' },
-  { name: 'Resiliencia', emoji: '💪', description: 'Superar desafíos' },
-  { name: 'Rapidez', emoji: '⚡', description: 'Entrega rápida' },
+  { name: 'Teamwork', emoji: '🤝', description: 'Collaboration and support' },
+  { name: 'Innovation', emoji: '💡', description: 'Creative ideas and solutions' },
+  { name: 'Quality', emoji: '✨', description: 'Excellence in work' },
+  { name: 'Mentorship', emoji: '🎓', description: 'Teaching and guidance' },
+  { name: 'Communication', emoji: '💬', description: 'Clarity and effectiveness' },
+  { name: 'Leadership', emoji: '👑', description: 'Guiding and motivating' },
+  { name: 'Resilience', emoji: '💪', description: 'Overcoming challenges' },
+  { name: 'Speed', emoji: '⚡', description: 'Fast delivery' },
 ]
 
-// SVG placeholder para badges
+// Default Badge Skins
+const BADGE_SKINS = [
+  { name: 'Crystal', slug: 'crystal', description: 'Gem-like crystal design with faceted edges', style: SkinStyle.CRYSTAL, isDefault: true, isPremium: false },
+  { name: 'Academic', slug: 'academic', description: 'Formal scholarly design with laurel motifs', style: SkinStyle.ACADEMIC, isDefault: false, isPremium: false },
+  { name: 'Minimalist', slug: 'minimalist', description: 'Clean, simple design with subtle elegance', style: SkinStyle.MINIMALIST, isDefault: false, isPremium: false },
+  { name: 'Vintage', slug: 'vintage', description: 'Classic retro design with ornate details', style: SkinStyle.VINTAGE, isDefault: false, isPremium: true },
+  { name: 'Neon', slug: 'neon', description: 'Vibrant glowing design with modern aesthetics', style: SkinStyle.NEON, isDefault: false, isPremium: true },
+]
+
+// SVG generator for badges
 function generateBadgeSvg(emoji: string, name: string): string {
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 140">
   <defs>
@@ -158,11 +183,36 @@ function generateBadgeSvg(emoji: string, name: string): string {
 </svg>`
 }
 
+// SVG generator for badge skin preview
+function generateSkinSvg(style: SkinStyle): string {
+  const styles: Record<SkinStyle, { bg: string, stroke: string, accent: string }> = {
+    [SkinStyle.DEFAULT]: { bg: '#1a1a2e', stroke: '#4a4a6a', accent: '#a0a0c0' },
+    [SkinStyle.CRYSTAL]: { bg: '#0f172a', stroke: '#38bdf8', accent: '#7dd3fc' },
+    [SkinStyle.ACADEMIC]: { bg: '#1c1917', stroke: '#d4af37', accent: '#fbbf24' },
+    [SkinStyle.MINIMALIST]: { bg: '#f8fafc', stroke: '#cbd5e1', accent: '#64748b' },
+    [SkinStyle.VINTAGE]: { bg: '#292524', stroke: '#a16207', accent: '#ca8a04' },
+    [SkinStyle.NEON]: { bg: '#0c0a09', stroke: '#d946ef', accent: '#f472b6' },
+  }
+  const s = styles[style]
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 140">
+  <defs>
+    <linearGradient id="skin-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:${s.bg}"/>
+      <stop offset="100%" style="stop-color:${s.bg}"/>
+    </linearGradient>
+  </defs>
+  <path d="M60 5 L110 35 L110 95 L60 135 L10 95 L10 35 Z" fill="url(#skin-bg)" stroke="${s.stroke}" stroke-width="3"/>
+  <circle cx="60" cy="65" r="25" fill="none" stroke="${s.accent}" stroke-width="2"/>
+  <text x="60" y="115" font-size="10" fill="${s.accent}" text-anchor="middle" font-family="sans-serif">${style}</text>
+</svg>`
+}
+
 async function main() {
   console.log('🌱 Seeding database...')
 
-  // Limpiar datos existentes
+  // Clean existing data
   console.log('🧹 Cleaning existing data...')
+  await prisma.badgeSkin.deleteMany()
   await prisma.userBadge.deleteMany()
   await prisma.kudo.deleteMany()
   await prisma.kudoCategory.deleteMany()
@@ -173,28 +223,28 @@ async function main() {
   await prisma.team.deleteMany()
   await prisma.organization.deleteMany()
 
-  // Crear organización demo
+  // Create demo organization
   console.log('🏢 Creating demo organization...')
   const org = await prisma.organization.create({
     data: {
       name: 'Sistemas Ursol',
       slug: 'sistemas-ursol',
-      description: 'Organización demo de BOOMFLOW',
+      description: 'BOOMFLOW demo organization',
     },
   })
 
-  // Crear equipo demo
+  // Create demo team
   console.log('👥 Creating demo team...')
   const team = await prisma.team.create({
     data: {
-      name: 'Desarrollo',
-      slug: 'desarrollo',
-      description: 'Equipo de desarrollo',
+      name: 'Development',
+      slug: 'development',
+      description: 'Development team',
       organizationId: org.id,
     },
   })
 
-  // Crear categorías de kudos
+  // Create kudo categories
   console.log('🏷️ Creating kudo categories...')
   for (const cat of KUDO_CATEGORIES) {
     await prisma.kudoCategory.create({
@@ -202,8 +252,8 @@ async function main() {
     })
   }
 
-  // Crear badges
-  console.log('🎖️ Creating 89 badges...')
+  // Create badges
+  console.log('🎖️ Creating badges...')
   let badgeCount = 0
   for (const badge of BADGES) {
     await prisma.badge.create({
@@ -223,7 +273,24 @@ async function main() {
   }
   console.log(`✅ Created ${badgeCount} badges`)
 
-  // Crear usuarios demo
+  // Create badge skins
+  console.log('🎨 Creating badge skins...')
+  for (const skin of BADGE_SKINS) {
+    await prisma.badgeSkin.create({
+      data: {
+        name: skin.name,
+        slug: skin.slug,
+        description: skin.description,
+        svgIcon: generateSkinSvg(skin.style),
+        style: skin.style,
+        isDefault: skin.isDefault,
+        isPremium: skin.isPremium,
+      },
+    })
+  }
+  console.log(`✅ Created ${BADGE_SKINS.length} badge skins`)
+
+  // Create demo users
   console.log('👤 Creating demo users...')
   const ursolcr = await prisma.user.create({
     data: {
@@ -247,7 +314,7 @@ async function main() {
     },
   })
 
-  // Asignar algunos badges a los usuarios demo
+  // Assign badges to demo users
   console.log('🎖️ Assigning badges to demo users...')
   const ursolBadges = ['ursol-founder', 'boomflow-creator', 'hello-world', 'first-commit', 'first-pr', 'first-review', 'code-ninja', 'mentor-master', 'team-spirit', 'architect']
   const jeremyBadges = ['hello-world', 'first-commit', 'first-pr', 'first-review', 'code-ninja', 'team-spirit']
@@ -260,7 +327,7 @@ async function main() {
           userId: ursolcr.id,
           badgeId: badge.id,
           awardedBy: 'system',
-          reason: 'Badge inicial',
+          reason: 'Initial badge',
         },
       })
     }
@@ -274,22 +341,22 @@ async function main() {
           userId: jeremySud.id,
           badgeId: badge.id,
           awardedBy: 'system',
-          reason: 'Badge inicial',
+          reason: 'Initial badge',
         },
       })
     }
   }
 
-  // Crear kudos entre usuarios
+  // Create kudos between users
   console.log('💬 Creating demo kudos...')
-  const teamworkCategory = await prisma.kudoCategory.findUnique({ where: { name: 'Trabajo en equipo' } })
-  const innovationCategory = await prisma.kudoCategory.findUnique({ where: { name: 'Innovación' } })
+  const teamworkCategory = await prisma.kudoCategory.findUnique({ where: { name: 'Teamwork' } })
+  const innovationCategory = await prisma.kudoCategory.findUnique({ where: { name: 'Innovation' } })
 
   await prisma.kudo.createMany({
     data: [
-      { fromId: ursolcr.id, toId: jeremySud.id, message: '¡Excelente trabajo en el nuevo feature!', categoryId: teamworkCategory?.id },
-      { fromId: jeremySud.id, toId: ursolcr.id, message: 'Gracias por el mentoring, aprendí mucho.', categoryId: innovationCategory?.id },
-      { fromId: ursolcr.id, toId: jeremySud.id, message: 'Gran colaboración en el sprint.', categoryId: teamworkCategory?.id },
+      { fromId: ursolcr.id, toId: jeremySud.id, message: 'Excellent work on the new feature!', categoryId: teamworkCategory?.id },
+      { fromId: jeremySud.id, toId: ursolcr.id, message: 'Thanks for the mentoring, learned a lot.', categoryId: innovationCategory?.id },
+      { fromId: ursolcr.id, toId: jeremySud.id, message: 'Great collaboration during the sprint.', categoryId: teamworkCategory?.id },
     ],
   })
 
@@ -297,9 +364,10 @@ async function main() {
   console.log(`
 📊 Summary:
 - 1 Organization: Sistemas Ursol
-- 1 Team: Desarrollo
+- 1 Team: Development
 - 8 Kudo Categories
 - ${badgeCount} Badges
+- ${BADGE_SKINS.length} Badge Skins
 - 2 Users (ursolcr, jeremy-sud)
 - 3 Demo Kudos
   `)

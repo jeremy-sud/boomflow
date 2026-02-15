@@ -1,19 +1,30 @@
 'use client'
 
-import { useState, useEffect, createContext, useContext, useCallback } from 'react'
+import { useState, useEffect, createContext, useContext, useCallback, useMemo } from 'react'
 
+/** Toast notification type */
 interface Toast {
-  id: string
-  type: 'success' | 'error' | 'info' | 'badge'
-  title: string
-  message: string
-  duration?: number
+  readonly id: string
+  readonly type: 'success' | 'error' | 'info' | 'badge'
+  readonly title: string
+  readonly message: string
+  readonly duration?: number
 }
 
+/** Context type for toast system */
 interface ToastContextType {
-  toasts: Toast[]
-  addToast: (toast: Omit<Toast, 'id'>) => void
-  removeToast: (id: string) => void
+  readonly toasts: Toast[]
+  readonly addToast: (toast: Omit<Toast, 'id'>) => void
+  readonly removeToast: (id: string) => void
+}
+
+/**
+ * Maps tier to emoji
+ */
+const TIER_EMOJI_MAP: Record<string, string> = {
+  GOLD: '🥇',
+  SILVER: '🥈',
+  BRONZE: '🥉',
 }
 
 const ToastContext = createContext<ToastContextType | undefined>(undefined)
@@ -26,7 +37,7 @@ export function useToast() {
   return context
 }
 
-export function ToastProvider({ children }: { children: React.ReactNode }) {
+export function ToastProvider({ children }: Readonly<{ children: React.ReactNode }>) {
   const [toasts, setToasts] = useState<Toast[]>([])
 
   const addToast = useCallback((toast: Omit<Toast, 'id'>) => {
@@ -38,8 +49,11 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
     setToasts(prev => prev.filter(t => t.id !== id))
   }, [])
 
+  // Memoize context value to prevent unnecessary re-renders
+  const contextValue = useMemo(() => ({ toasts, addToast, removeToast }), [toasts, addToast, removeToast])
+
   return (
-    <ToastContext.Provider value={{ toasts, addToast, removeToast }}>
+    <ToastContext.Provider value={contextValue}>
       {children}
       <ToastContainer />
     </ToastContext.Provider>
@@ -58,7 +72,16 @@ function ToastContainer() {
   )
 }
 
-function ToastItem({ toast, onClose }: { toast: Toast; onClose: () => void }) {
+/** Props for ToastItem component */
+interface ToastItemProps {
+  readonly toast: Toast
+  readonly onClose: () => void
+}
+
+/**
+ * Individual toast notification component
+ */
+function ToastItem({ toast, onClose }: ToastItemProps) {
   const [isVisible, setIsVisible] = useState(false)
   const [isLeaving, setIsLeaving] = useState(false)
 
@@ -143,7 +166,7 @@ export function useBadgeToast() {
   const { addToast } = useToast()
 
   const showBadgeEarned = useCallback((badgeName: string, tier: string) => {
-    const tierEmoji = tier === 'GOLD' ? '🥇' : tier === 'SILVER' ? '🥈' : '🥉'
+    const tierEmoji = TIER_EMOJI_MAP[tier] ?? '🥉'
     
     addToast({
       type: 'badge',
@@ -152,8 +175,8 @@ export function useBadgeToast() {
       duration: 5000,
     })
 
-    // Confetti effect
-    if (typeof window !== 'undefined') {
+    // Confetti effect - use globalThis for SSR compatibility
+    if (globalThis.window !== undefined) {
       triggerConfetti()
     }
   }, [addToast])

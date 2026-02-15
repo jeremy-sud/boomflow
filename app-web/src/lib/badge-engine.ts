@@ -1,13 +1,13 @@
 /**
  * BOOMFLOW Badge Engine
- * Sistema de evaluación y otorgamiento automático de badges
+ * Automatic badge evaluation and awarding system
  */
 
 import prisma from '@/lib/prisma'
 import { TriggerType } from '@/generated/prisma'
 
 // Re-export TriggerType for external use
-export { TriggerType }
+export type { TriggerType } from '@/generated/prisma'
 
 export interface BadgeCheckResult {
   awarded: boolean
@@ -27,6 +27,7 @@ export interface UserStats {
   pullRequests: number
   issuesClosed: number
   streakDays: number
+  tenureDays: number
   // GitHub stats
   githubCommits: number
   githubPRs: number
@@ -34,23 +35,25 @@ export interface UserStats {
   // Peer-to-peer stats
   peerAwardsReceived: number
   peerAwardsGiven: number
+  // Badge count
+  totalBadges: number
 }
 
 /**
- * Badge Engine - Evaluación automática de badges
+ * Badge Engine - Automatic badge evaluation
  */
 export class BadgeEngine {
   /**
-   * Evalúa todos los badges automáticos para un usuario
-   * y otorga los que correspondan
+   * Evaluates all automatic badges for a user
+   * and awards those that are earned
    */
   static async evaluateUserBadges(userId: string): Promise<BadgeCheckResult[]> {
     const results: BadgeCheckResult[] = []
     
-    // Obtener stats del usuario
+    // Get user stats
     const stats = await this.getUserStats(userId)
     
-    // Obtener badges automáticos que el usuario NO tiene
+    // Get automatic badges the user does NOT have
     const automaticBadges = await prisma.badge.findMany({
       where: {
         isAutomatic: true,
@@ -65,13 +68,13 @@ export class BadgeEngine {
       const shouldAward = this.checkTrigger(badge.triggerType, badge.triggerValue, stats)
       
       if (shouldAward) {
-        // Otorgar badge
+        // Award badge
         await prisma.userBadge.create({
           data: {
             userId,
             badgeId: badge.id,
             awardedBy: 'system',
-            reason: `Logro automático: ${badge.name}`,
+            reason: `Automatic achievement: ${badge.name}`,
           }
         })
 
@@ -83,7 +86,7 @@ export class BadgeEngine {
             slug: badge.slug,
             tier: badge.tier,
           },
-          reason: `Completaste el requisito para ${badge.name}`,
+          reason: `You completed the requirement for ${badge.name}`,
         })
       }
     }
@@ -92,8 +95,8 @@ export class BadgeEngine {
   }
 
   /**
-   * Evalúa un trigger específico después de una acción
-   * (ej: después de recibir un kudo)
+   * Evaluates a specific trigger after an action
+   * (e.g., after receiving a kudo)
    */
   static async evaluateTrigger(
     userId: string, 
@@ -103,7 +106,7 @@ export class BadgeEngine {
     
     const stats = await this.getUserStats(userId)
     
-    // Buscar badges con este trigger que el usuario no tenga
+    // Find badges with this trigger that the user doesn't have
     const badges = await prisma.badge.findMany({
       where: {
         isAutomatic: true,
@@ -124,7 +127,7 @@ export class BadgeEngine {
             userId,
             badgeId: badge.id,
             awardedBy: 'system',
-            reason: `Logro automático: ${badge.name}`,
+            reason: `Automatic achievement: ${badge.name}`,
           }
         })
 
@@ -136,7 +139,7 @@ export class BadgeEngine {
             slug: badge.slug,
             tier: badge.tier,
           },
-          reason: `¡Nuevo badge desbloqueado!`,
+          reason: 'New badge unlocked!',
         })
       }
     }
@@ -145,7 +148,7 @@ export class BadgeEngine {
   }
 
   /**
-   * Otorga un badge manualmente a un usuario
+   * Manually awards a badge to a user
    */
   static async awardBadge(
     userId: string,
@@ -153,7 +156,7 @@ export class BadgeEngine {
     awardedBy: string,
     reason?: string
   ): Promise<BadgeCheckResult> {
-    // Verificar si el badge existe
+    // Verify badge exists
     const badge = await prisma.badge.findUnique({
       where: { slug: badgeSlug }
     })
@@ -161,11 +164,11 @@ export class BadgeEngine {
     if (!badge) {
       return {
         awarded: false,
-        reason: 'Badge no encontrado',
+        reason: 'Badge not found',
       }
     }
 
-    // Verificar si el usuario ya tiene el badge
+    // Check if user already has this badge
     const existing = await prisma.userBadge.findUnique({
       where: {
         userId_badgeId: {
@@ -178,17 +181,17 @@ export class BadgeEngine {
     if (existing) {
       return {
         awarded: false,
-        reason: 'El usuario ya tiene este badge',
+        reason: 'User already has this badge',
       }
     }
 
-    // Otorgar badge
+    // Award badge
     await prisma.userBadge.create({
       data: {
         userId,
         badgeId: badge.id,
         awardedBy,
-        reason: reason || `Otorgado por ${awardedBy}`,
+        reason: reason || `Awarded by ${awardedBy}`,
       }
     })
 
@@ -200,12 +203,12 @@ export class BadgeEngine {
         slug: badge.slug,
         tier: badge.tier,
       },
-      reason: reason || `Badge ${badge.name} otorgado exitosamente`,
+      reason: reason || `Badge ${badge.name} awarded successfully`,
     }
   }
 
   /**
-   * Revoca un badge de un usuario
+   * Revokes a badge from a user
    */
   static async revokeBadge(
     userId: string,
@@ -216,7 +219,7 @@ export class BadgeEngine {
     })
 
     if (!badge) {
-      return { success: false, message: 'Badge no encontrado' }
+      return { success: false, message: 'Badge not found' }
     }
 
     const userBadge = await prisma.userBadge.findUnique({
@@ -229,39 +232,51 @@ export class BadgeEngine {
     })
 
     if (!userBadge) {
-      return { success: false, message: 'El usuario no tiene este badge' }
+      return { success: false, message: 'User does not have this badge' }
     }
 
     await prisma.userBadge.delete({
       where: { id: userBadge.id }
     })
 
-    return { success: true, message: `Badge ${badge.name} revocado` }
+    return { success: true, message: `Badge ${badge.name} revoked` }
   }
 
   /**
-   * Obtiene estadísticas de un usuario
+   * Gets statistics for a user
    */
   static async getUserStats(userId: string): Promise<UserStats> {
-    const [kudosReceived, kudosSent, githubStats, peerAwardsReceived, peerAwardsGiven] = await Promise.all([
+    const [kudosReceived, kudosSent, githubStats, peerAwardsReceived, peerAwardsGiven, totalBadges, user] = await Promise.all([
       prisma.kudo.count({ where: { toId: userId } }),
       prisma.kudo.count({ where: { fromId: userId } }),
       prisma.gitHubStats.findUnique({ where: { userId } }),
-      // Contar badges de tipo MANUAL_PEER_AWARD recibidos
+      // Count badges of type MANUAL_PEER_AWARD received
       prisma.userBadge.count({ 
         where: { 
           userId,
-          badge: { triggerType: 'MANUAL_PEER_AWARD' }
+          badge: { triggerType: TriggerType.MANUAL_PEER_AWARD }
         } 
       }),
-      // Contar badges de tipo MANUAL_PEER_AWARD otorgados
+      // Count badges of type MANUAL_PEER_AWARD awarded by this user
       prisma.userBadge.count({ 
         where: { 
           awardedBy: userId,
-          badge: { triggerType: 'MANUAL_PEER_AWARD' }
+          badge: { triggerType: TriggerType.MANUAL_PEER_AWARD }
         } 
       }),
+      // Total badges count
+      prisma.userBadge.count({ where: { userId } }),
+      // User record for tenure calculation
+      prisma.user.findUnique({ where: { id: userId }, select: { createdAt: true } }),
     ])
+
+    // Calculate tenure days
+    const tenureDays = user?.createdAt 
+      ? Math.floor((Date.now() - user.createdAt.getTime()) / (1000 * 60 * 60 * 24))
+      : 0
+
+    // Calculate streak days from GitHub activity
+    const streakDays = await this.calculateStreakDays(userId)
 
     return {
       kudosReceived,
@@ -269,7 +284,8 @@ export class BadgeEngine {
       codeReviews: githubStats?.reviews || 0,
       pullRequests: githubStats?.pullRequests || 0,
       issuesClosed: githubStats?.issuesClosed || 0,
-      streakDays: 0, // TODO: Calcular desde actividad
+      streakDays,
+      tenureDays,
       // GitHub stats
       githubCommits: githubStats?.commits || 0,
       githubPRs: githubStats?.pullRequests || 0,
@@ -277,11 +293,53 @@ export class BadgeEngine {
       // Peer-to-peer stats
       peerAwardsReceived,
       peerAwardsGiven,
+      // Badge count
+      totalBadges,
     }
   }
 
   /**
-   * Verifica si un trigger se cumple según las stats del usuario
+   * Calculates consecutive activity days (streak)
+   */
+  private static async calculateStreakDays(userId: string): Promise<number> {
+    const recentBadges = await prisma.userBadge.findMany({
+      where: { userId },
+      orderBy: { awardedAt: 'desc' },
+      take: 30,
+      select: { awardedAt: true }
+    })
+
+    if (recentBadges.length === 0) return 0
+
+    // Simple streak calculation based on recent activity
+    // In production, this would integrate with GitHub activity data
+    let streak = 0
+    const today = new Date()
+    today.setHours(0, 0, 0, 0)
+
+    const activityDates = new Set(
+      recentBadges.map(b => {
+        const d = new Date(b.awardedAt)
+        d.setHours(0, 0, 0, 0)
+        return d.getTime()
+      })
+    )
+
+    for (let i = 0; i < 30; i++) {
+      const checkDate = new Date(today)
+      checkDate.setDate(checkDate.getDate() - i)
+      if (activityDates.has(checkDate.getTime())) {
+        streak++
+      } else if (i > 0) {
+        break
+      }
+    }
+
+    return streak
+  }
+
+  /**
+   * Checks if a trigger condition is met based on user stats
    */
   private static checkTrigger(
     triggerType: TriggerType | null,
@@ -291,52 +349,58 @@ export class BadgeEngine {
     if (!triggerType || triggerValue === null) return false
 
     switch (triggerType) {
-      case 'KUDOS_RECEIVED':
+      case TriggerType.KUDOS_RECEIVED:
         return stats.kudosReceived >= triggerValue
       
-      case 'KUDOS_SENT':
+      case TriggerType.KUDOS_SENT:
         return stats.kudosSent >= triggerValue
       
-      case 'CODE_REVIEWS':
+      case TriggerType.CODE_REVIEWS:
         return stats.codeReviews >= triggerValue
       
-      case 'PULL_REQUESTS':
+      case TriggerType.PULL_REQUESTS:
         return stats.pullRequests >= triggerValue
       
-      case 'ISSUES_CLOSED':
+      case TriggerType.ISSUES_CLOSED:
         return stats.issuesClosed >= triggerValue
       
-      case 'STREAK_DAYS':
+      case TriggerType.STREAK_DAYS:
         return stats.streakDays >= triggerValue
       
-      case 'FIRST_ACTION':
-        // First action triggers se manejan directamente
+      case TriggerType.TENURE_DAYS:
+        return stats.tenureDays >= triggerValue
+      
+      case TriggerType.BADGES_COUNT:
+        return stats.totalBadges >= triggerValue
+      
+      case TriggerType.FIRST_ACTION:
+        // First action triggers are handled directly
         return false
       
-      case 'MANUAL':
-        // Badges manuales nunca se otorgan automáticamente
+      case TriggerType.MANUAL:
+        // Manual badges are never awarded automatically
         return false
 
       // GitHub triggers
-      case 'GITHUB_COMMIT':
+      case TriggerType.GITHUB_COMMIT:
         return stats.githubCommits >= triggerValue
 
-      case 'GITHUB_PR':
+      case TriggerType.GITHUB_PR:
         return stats.githubPRs >= triggerValue
 
-      case 'GITHUB_REVIEW':
+      case TriggerType.GITHUB_REVIEW:
         return stats.githubReviews >= triggerValue
 
       // Peer-to-peer triggers
-      case 'MANUAL_PEER_AWARD':
-        // Las medallas peer-to-peer se manejan vía awardPeerBadge()
+      case TriggerType.MANUAL_PEER_AWARD:
+        // Peer badges are handled via awardPeerBadge()
         return false
 
-      case 'INVESTMENT':
-        // Las medallas de inversión se manejan vía awardPatronBadge()
+      case TriggerType.INVESTMENT:
+        // Investment badges are handled via awardPatronBadge()
         return false
 
-      case 'PEER_AWARDS_COUNT':
+      case TriggerType.PEER_AWARDS_COUNT:
         return stats.peerAwardsReceived >= triggerValue
       
       default:
@@ -345,7 +409,7 @@ export class BadgeEngine {
   }
 
   /**
-   * Obtiene el progreso de un usuario hacia badges no obtenidos
+   * Gets a user's progress towards unlocking badges
    */
   static async getBadgeProgress(userId: string): Promise<Array<{
     badge: { id: string; name: string; slug: string; tier: string }
@@ -371,25 +435,31 @@ export class BadgeEngine {
       const target = badge.triggerValue || 1
 
       switch (badge.triggerType) {
-        case 'KUDOS_RECEIVED':
+        case TriggerType.KUDOS_RECEIVED:
           progress = stats.kudosReceived
           break
-        case 'KUDOS_SENT':
+        case TriggerType.KUDOS_SENT:
           progress = stats.kudosSent
           break
-        case 'CODE_REVIEWS':
+        case TriggerType.CODE_REVIEWS:
           progress = stats.codeReviews
           break
-        case 'PULL_REQUESTS':
+        case TriggerType.PULL_REQUESTS:
           progress = stats.pullRequests
           break
-        case 'ISSUES_CLOSED':
+        case TriggerType.ISSUES_CLOSED:
           progress = stats.issuesClosed
           break
-        case 'STREAK_DAYS':
+        case TriggerType.STREAK_DAYS:
           progress = stats.streakDays
           break
-        case 'PEER_AWARDS_COUNT':
+        case TriggerType.TENURE_DAYS:
+          progress = stats.tenureDays
+          break
+        case TriggerType.BADGES_COUNT:
+          progress = stats.totalBadges
+          break
+        case TriggerType.PEER_AWARDS_COUNT:
           progress = stats.peerAwardsReceived
           break
       }
@@ -410,23 +480,23 @@ export class BadgeEngine {
   }
 
   /**
-   * Otorga una medalla de Resonancia (Peer-to-Peer)
-   * Cada usuario tiene máximo 2 por año para dar
+   * Awards a Resonance badge (Peer-to-Peer)
+   * Each user has a maximum of 2 per year to give
    */
   static async awardPeerBadge(
     fromUserId: string,
     toUserId: string,
     message: string
   ): Promise<BadgeCheckResult> {
-    // Validar que no sea auto-otorgamiento
+    // Validate no self-award
     if (fromUserId === toUserId) {
       return {
         awarded: false,
-        reason: 'No puedes darte una medalla de Resonancia a ti mismo',
+        reason: 'You cannot award a Resonance badge to yourself',
       }
     }
 
-    // Verificar límite anual (2 por usuario por año)
+    // Check annual limit (2 per user per year)
     const currentYear = new Date().getFullYear()
     const startOfYear = new Date(currentYear, 0, 1)
     const endOfYear = new Date(currentYear, 11, 31, 23, 59, 59)
@@ -434,7 +504,7 @@ export class BadgeEngine {
     const peerAwardsThisYear = await prisma.userBadge.count({
       where: {
         awardedBy: fromUserId,
-        badge: { triggerType: 'MANUAL_PEER_AWARD' },
+        badge: { triggerType: TriggerType.MANUAL_PEER_AWARD },
         awardedAt: {
           gte: startOfYear,
           lte: endOfYear,
@@ -445,14 +515,14 @@ export class BadgeEngine {
     if (peerAwardsThisYear >= 2) {
       return {
         awarded: false,
-        reason: `Has agotado tus 2 medallas de Resonancia para ${currentYear}`,
+        reason: `You have used all 2 Resonance badges for ${currentYear}`,
       }
     }
 
-    // Buscar la medalla de Resonancia
+    // Find the Resonance badge
     const resonanceBadge = await prisma.badge.findFirst({
       where: {
-        triggerType: 'MANUAL_PEER_AWARD',
+        triggerType: TriggerType.MANUAL_PEER_AWARD,
         isActive: true,
       }
     })
@@ -460,11 +530,11 @@ export class BadgeEngine {
     if (!resonanceBadge) {
       return {
         awarded: false,
-        reason: 'Medalla de Resonancia no configurada en el sistema',
+        reason: 'Resonance badge not configured in the system',
       }
     }
 
-    // Otorgar la medalla
+    // Award the badge
     await prisma.userBadge.create({
       data: {
         userId: toUserId,
@@ -474,8 +544,8 @@ export class BadgeEngine {
       }
     })
 
-    // Evaluar si el usuario ahora califica para badges acumulativos de peer awards
-    await this.evaluateTrigger(toUserId, 'PEER_AWARDS_COUNT')
+    // Evaluate if the user now qualifies for cumulative peer award badges
+    await this.evaluateTrigger(toUserId, TriggerType.PEER_AWARDS_COUNT)
 
     return {
       awarded: true,
@@ -485,12 +555,12 @@ export class BadgeEngine {
         slug: resonanceBadge.slug,
         tier: resonanceBadge.tier,
       },
-      reason: `Medalla de Resonancia otorgada: "${message}"`,
+      reason: `Resonance badge awarded: "${message}"`,
     }
   }
 
   /**
-   * Otorga una medalla de Patron (Inversión)
+   * Awards a Patron badge (Investment)
    */
   static async awardPatronBadge(
     userId: string,
@@ -511,11 +581,11 @@ export class BadgeEngine {
     if (!patronBadge) {
       return {
         awarded: false,
-        reason: `Medalla Patron ${tier} no configurada en el sistema`,
+        reason: `Patron ${tier} badge not configured in the system`,
       }
     }
 
-    // Verificar si ya tiene esta medalla
+    // Check if user already has this badge
     const existing = await prisma.userBadge.findUnique({
       where: {
         userId_badgeId: {
@@ -528,17 +598,22 @@ export class BadgeEngine {
     if (existing) {
       return {
         awarded: false,
-        reason: 'Ya tienes esta medalla de Patron',
+        reason: 'You already have this Patron badge',
       }
     }
 
-    // Otorgar la medalla
+    // Build reason string
+    const impactPart = impactChoice ? ' - Impact: ' + impactChoice : ''
+    const refPart = paymentReference ? ' (Ref: ' + paymentReference + ')' : ''
+    const reasonText = 'Patron ' + tier + impactPart + refPart
+
+    // Award the badge
     await prisma.userBadge.create({
       data: {
         userId,
         badgeId: patronBadge.id,
         awardedBy: 'system',
-        reason: `Patron ${tier}${impactChoice ? ` - Impacto: ${impactChoice}` : ''}${paymentReference ? ` (Ref: ${paymentReference})` : ''}`,
+        reason: reasonText,
       }
     })
 
@@ -550,12 +625,12 @@ export class BadgeEngine {
         slug: patronBadge.slug,
         tier: patronBadge.tier,
       },
-      reason: `¡Gracias por tu apoyo! Medalla Patron ${tier} otorgada`,
+      reason: `Thank you for your support! Patron ${tier} badge awarded`,
     }
   }
 
   /**
-   * Obtiene las medallas de Resonancia restantes para un usuario este año
+   * Gets remaining Resonance badges a user can award this year
    */
   static async getRemainingPeerAwards(userId: string): Promise<number> {
     const currentYear = new Date().getFullYear()
@@ -565,7 +640,7 @@ export class BadgeEngine {
     const peerAwardsThisYear = await prisma.userBadge.count({
       where: {
         awardedBy: userId,
-        badge: { triggerType: 'MANUAL_PEER_AWARD' },
+        badge: { triggerType: TriggerType.MANUAL_PEER_AWARD },
         awardedAt: {
           gte: startOfYear,
           lte: endOfYear,

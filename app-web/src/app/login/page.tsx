@@ -1,6 +1,5 @@
-import { signIn } from "@/auth";
+import { signIn, auth } from "@/auth";
 import { redirect } from "next/navigation";
-import { auth } from "@/auth";
 
 export default async function LoginPage() {
   const session = await auth();
@@ -16,7 +15,7 @@ export default async function LoginPage() {
         {/* Logo */}
         <div className="text-center mb-8">
           <span className="text-6xl">🌸</span>
-          <h1 className="text-4xl font-bold mt-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500">
+          <h1 className="text-4xl font-bold mt-4 bg-clip-text text-transparent bg-linear-to-r from-blue-400 via-purple-500 to-pink-500">
             BOOMFLOW
           </h1>
           <p className="text-zinc-500 mt-2">Sistema de Reconocimiento Profesional</p>

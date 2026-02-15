@@ -9,8 +9,22 @@ import { prisma } from '../lib/prisma.js'
 import { authenticate, optionalAuth } from '../middleware/auth.js'
 import { asyncHandler } from '../middleware/errorHandler.js'
 import { checkAndAwardBadges } from '../services/badgeEngine.js'
+import { notifyKudoReceived } from '../services/notificationService.js'
+import { logKudoCreated } from '../services/auditLogService.js'
 
 const router = Router()
+
+/**
+ * Parses pagination query params safely
+ * @param {Object} query - Express query object
+ * @returns {{ page: number, limit: number, skip: number }}
+ */
+function parsePagination(query) {
+  const page = Number.parseInt(query.page || '1', 10)
+  const limit = Number.parseInt(query.limit || '20', 10)
+  const skip = (page - 1) * limit
+  return { page, limit, skip }
+}
 
 // Validation schemas
 const createKudoSchema = z.object({
@@ -63,8 +77,23 @@ router.post('/', authenticate, asyncHandler(async (req, res) => {
   // Check if receiver unlocked any badges
   const unlockedBadge = await checkAndAwardBadges(receiver.id, data.category)
 
-  // TODO: Send notification to receiver
-  // TODO: Add to audit log
+  // Send notification to receiver
+  await notifyKudoReceived({
+    toUserId: receiver.id,
+    fromUsername: req.user.username,
+    kudoId: kudo.id,
+    message: kudo.message,
+    category: data.category,
+  })
+
+  // Log to audit trail for compliance
+  await logKudoCreated({
+    userId: req.user.id,
+    kudoId: kudo.id,
+    receiverId: receiver.id,
+    category: data.category,
+    req,
+  })
 
   res.status(201).json({
     ...kudo,
@@ -77,8 +106,7 @@ router.post('/', authenticate, asyncHandler(async (req, res) => {
  * Get public kudos feed (for organization or global)
  */
 router.get('/feed', optionalAuth, asyncHandler(async (req, res) => {
-  const { page = 1, limit = 20 } = req.query
-  const skip = (parseInt(page) - 1) * parseInt(limit)
+  const { page, limit, skip } = parsePagination(req.query)
 
   const where = {
     isPublic: true,
@@ -96,7 +124,7 @@ router.get('/feed', optionalAuth, asyncHandler(async (req, res) => {
       where,
       orderBy: { createdAt: 'desc' },
       skip,
-      take: parseInt(limit),
+      take: limit,
       include: {
         giver: {
           select: { username: true, displayName: true, avatarUrl: true }
@@ -112,10 +140,10 @@ router.get('/feed', optionalAuth, asyncHandler(async (req, res) => {
   res.json({
     data: kudos,
     pagination: {
-      page: parseInt(page),
-      limit: parseInt(limit),
+      page,
+      limit,
       total,
-      totalPages: Math.ceil(total / parseInt(limit))
+      totalPages: Math.ceil(total / limit)
     }
   })
 }))
@@ -125,8 +153,8 @@ router.get('/feed', optionalAuth, asyncHandler(async (req, res) => {
  * Get kudos received by the authenticated user
  */
 router.get('/received', authenticate, asyncHandler(async (req, res) => {
-  const { page = 1, limit = 20, category } = req.query
-  const skip = (parseInt(page) - 1) * parseInt(limit)
+  const { page, limit, skip } = parsePagination(req.query)
+  const { category } = req.query
 
   const where = {
     receiverId: req.user.id,
@@ -138,7 +166,7 @@ router.get('/received', authenticate, asyncHandler(async (req, res) => {
       where,
       orderBy: { createdAt: 'desc' },
       skip,
-      take: parseInt(limit),
+      take: limit,
       include: {
         giver: {
           select: { username: true, displayName: true, avatarUrl: true }
@@ -151,10 +179,10 @@ router.get('/received', authenticate, asyncHandler(async (req, res) => {
   res.json({
     data: kudos,
     pagination: {
-      page: parseInt(page),
-      limit: parseInt(limit),
+      page,
+      limit,
       total,
-      totalPages: Math.ceil(total / parseInt(limit))
+      totalPages: Math.ceil(total / limit)
     }
   })
 }))
@@ -164,15 +192,14 @@ router.get('/received', authenticate, asyncHandler(async (req, res) => {
  * Get kudos given by the authenticated user
  */
 router.get('/given', authenticate, asyncHandler(async (req, res) => {
-  const { page = 1, limit = 20 } = req.query
-  const skip = (parseInt(page) - 1) * parseInt(limit)
+  const { page, limit, skip } = parsePagination(req.query)
 
   const [kudos, total] = await Promise.all([
     prisma.kudo.findMany({
       where: { giverId: req.user.id },
       orderBy: { createdAt: 'desc' },
       skip,
-      take: parseInt(limit),
+      take: limit,
       include: {
         receiver: {
           select: { username: true, displayName: true, avatarUrl: true }
@@ -185,10 +212,10 @@ router.get('/given', authenticate, asyncHandler(async (req, res) => {
   res.json({
     data: kudos,
     pagination: {
-      page: parseInt(page),
-      limit: parseInt(limit),
+      page,
+      limit,
       total,
-      totalPages: Math.ceil(total / parseInt(limit))
+      totalPages: Math.ceil(total / limit)
     }
   })
 }))

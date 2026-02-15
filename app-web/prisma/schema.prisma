@@ -114,36 +114,58 @@ model Badge {
   name           String
   slug           String        @unique
   description    String
-  svgIcon        String        // SVG como string
+  svgIcon        String        // Default SVG icon
   category       BadgeCategory
   tier           BadgeTier     @default(BRONZE)
   isAutomatic    Boolean       @default(false)
   triggerType    TriggerType?
-  triggerValue   Int?          // Valor para trigger automático
+  triggerValue   Int?          // Value for automatic trigger
   isActive       Boolean       @default(true)
   createdAt      DateTime      @default(now())
   updatedAt      DateTime      @updatedAt
 
-  // Relaciones (badges custom por org)
+  // Relations
   organizationId String?
   organization   Organization? @relation(fields: [organizationId], references: [id])
   userBadges     UserBadge[]
+  skins          BadgeSkin[]   // Available skins for this badge
 
   @@map("badges")
+}
+
+model BadgeSkin {
+  id          String   @id @default(cuid())
+  name        String   // e.g., "Crystal", "Gem", "Academic", "Minimalist"
+  slug        String   @unique
+  description String?
+  svgIcon     String   // SVG content for this skin variant
+  style       SkinStyle @default(DEFAULT)
+  isDefault   Boolean  @default(false)
+  isPremium   Boolean  @default(false) // Requires patron status
+  createdAt   DateTime @default(now())
+
+  // Relations
+  badgeId     String?
+  badge       Badge?    @relation(fields: [badgeId], references: [id], onDelete: SetNull)
+  userBadges  UserBadge[]
+
+  @@map("badge_skins")
 }
 
 model UserBadge {
   id        String   @id @default(cuid())
   awardedAt DateTime @default(now())
-  awardedBy String?  // username de quien otorgó (null si automático)
+  awardedBy String?  // Username who awarded (null if automatic)
   reason    String?
   isVisible Boolean  @default(true)
 
-  // Relaciones
+  // Relations
   userId    String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   badgeId   String
   badge     Badge    @relation(fields: [badgeId], references: [id], onDelete: Cascade)
+  skinId    String?  // Optional custom skin
+  skin      BadgeSkin? @relation(fields: [skinId], references: [id], onDelete: SetNull)
 
   @@unique([userId, badgeId])
   @@map("user_badges")
@@ -152,17 +174,29 @@ model UserBadge {
 // ==================== ENUMS ====================
 
 enum BadgeCategory {
-  COLABORACION
-  CODIGO
-  LIDERAZGO
-  INNOVACION
-  CULTURA
-  ONBOARDING
-  COMUNICACION
-  CALIDAD
-  ESPECIALES
-  COMMUNITY       // Medallas sociales/vínculo peer-to-peer
-  PREMIUM         // Medallas de inversión/patron
+  COLLABORATION   // Team collaboration and mentoring
+  CODING          // Code quality and development skills
+  LEADERSHIP      // Technical and team leadership
+  INNOVATION      // Creative solutions and new ideas
+  CULTURE         // Company culture and values
+  ONBOARDING      // Onboarding milestones
+  DOCUMENTATION   // Docs, wikis, and knowledge sharing
+  QUALITY         // Testing, QA, and reliability
+  DEVOPS          // Infrastructure, CI/CD, deployment
+  SPECIAL         // Unique achievements
+  COMMUNITY       // Peer-to-peer social badges
+  PREMIUM         // Patron/investment badges
+  MILESTONE       // Cumulative achievements
+  GROWTH          // Learning and professional development
+}
+
+enum SkinStyle {
+  DEFAULT         // Original badge design
+  CRYSTAL         // Gem/crystal faceted design
+  ACADEMIC        // Formal, scholarly design
+  MINIMALIST      // Clean, simple design
+  VINTAGE         // Retro, classic design
+  NEON            // Modern, glowing design
 }
 
 enum BadgeTier {
@@ -172,30 +206,33 @@ enum BadgeTier {
 }
 
 enum TriggerType {
-  KUDOS_RECEIVED    // Recibir X kudos
-  KUDOS_SENT        // Enviar X kudos
-  CODE_REVIEWS      // Hacer X code reviews
-  PULL_REQUESTS     // Crear X PRs
-  ISSUES_CLOSED     // Cerrar X issues
-  STREAK_DAYS       // X días consecutivos activo
-  FIRST_ACTION      // Primera acción de tipo
-  MANUAL            // Otorgado manualmente
+  KUDOS_RECEIVED    // Receive X kudos
+  KUDOS_SENT        // Send X kudos
+  CODE_REVIEWS      // Complete X code reviews
+  PULL_REQUESTS     // Create X PRs
+  ISSUES_CLOSED     // Close X issues
+  STREAK_DAYS       // X consecutive active days
+  FIRST_ACTION      // First action of type
+  MANUAL            // Manually awarded
   // GitHub triggers
-  GITHUB_COMMIT     // Commits de GitHub sincronizados
-  GITHUB_PR         // PRs de GitHub sincronizados
-  GITHUB_REVIEW     // Reviews de GitHub sincronizados
-  // Nuevos triggers para economía social
-  MANUAL_PEER_AWARD // Otorgado por un compañero (Resonancia/Vínculo)
-  INVESTMENT        // Otorgado por inversión/donación (Patron)
-  PEER_AWARDS_COUNT // Cantidad de medallas peer-to-peer recibidas
+  GITHUB_COMMIT     // Synced GitHub commits
+  GITHUB_PR         // Synced GitHub PRs
+  GITHUB_REVIEW     // Synced GitHub reviews
+  // Social economy triggers
+  MANUAL_PEER_AWARD // Awarded by a colleague (peer-to-peer)
+  INVESTMENT        // Awarded by investment/donation (Patron)
+  PEER_AWARDS_COUNT // Count of peer-to-peer badges received
+  BADGES_COUNT      // Total badges earned
+  TENURE_DAYS       // Days since joining
 }
 
 enum NotificationType {
-  KUDO_RECEIVED     // Te enviaron un kudo
-  BADGE_EARNED      // Ganaste un badge
-  BADGE_PROGRESS    // Estás cerca de un badge
-  MENTION           // Te mencionaron
-  SYSTEM            // Notificación del sistema
+  KUDO_RECEIVED     // Received a kudo
+  BADGE_EARNED      // Earned a badge
+  BADGE_PROGRESS    // Close to earning a badge
+  MENTION           // Got mentioned
+  SYSTEM            // System notification
+  PEER_AWARD        // Received peer recognition
 }
 
 // ==================== NOTIFICACIONES ====================

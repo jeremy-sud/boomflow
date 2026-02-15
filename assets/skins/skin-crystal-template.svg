@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 140">
+  <defs>
+    <!-- Crystal gradient - blue/cyan tones -->
+    <linearGradient id="crystal-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0f172a"/>
+      <stop offset="50%" style="stop-color:#1e293b"/>
+      <stop offset="100%" style="stop-color:#0c1220"/>
+    </linearGradient>
+    <!-- Crystal highlights -->
+    <linearGradient id="crystal-edge" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#38bdf8"/>
+      <stop offset="50%" style="stop-color:#7dd3fc"/>
+      <stop offset="100%" style="stop-color:#0ea5e9"/>
+    </linearGradient>
+    <!-- Inner glow -->
+    <filter id="crystal-glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="3" result="glow"/>
+      <feMerge>
+        <feMergeNode in="glow"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Main gem shape - hexagonal -->
+  <polygon points="60,5 105,30 105,90 60,135 15,90 15,30" 
+           fill="url(#crystal-bg)" 
+           stroke="url(#crystal-edge)" 
+           stroke-width="2"/>
+  
+  <!-- Facet lines - top left -->
+  <line x1="60" y1="5" x2="35" y2="50" stroke="#38bdf8" stroke-width="1" opacity="0.6"/>
+  <line x1="15" y1="30" x2="35" y2="50" stroke="#38bdf8" stroke-width="1" opacity="0.6"/>
+  
+  <!-- Facet lines - top right -->
+  <line x1="60" y1="5" x2="85" y2="50" stroke="#38bdf8" stroke-width="1" opacity="0.6"/>
+  <line x1="105" y1="30" x2="85" y2="50" stroke="#38bdf8" stroke-width="1" opacity="0.6"/>
+  
+  <!-- Facet lines - center -->
+  <line x1="35" y1="50" x2="60" y2="70" stroke="#7dd3fc" stroke-width="1" opacity="0.4"/>
+  <line x1="85" y1="50" x2="60" y2="70" stroke="#7dd3fc" stroke-width="1" opacity="0.4"/>
+  
+  <!-- Facet lines - bottom -->
+  <line x1="60" y1="70" x2="35" y2="90" stroke="#38bdf8" stroke-width="1" opacity="0.5"/>
+  <line x1="60" y1="70" x2="85" y2="90" stroke="#38bdf8" stroke-width="1" opacity="0.5"/>
+  <line x1="35" y1="90" x2="60" y2="135" stroke="#38bdf8" stroke-width="1" opacity="0.5"/>
+  <line x1="85" y1="90" x2="60" y2="135" stroke="#38bdf8" stroke-width="1" opacity="0.5"/>
+  
+  <!-- Center highlight -->
+  <polygon points="60,50 75,60 60,80 45,60" 
+           fill="#7dd3fc" 
+           opacity="0.3"
+           filter="url(#crystal-glow)"/>
+  
+  <!-- Star highlight -->
+  <polygon points="60,58 62,64 68,64 63,68 65,75 60,71 55,75 57,68 52,64 58,64" 
+           fill="#e0f2fe" 
+           opacity="0.8"/>
+  
+  <!-- Text area -->
+  <text x="60" y="105" font-size="8" fill="#7dd3fc" text-anchor="middle" 
+        font-family="system-ui, sans-serif" font-weight="600">CRYSTAL</text>
+</svg>

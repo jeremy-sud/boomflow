@@ -9,7 +9,7 @@ import { TriggerType } from '@/generated/prisma'
 export async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams
-    const limit = parseInt(searchParams.get('limit') || '20')
+    const limit = Number.parseInt(searchParams.get('limit') || '20', 10)
     const cursor = searchParams.get('cursor') // Para paginación
 
     const kudos = await prisma.kudo.findMany({
@@ -29,7 +29,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({
       kudos,
-      nextCursor: kudos.length === limit ? kudos[kudos.length - 1]?.id : null,
+      nextCursor: kudos.length === limit ? kudos.at(-1)?.id : null,
     })
   } catch (error) {
     console.error('Error fetching kudos:', error)

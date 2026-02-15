@@ -44,8 +44,9 @@ export default function FeedPage() {
         </h2>
         <div className="space-y-4">
           <div>
-            <label className="text-sm text-zinc-500 mb-1 block">¿A quién quieres reconocer?</label>
+            <label htmlFor="kudo-recipient" className="text-sm text-zinc-500 mb-1 block">¿A quién quieres reconocer?</label>
             <select
+              id="kudo-recipient"
               value={selectedUser}
               onChange={(e) => setSelectedUser(e.target.value)}
               className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 focus:border-blue-500 focus:outline-none"
@@ -59,8 +60,9 @@ export default function FeedPage() {
             </select>
           </div>
           <div>
-            <label className="text-sm text-zinc-500 mb-1 block">Mensaje de reconocimiento</label>
+            <label htmlFor="kudo-message" className="text-sm text-zinc-500 mb-1 block">Mensaje de reconocimiento</label>
             <textarea
+              id="kudo-message"
               value={kudoMessage}
               onChange={(e) => setKudoMessage(e.target.value)}
               placeholder="Escribe por qué quieres reconocer a esta persona..."
@@ -70,7 +72,7 @@ export default function FeedPage() {
           <button
             onClick={handleSendKudo}
             disabled={!selectedUser || !kudoMessage.trim()}
-            className="px-6 py-3 rounded-lg bg-gradient-to-r from-purple-600 to-pink-600 font-medium hover:from-purple-500 hover:to-pink-500 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-6 py-3 rounded-lg bg-linear-to-r from-purple-600 to-pink-600 font-medium hover:from-purple-500 hover:to-pink-500 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
           >
             💜 Enviar Kudo
           </button>
@@ -142,7 +144,15 @@ export default function FeedPage() {
   );
 }
 
-function ActivityCard({ activity }: { activity: Activity }) {
+/** Props for ActivityCard component */
+interface ActivityCardProps {
+  readonly activity: Activity;
+}
+
+/**
+ * Displays a single activity card in the feed
+ */
+function ActivityCard({ activity }: ActivityCardProps) {
   const user = getUserById(activity.userId);
   const targetUser = activity.targetUserId ? getUserById(activity.targetUserId) : null;
   const badge = activity.badgeId ? getBadgeById(activity.badgeId) : null;

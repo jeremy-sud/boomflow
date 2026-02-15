@@ -134,10 +134,11 @@ router.get('/leaderboard', optionalAuth, asyncHandler(async (req, res) => {
     case 'month':
       dateFilter = { createdAt: { gte: new Date(now.getFullYear(), now.getMonth(), 1) } }
       break
-    case 'quarter':
+    case 'quarter': {
       const quarter = Math.floor(now.getMonth() / 3)
       dateFilter = { createdAt: { gte: new Date(now.getFullYear(), quarter * 3, 1) } }
       break
+    }
     // 'all' = no filter
   }
 
@@ -156,7 +157,7 @@ router.get('/leaderboard', optionalAuth, asyncHandler(async (req, res) => {
     where,
     _count: true,
     orderBy: { _count: { receiverId: 'desc' } },
-    take: parseInt(limit)
+    take: Number.parseInt(limit, 10)
   })
 
   // Get user details
@@ -210,7 +211,7 @@ router.get('/search', asyncHandler(async (req, res) => {
       displayName: true,
       avatarUrl: true
     },
-    take: parseInt(limit)
+    take: Number.parseInt(limit, 10)
   })
 
   res.json(users)

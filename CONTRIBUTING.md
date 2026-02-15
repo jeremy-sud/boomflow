@@ -101,6 +101,67 @@ When creating new badges:
 - Follow the existing component structure
 - Use TypeScript for type safety
 - Keep components small and focused
+- **Mark props interfaces as `readonly`** for immutability
+- **Use `useMemo` for context values** to prevent unnecessary re-renders
+- **Use semantic HTML elements** (`<button>` instead of clickable `<div>`)
+- **Associate labels with form controls** using `htmlFor` and `id` attributes
+
+```tsx
+// ✅ Good - Props marked as readonly
+interface BadgeCardProps {
+  readonly badge: Badge;
+  readonly onClick?: () => void;
+}
+
+// ✅ Good - Using useMemo for context
+const contextValue = useMemo(() => ({ 
+  toasts, addToast, removeToast 
+}), [toasts, addToast, removeToast])
+
+// ✅ Good - Semantic button with keyboard support
+<button
+  type="button"
+  onClick={handleClick}
+  aria-pressed={isSelected}
+>
+  Filter
+</button>
+
+// ✅ Good - Label associated with input
+<label htmlFor="kudo-message">Message</label>
+<input id="kudo-message" type="text" />
+```
+
+### Avoid Nested Ternaries
+
+Replace nested ternary operators with helper functions or lookup objects:
+
+```typescript
+// ❌ Bad - Nested ternary
+const emoji = tier === 'GOLD' ? '🥇' : tier === 'SILVER' ? '🥈' : '🥉'
+
+// ✅ Good - Lookup object
+const TIER_EMOJI: Record<string, string> = {
+  GOLD: '🥇',
+  SILVER: '🥈', 
+  BRONZE: '🥉'
+}
+const emoji = TIER_EMOJI[tier] ?? '🥉'
+```
+
+### Use Modern Node.js Imports
+
+Prefer `node:` prefix for Node.js built-in modules:
+
+```javascript
+// ✅ Good
+import * as fs from 'node:fs'
+import * as path from 'node:path'
+
+// ❌ Bad
+import * as fs from 'fs'
+import * as path from 'path'
+```
 
 ## 🎨 Adding New Badges
 

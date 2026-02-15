@@ -55,7 +55,13 @@ export class NotificationService {
     userId: string,
     badge: { id: string; name: string; slug: string; tier: string }
   ) {
-    const tierEmoji = badge.tier === 'GOLD' ? '🥇' : badge.tier === 'SILVER' ? '🥈' : '🥉'
+    // Determinar emoji según tier del badge
+    const tierEmojiMap: Record<string, string> = {
+      GOLD: '🥇',
+      SILVER: '🥈',
+      BRONZE: '🥉'
+    }
+    const tierEmoji = tierEmojiMap[badge.tier] ?? '🥉'
     
     return this.create({
       userId,

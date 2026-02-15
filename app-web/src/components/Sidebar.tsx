@@ -5,16 +5,18 @@ import { usePathname } from 'next/navigation';
 import Image from 'next/image';
 import { NotificationBell } from './NotificationBell';
 
+/** User information for sidebar display */
 interface User {
-  name?: string | null;
-  email?: string | null;
-  image?: string | null;
-  username?: string;
+  readonly name?: string | null;
+  readonly email?: string | null;
+  readonly image?: string | null;
+  readonly username?: string;
 }
 
+/** Props for Sidebar component */
 interface SidebarProps {
-  user?: User | null;
-  badgeCount?: number;
+  readonly user?: User | null;
+  readonly badgeCount?: number;
 }
 
 const NAV_ITEMS = [
@@ -52,7 +54,7 @@ export default function Sidebar({ user, badgeCount = 0 }: SidebarProps) {
                   href={item.href}
                   className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 ${
                     isActive
-                      ? 'bg-gradient-to-r from-blue-600/30 to-purple-600/30 text-white border border-white/20'
+                      ? 'bg-linear-to-r from-blue-600/30 to-purple-600/30 text-white border border-white/20'
                       : 'text-zinc-400 hover:bg-white/5 hover:text-white'
                   }`}
                 >
@@ -79,7 +81,7 @@ export default function Sidebar({ user, badgeCount = 0 }: SidebarProps) {
                   className="rounded-full"
                 />
               ) : (
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold">
+                <div className="w-10 h-10 rounded-full bg-linear-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold">
                   {(user.name || user.username || 'U')[0].toUpperCase()}
                 </div>
               )}
@@ -103,7 +105,7 @@ export default function Sidebar({ user, badgeCount = 0 }: SidebarProps) {
         ) : (
           <Link
             href="/login"
-            className="flex items-center justify-center gap-2 px-4 py-3 rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 text-white font-medium hover:from-blue-500 hover:to-purple-500 transition-all"
+            className="flex items-center justify-center gap-2 px-4 py-3 rounded-lg bg-linear-to-r from-blue-600 to-purple-600 text-white font-medium hover:from-blue-500 hover:to-purple-500 transition-all"
           >
             <span>🔐</span> Iniciar sesión
           </Link>

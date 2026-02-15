@@ -3,6 +3,34 @@
 import { USERS, CATEGORIES, TIERS, getBadgeById, getUserBadges } from '@/lib/data';
 import { useState } from 'react';
 
+/**
+ * Maps badge tier to emoji display
+ * @param tier - Badge tier (gold, silver, bronze)
+ * @returns Corresponding emoji
+ */
+function getTierEmoji(tier: string): string {
+  const tierMap: Record<string, string> = {
+    gold: '🥇',
+    silver: '🥈',
+    bronze: '🥉'
+  };
+  return tierMap[tier] ?? '🥉';
+}
+
+/**
+ * Maps badge tier to display label with emoji
+ * @param tier - Badge tier (gold, silver, bronze)
+ * @returns Label with emoji (e.g., "🥇 Oro")
+ */
+function getTierLabel(tier: string): string {
+  const tierLabels: Record<string, string> = {
+    gold: '🥇 Oro',
+    silver: '🥈 Plata',
+    bronze: '🥉 Bronce'
+  };
+  return tierLabels[tier] ?? '🥉 Bronce';
+}
+
 // Current user (mock - in production this would come from auth)
 const CURRENT_USER = USERS.find(u => u.username === 'jeremy-sud')!;
 
@@ -37,7 +65,7 @@ export default function ProfilePage() {
         <div className="flex flex-col md:flex-row items-center gap-6">
           {/* Avatar */}
           <div className="relative">
-            <div className="w-28 h-28 rounded-full bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 p-1">
+            <div className="w-28 h-28 rounded-full bg-linear-to-br from-blue-500 via-purple-500 to-pink-500 p-1">
               <div className="w-full h-full rounded-full bg-zinc-900 flex items-center justify-center text-4xl font-bold">
                 {CURRENT_USER.displayName[0].toUpperCase()}
               </div>
@@ -80,17 +108,19 @@ export default function ProfilePage() {
       {/* Badge Summary */}
       <div className="grid grid-cols-3 gap-4">
         {TIERS.map(tier => (
-          <div
+          <button
+            type="button"
             key={tier.id}
             className={`glass-panel rounded-xl p-4 text-center cursor-pointer transition-all ${
               filterTier === tier.id ? 'ring-2 ring-white/30' : ''
             }`}
             onClick={() => setFilterTier(filterTier === tier.id ? 'all' : tier.id)}
+            aria-pressed={filterTier === tier.id}
           >
             <span className="text-3xl">{tier.emoji}</span>
             <p className="text-2xl font-bold mt-2">{tierCounts[tier.id as keyof typeof tierCounts]}</p>
             <p className="text-xs text-zinc-500">{tier.name}</p>
-          </div>
+          </button>
         ))}
       </div>
 
@@ -168,7 +198,7 @@ export default function ProfilePage() {
                     />
                     <span className="text-sm">{badge.name}</span>
                     <span className="text-xs">
-                      {badge.tier === 'gold' ? '🥇' : badge.tier === 'silver' ? '🥈' : '🥉'}
+                      {getTierEmoji(badge.tier)}
                     </span>
                   </div>
                 ))}
@@ -181,7 +211,7 @@ export default function ProfilePage() {
   );
 }
 
-function BadgeCard({ badge }: { badge: ReturnType<typeof getBadgeById> }) {
+function BadgeCard({ badge }: Readonly<{ badge: ReturnType<typeof getBadgeById> }>) {
   if (!badge) return null;
 
   const tierColors = {
@@ -192,7 +222,7 @@ function BadgeCard({ badge }: { badge: ReturnType<typeof getBadgeById> }) {
 
   return (
     <div
-      className={`rounded-xl p-4 border bg-gradient-to-br ${tierColors[badge.tier]} backdrop-blur-lg hover:scale-105 transition-transform cursor-pointer`}
+      className={`rounded-xl p-4 border bg-linear-to-br ${tierColors[badge.tier]} backdrop-blur-lg hover:scale-105 transition-transform cursor-pointer`}
     >
       <div className="flex flex-col items-center text-center">
         <img
@@ -203,7 +233,7 @@ function BadgeCard({ badge }: { badge: ReturnType<typeof getBadgeById> }) {
         <h4 className="font-medium text-sm">{badge.name}</h4>
         <p className="text-xs text-zinc-500 mt-1 line-clamp-2">{badge.description}</p>
         <div className="mt-2 text-xs">
-          {badge.tier === 'gold' ? '🥇 Oro' : badge.tier === 'silver' ? '🥈 Plata' : '🥉 Bronce'}
+          {getTierLabel(badge.tier)}
         </div>
       </div>
     </div>

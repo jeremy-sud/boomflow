@@ -12,9 +12,9 @@ interface GitHubContributions {
 }
 
 export class GitHubSyncService {
-  private octokit: Octokit
-  private userId: string
-  private username: string
+  private readonly octokit: Octokit
+  private readonly userId: string
+  private readonly username: string
 
   constructor(accessToken: string, userId: string, username: string) {
     this.octokit = new Octokit({ auth: accessToken })

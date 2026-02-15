@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 140">
+  <defs>
+    <!-- Vintage - sepia/brown tones -->
+    <linearGradient id="vintage-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#3d2914"/>
+      <stop offset="50%" style="stop-color:#292524"/>
+      <stop offset="100%" style="stop-color:#1c1917"/>
+    </linearGradient>
+    <linearGradient id="vintage-gold" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#ca8a04"/>
+      <stop offset="50%" style="stop-color:#a16207"/>
+      <stop offset="100%" style="stop-color:#854d0e"/>
+    </linearGradient>
+    <!-- Aged texture filter -->
+    <filter id="vintage-noise">
+      <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="4" result="noise"/>
+      <feColorMatrix type="saturate" values="0"/>
+      <feBlend in="SourceGraphic" in2="noise" mode="multiply"/>
+    </filter>
+  </defs>
+  
+  <!-- Ornate frame - outer -->
+  <ellipse cx="60" cy="70" rx="52" ry="60" fill="url(#vintage-bg)" stroke="url(#vintage-gold)" stroke-width="4"/>
+  
+  <!-- Decorative border elements -->
+  <ellipse cx="60" cy="70" rx="46" ry="54" fill="none" stroke="#a16207" stroke-width="1"/>
+  <ellipse cx="60" cy="70" rx="42" ry="50" fill="none" stroke="#ca8a04" stroke-width="0.5" stroke-dasharray="8,4"/>
+  
+  <!-- Corner flourishes - top -->
+  <path d="M30 25 Q40 20 50 25 Q45 35 35 30" stroke="url(#vintage-gold)" stroke-width="1.5" fill="none"/>
+  <path d="M90 25 Q80 20 70 25 Q75 35 85 30" stroke="url(#vintage-gold)" stroke-width="1.5" fill="none"/>
+  
+  <!-- Corner flourishes - bottom -->
+  <path d="M30 115 Q40 120 50 115 Q45 105 35 110" stroke="url(#vintage-gold)" stroke-width="1.5" fill="none"/>
+  <path d="M90 115 Q80 120 70 115 Q75 105 85 110" stroke="url(#vintage-gold)" stroke-width="1.5" fill="none"/>
+  
+  <!-- Inner medallion -->
+  <circle cx="60" cy="70" r="28" fill="#292524" stroke="url(#vintage-gold)" stroke-width="2"/>
+  <circle cx="60" cy="70" r="24" fill="none" stroke="#854d0e" stroke-width="1"/>
+  
+  <!-- Vintage star -->
+  <polygon points="60,50 64,62 77,62 67,71 71,84 60,75 49,84 53,71 43,62 56,62" 
+           fill="url(#vintage-gold)" stroke="#5c3c0d" stroke-width="0.5"/>
+  
+  <!-- Text banner -->
+  <rect x="25" y="118" width="70" height="14" rx="2" fill="#292524" stroke="url(#vintage-gold)" stroke-width="1"/>
+  <text x="60" y="128" font-size="7" fill="#ca8a04" text-anchor="middle" 
+        font-family="Georgia, serif" font-style="italic">VINTAGE</text>
+</svg>

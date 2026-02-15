@@ -506,6 +506,113 @@ const patronResult = await BadgeEngine.awardPatronBadge(
 
 ---
 
+## Servicios de Backend
+
+### Notification Service
+
+El servicio de notificaciones permite crear y gestionar notificaciones en tiempo real para los usuarios.
+
+**Ubicación:** `backend/src/services/notificationService.js`
+
+```javascript
+import { 
+  NotificationType,
+  notifyKudoReceived, 
+  notifyBadgeEarned,
+  getNotificationsByUser,
+  markAsRead,
+  countUnread 
+} from '../services/notificationService.js'
+
+// Tipos de notificación disponibles
+NotificationType.KUDO_RECEIVED    // Usuario recibió un kudo
+NotificationType.BADGE_EARNED     // Usuario ganó un badge
+NotificationType.BADGE_PROGRESS   // Progreso hacia un badge
+NotificationType.INVITE_RECEIVED  // Invitación a organización
+NotificationType.SYSTEM           // Anuncio del sistema
+
+// Notificar kudo recibido
+await notifyKudoReceived({
+  toUserId: 'user123',
+  fromUsername: 'jeremy-sud',
+  kudoId: 'kudo456',
+  message: 'Excelente trabajo en el PR!',
+  category: 'COLLABORATION'
+})
+
+// Notificar badge ganado
+await notifyBadgeEarned({
+  userId: 'user123',
+  badge: { id: 'badge456', name: 'Code Ninja', slug: 'code-ninja', tier: 'GOLD' }
+})
+
+// Obtener notificaciones de un usuario
+const notifications = await getNotificationsByUser(userId, { 
+  limit: 20, 
+  unreadOnly: true 
+})
+
+// Marcar notificaciones como leídas
+await markAsRead(['notif1', 'notif2'], userId)
+
+// Contar notificaciones no leídas
+const count = await countUnread(userId)
+```
+
+### Audit Log Service
+
+El servicio de audit log registra acciones importantes para cumplimiento y debugging.
+
+**Ubicación:** `backend/src/services/auditLogService.js`
+
+```javascript
+import { 
+  AuditAction,
+  AuditResource,
+  logKudoCreated,
+  logBadgeAwarded,
+  logGitHubSync,
+  getAuditLogs 
+} from '../services/auditLogService.js'
+
+// Acciones auditadas
+AuditAction.KUDO_CREATED      // Creación de kudos
+AuditAction.BADGE_AWARDED     // Otorgamiento de badges
+AuditAction.USER_ROLE_CHANGED // Cambios de rol
+AuditAction.GITHUB_SYNC       // Sincronizaciones de GitHub
+
+// Registrar creación de kudo (usado internamente en rutas)
+await logKudoCreated({
+  userId: req.user.id,
+  kudoId: 'kudo123',
+  receiverId: 'user456',
+  category: 'CODING',
+  req  // Para extraer IP y User-Agent
+})
+
+// Registrar otorgamiento de badge
+await logBadgeAwarded({
+  awarderId: req.user.id,
+  userId: 'user456',
+  badgeId: 'badge123',
+  userBadgeId: 'ub789',
+  badgeName: 'Code Ninja',
+  reason: 'Excelente calidad de código',
+  req
+})
+
+// Consultar audit logs con filtros
+const logs = await getAuditLogs({
+  userId: 'user123',
+  action: AuditAction.BADGE_AWARDED,
+  startDate: new Date('2026-01-01'),
+  endDate: new Date(),
+  limit: 100
+})
+```
+
+---
+
 ## Base de Datos
 
 ### Schema (Prisma)

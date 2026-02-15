@@ -1,7 +1,17 @@
 'use client';
 
-import { USERS, BADGE_CATALOG, ACTIVITY_FEED, CATEGORIES, getBadgeById, getUserById, formatTimeAgo, getBadgeStats } from '@/lib/data';
+import { USERS, ACTIVITY_FEED, getBadgeById, getUserById, formatTimeAgo, getBadgeStats } from '@/lib/data';
 import Link from 'next/link';
+
+/**
+ * Maps leaderboard position to medal emoji
+ * @param index - 0-based position index
+ * @returns Medal emoji for position
+ */
+function getPositionEmoji(index: number): string {
+  const positions: Record<number, string> = { 0: '🥇', 1: '🥈', 2: '🥉' };
+  return positions[index] ?? '🏅';
+}
 
 // Current user (mock - in production this would come from auth)
 const CURRENT_USER = USERS.find(u => u.username === 'jeremy-sud')!;
@@ -86,9 +96,9 @@ export default function Home() {
             {topUsers.map((user, index) => (
               <div key={user.id} className="flex items-center gap-3">
                 <span className="text-2xl">
-                  {index === 0 ? '🥇' : index === 1 ? '🥈' : '🥉'}
+                  {getPositionEmoji(index)}
                 </span>
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold">
+                <div className="w-10 h-10 rounded-full bg-linear-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold">
                   {user.displayName[0].toUpperCase()}
                 </div>
                 <div className="flex-1">
@@ -170,13 +180,19 @@ export default function Home() {
   );
 }
 
-function StatCard({ icon, label, value, subtext, color }: {
-  icon: string;
-  label: string;
-  value: number;
-  subtext: string;
-  color: string;
-}) {
+/** Props for StatCard component */
+interface StatCardProps {
+  readonly icon: string;
+  readonly label: string;
+  readonly value: number;
+  readonly subtext: string;
+  readonly color: string;
+}
+
+/**
+ * Displays a statistic card with icon and gradient background
+ */
+function StatCard({ icon, label, value, subtext, color }: StatCardProps) {
   const colorClasses: Record<string, string> = {
     blue: 'from-blue-600/20 to-blue-900/20 border-blue-500/30',
     purple: 'from-purple-600/20 to-purple-900/20 border-purple-500/30',
@@ -185,7 +201,7 @@ function StatCard({ icon, label, value, subtext, color }: {
   };
 
   return (
-    <div className={`rounded-2xl p-6 bg-gradient-to-br ${colorClasses[color]} border backdrop-blur-lg`}>
+    <div className={`rounded-2xl p-6 bg-linear-to-br ${colorClasses[color]} border backdrop-blur-lg`}>
       <div className="flex items-center gap-3 mb-3">
         <span className="text-2xl">{icon}</span>
         <span className="text-sm text-zinc-400">{label}</span>
@@ -196,7 +212,15 @@ function StatCard({ icon, label, value, subtext, color }: {
   );
 }
 
-function ActivityItem({ activity }: { activity: typeof ACTIVITY_FEED[0] }) {
+/** Props for ActivityItem component */
+interface ActivityItemProps {
+  readonly activity: typeof ACTIVITY_FEED[0];
+}
+
+/**
+ * Displays a single activity feed item
+ */
+function ActivityItem({ activity }: ActivityItemProps) {
   const user = getUserById(activity.userId);
   const targetUser = activity.targetUserId ? getUserById(activity.targetUserId) : null;
   const badge = activity.badgeId ? getBadgeById(activity.badgeId) : null;
