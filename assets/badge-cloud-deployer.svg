@@ -20,11 +20,20 @@
   <circle cx="64" cy="64" r="58" fill="url(#gold)" filter="url(#shadow)"/>
   <circle cx="64" cy="64" r="50" fill="url(#bg)"/>
   <ellipse cx="64" cy="40" rx="35" ry="25" fill="url(#shine)"/>
-  <!-- Icon: Cloud with upload arrow -->
-  <g transform="translate(64, 50)" fill="white" stroke="white" stroke-width="2">
-    <path d="M-20,8 Q-24,8 -24,2 Q-24,-6 -16,-6 Q-14,-14 -4,-14 Q4,-14 8,-8 Q10,-10 14,-10 Q22,-10 22,0 Q22,8 14,8 Z" fill="white"/>
-    <line x1="0" y1="6" x2="0" y2="20" stroke-width="3" stroke-linecap="round"/>
-    <polyline points="-6,12 0,6 6,12" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Icon: Gem/Crystal - Piedra preciosa facetada -->
+  <g transform="translate(64, 50)">
+    <!-- Faceta superior (brillo) -->
+    <polygon points="0,-18 12,-8 0,0 -12,-8" fill="white"/>
+    <!-- Faceta izquierda -->
+    <polygon points="-12,-8 0,0 0,18 -14,4" fill="white" opacity="0.6"/>
+    <!-- Faceta derecha -->
+    <polygon points="12,-8 14,4 0,18 0,0" fill="white" opacity="0.8"/>
+    <!-- Líneas de facetado para efecto de gema -->
+    <line x1="0" y1="-18" x2="0" y2="18" stroke="white" stroke-width="0.5" opacity="0.4"/>
+    <line x1="-12" y1="-8" x2="14" y2="4" stroke="white" stroke-width="0.5" opacity="0.3"/>
+    <line x1="12" y1="-8" x2="-14" y2="4" stroke="white" stroke-width="0.5" opacity="0.3"/>
+    <!-- Destello superior -->
+    <polygon points="0,-18 4,-14 0,-10 -4,-14" fill="white" opacity="0.9"/>
   </g>
   <text x="64" y="95" text-anchor="middle" font-family="'Segoe UI',Roboto,sans-serif" font-size="8" font-weight="600" fill="white">CLOUD DEPLOYER</text>
   <text x="64" y="108" text-anchor="middle" font-family="'Segoe UI',Roboto,sans-serif" font-size="7" fill="#FFD700">★ GOLD</text>

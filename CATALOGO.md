@@ -206,6 +206,36 @@ Cada medalla tiene un nivel (tier) que indica su dificultad o importancia:
 
 ---
 
+## ❤️ Community (Social) (4 medallas)
+
+*Medallas de vínculo humano y conexión entre compañeros*
+
+> 💡 **Estas medallas no se "ganan", se "transfieren"**. Cada colaborador tiene 2 medallas de Resonancia al año para regalar a compañeros.
+
+| Medalla | Nivel | Significado | ¿Cómo obtenerla? |
+|---------|-------|-------------|------------------|
+| 🤝 **Resonancia** | 🥉 | Un colega te reconoce por tu apoyo y compañerismo. El valor humano importa. | Recibida de un compañero (MANUAL_PEER_AWARD) |
+| 💫 **Vínculo Fuerte** | 🥈 | Has recibido 3+ medallas de Resonancia. Tu conexión con el equipo es evidente. | 3+ medallas Resonancia recibidas |
+| 🌟 **Alma del Equipo** | 🥇 | Has recibido 10+ medallas de Resonancia. Eres el corazón del grupo. | 10+ medallas Resonancia recibidas |
+| 💝 **Generous Spirit** | 🥈 | Das reconocimiento sincero. Has otorgado medallas de Resonancia consistentemente. | Dar medallas de Resonancia (nominación) |
+
+---
+
+## 💎 Premium (Patron) (4 medallas)
+
+*Medallas de inversión y compromiso con la comunidad Ursol*
+
+> ⚠️ **Estas medallas tienen una estética especial** (borde brillante) para distinguirlas de las de mérito técnico. Nunca compiten con badges de habilidad.
+
+| Medalla | Nivel | Significado | ¿Cómo obtenerla? |
+|---------|-------|-------------|------------------|
+| 🌱 **Patron Seed** | 🥉 | Semilla de apoyo. Tu pequeña inversión ($1-5) nutre la comunidad. | Inversión $1-5 |
+| 🌿 **Patron Growth** | 🥈 | Crecimiento sostenido. Tu inversión ($10-20) impulsa el ecosistema. Beneficio: 1 tarde libre/mes. | Inversión $10-20 |
+| 🌸 **Patron Bloom** | 🥇 | Floreció tu apoyo. Inversión significativa ($50+) con beneficios premium. | Inversión $50+ |
+| 🌳 **Eco Champion** | 🥇 | Campeón de impacto. Tu donación fue a una causa social. Certificado de impacto incluido. | Donación social verificada |
+
+---
+
 ## 📊 Resumen por Categoría
 
 | Categoría | Medallas | Bronce | Plata | Oro |
@@ -219,7 +249,9 @@ Cada medalla tiene un nivel (tier) que indica su dificultad o importancia:
 | 🌱 Growth | 5 | 0 | 5 | 0 |
 | ❤️ Milestones | 9 | 1 | 4 | 4 |
 | ⭐ Special | 1 | 0 | 0 | 1 |
-| **Total** | **89** | **9** | **49** | **31** |
+| ❤️ **Community** | **4** | **1** | **2** | **1** |
+| 💎 **Premium** | **4** | **1** | **1** | **2** |
+| **Total** | **97** | **11** | **52** | **34** |
 
 ---
 
@@ -237,6 +269,7 @@ Estas medallas se otorgan automáticamente basándose en métricas de GitHub:
 - `badge-hunter`, `badge-legend`, `badge-master`
 - `streak-keeper`, `streak-master`
 - `all-star`
+- `vinculo-fuerte` (3+ peer awards), `alma-del-equipo` (10+ peer awards)
 
 ### Manuales (nominación requerida)
 
@@ -247,9 +280,21 @@ Estas medallas requieren nominación por parte de un administrador:
 - Todas las de **DevOps avanzado**: kubernetes-knight, incident-commander, sre-specialist...
 - La mayoría de **Collaboration**: mentor, crisis-averted, hackathon-hero...
 
+### Peer-to-Peer (MANUAL_PEER_AWARD)
+
+Estas medallas son otorgadas por compañeros:
+
+- `resonancia`: Otorgada directamente por un colega (máx 2/año por persona)
+
+### Inversión (INVESTMENT)
+
+Estas medallas se obtienen mediante apoyo financiero:
+
+- `patron-seed`, `patron-growth`, `patron-bloom`, `eco-champion`
+
 ---
 
 <p align="center">
   <strong>🌸 BOOMFLOW — Catálogo de Medallas</strong><br/>
-  <sub>89 formas de reconocer la excelencia — Sistemas Ursol</sub>
+  <sub>97 formas de reconocer la excelencia — Sistemas Ursol</sub>
 </p>

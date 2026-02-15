@@ -1,13 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
   <defs>
     <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#06B6D4"/>
-      <stop offset="100%" stop-color="#0891B2"/>
+      <stop offset="0%" stop-color="#F472B6"/>
+      <stop offset="100%" stop-color="#EC4899"/>
     </linearGradient>
-    <linearGradient id="bronze" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#D4A574"/>
-      <stop offset="50%" stop-color="#CD7F32"/>
-      <stop offset="100%" stop-color="#8B5A2B"/>
+    <linearGradient id="silver" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#E8E8E8"/>
+      <stop offset="50%" stop-color="#C0C0C0"/>
+      <stop offset="100%" stop-color="#A0A0A0"/>
     </linearGradient>
     <linearGradient id="shine" x1="0%" y1="0%" x2="0%" y2="100%">
       <stop offset="0%" stop-color="white" stop-opacity="0.4"/>
@@ -17,7 +17,7 @@
       <feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.3"/>
     </filter>
   </defs>
-  <circle cx="64" cy="64" r="58" fill="url(#bronze)" filter="url(#shadow)"/>
+  <circle cx="64" cy="64" r="58" fill="url(#silver)" filter="url(#shadow)"/>
   <circle cx="64" cy="64" r="50" fill="url(#bg)"/>
   <ellipse cx="64" cy="40" rx="35" ry="25" fill="url(#shine)"/>
   <!-- Icon: Gem/Crystal - Piedra preciosa facetada -->
@@ -35,6 +35,6 @@
     <!-- Destello superior -->
     <polygon points="0,-18 4,-14 0,-10 -4,-14" fill="white" opacity="0.9"/>
   </g>
-  <text x="64" y="95" text-anchor="middle" font-family="'Segoe UI',Roboto,sans-serif" font-size="7" font-weight="600" fill="white">FIRST FEEDBACK</text>
-  <text x="64" y="108" text-anchor="middle" font-family="'Segoe UI',Roboto,sans-serif" font-size="7" fill="#CD7F32">● BRONZE</text>
+  <text x="64" y="93" text-anchor="middle" font-family="'Segoe UI',Roboto,sans-serif" font-size="7" font-weight="600" fill="white">GENEROUS SPIRIT</text>
+  <text x="64" y="108" text-anchor="middle" font-family="'Segoe UI',Roboto,sans-serif" font-size="7" fill="#C0C0C0">● SILVER</text>
 </svg>

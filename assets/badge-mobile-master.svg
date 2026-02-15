@@ -20,14 +20,20 @@
   <circle cx="64" cy="64" r="58" fill="url(#silver)" filter="url(#shadow)"/>
   <circle cx="64" cy="64" r="50" fill="url(#bg)"/>
   <ellipse cx="64" cy="40" rx="35" ry="25" fill="url(#shine)"/>
-  <!-- Icon: Mobile device with code -->
-  <g transform="translate(64, 52)" fill="white">
-    <rect x="-10" y="-18" width="20" height="32" rx="3" fill="white"/>
-    <rect x="-8" y="-14" width="16" height="22" fill="#0284C7"/>
-    <line x1="-4" y1="-8" x2="4" y2="-8" stroke="white" stroke-width="1.5"/>
-    <line x1="-4" y1="-4" x2="6" y2="-4" stroke="white" stroke-width="1.5"/>
-    <line x1="-4" y1="0" x2="2" y2="0" stroke="white" stroke-width="1.5"/>
-    <circle cx="0" cy="10" r="2" fill="white"/>
+  <!-- Icon: Gem/Crystal - Piedra preciosa facetada -->
+  <g transform="translate(64, 50)">
+    <!-- Faceta superior (brillo) -->
+    <polygon points="0,-18 12,-8 0,0 -12,-8" fill="white"/>
+    <!-- Faceta izquierda -->
+    <polygon points="-12,-8 0,0 0,18 -14,4" fill="white" opacity="0.6"/>
+    <!-- Faceta derecha -->
+    <polygon points="12,-8 14,4 0,18 0,0" fill="white" opacity="0.8"/>
+    <!-- Líneas de facetado para efecto de gema -->
+    <line x1="0" y1="-18" x2="0" y2="18" stroke="white" stroke-width="0.5" opacity="0.4"/>
+    <line x1="-12" y1="-8" x2="14" y2="4" stroke="white" stroke-width="0.5" opacity="0.3"/>
+    <line x1="12" y1="-8" x2="-14" y2="4" stroke="white" stroke-width="0.5" opacity="0.3"/>
+    <!-- Destello superior -->
+    <polygon points="0,-18 4,-14 0,-10 -4,-14" fill="white" opacity="0.9"/>
   </g>
   <text x="64" y="95" text-anchor="middle" font-family="'Segoe UI',Roboto,sans-serif" font-size="8" font-weight="600" fill="white">MOBILE MASTER</text>
   <text x="64" y="108" text-anchor="middle" font-family="'Segoe UI',Roboto,sans-serif" font-size="7" fill="#C0C0C0">● SILVER</text>

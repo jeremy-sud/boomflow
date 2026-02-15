@@ -161,6 +161,8 @@ enum BadgeCategory {
   COMUNICACION
   CALIDAD
   ESPECIALES
+  COMMUNITY       // Medallas sociales/vínculo peer-to-peer
+  PREMIUM         // Medallas de inversión/patron
 }
 
 enum BadgeTier {
@@ -182,6 +184,10 @@ enum TriggerType {
   GITHUB_COMMIT     // Commits de GitHub sincronizados
   GITHUB_PR         // PRs de GitHub sincronizados
   GITHUB_REVIEW     // Reviews de GitHub sincronizados
+  // Nuevos triggers para economía social
+  MANUAL_PEER_AWARD // Otorgado por un compañero (Resonancia/Vínculo)
+  INVESTMENT        // Otorgado por inversión/donación (Patron)
+  PEER_AWARDS_COUNT // Cantidad de medallas peer-to-peer recibidas
 }
 
 enum NotificationType {

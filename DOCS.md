@@ -459,6 +459,9 @@ Sincroniza estadísticas de GitHub y evalúa badges.
 | `GITHUB_COMMIT` | Commits sincronizados | First Commit (1), Code Ninja (50) |
 | `GITHUB_PR` | PRs sincronizados | First PR (1) |
 | `GITHUB_REVIEW` | Reviews sincronizados | First Review (1), Code Reviewer (10) |
+| `MANUAL_PEER_AWARD` | Otorgado por compañero | Resonancia |
+| `INVESTMENT` | Por inversión/donación | Patron Seed, Patron Growth, Patron Bloom |
+| `PEER_AWARDS_COUNT` | X peer awards recibidos | Vínculo Fuerte (3), Alma del Equipo (10) |
 
 ### Uso Programático
 
@@ -476,6 +479,29 @@ const result = await BadgeEngine.awardBadge(userId, 'code-ninja', 'admin', 'Raz�
 
 // Obtener progreso hacia badges
 const progress = await BadgeEngine.getBadgeProgress(userId)
+
+// === NUEVOS: Medallas Peer-to-Peer ===
+
+// Otorgar medalla de Resonancia a un compañero (máx 2/año)
+const peerResult = await BadgeEngine.awardPeerBadge(
+  fromUserId, 
+  toUserId, 
+  'Gracias por aguantarme en el despliegue del viernes'
+)
+
+// Consultar medallas de Resonancia restantes este año
+const remaining = await BadgeEngine.getRemainingPeerAwards(userId)
+// → 2 (si no ha dado ninguna) | 1 | 0
+
+// === NUEVOS: Medallas Patron (Inversión) ===
+
+// Otorgar medalla de Patron tras donación
+const patronResult = await BadgeEngine.awardPatronBadge(
+  userId,
+  'growth',           // 'seed' | 'growth' | 'bloom'
+  'stripe_pay_123',   // Referencia de pago (opcional)
+  'reforestation'     // Impacto elegido (opcional)
+)
 ```
 
 ---
@@ -532,7 +558,9 @@ model UserBadge {
 // Enums
 enum BadgeCategory {
   COLABORACION, CODIGO, LIDERAZGO, INNOVACION, 
-  CULTURA, ONBOARDING, COMUNICACION, CALIDAD, ESPECIALES
+  CULTURA, ONBOARDING, COMUNICACION, CALIDAD, ESPECIALES,
+  COMMUNITY,    // Medallas sociales/vínculo peer-to-peer
+  PREMIUM       // Medallas de inversión/patron
 }
 
 enum BadgeTier { BRONZE, SILVER, GOLD }
@@ -540,7 +568,13 @@ enum BadgeTier { BRONZE, SILVER, GOLD }
 enum TriggerType {
   KUDOS_RECEIVED, KUDOS_SENT, CODE_REVIEWS, 
   PULL_REQUESTS, ISSUES_CLOSED, STREAK_DAYS, 
-  FIRST_ACTION, MANUAL
+  FIRST_ACTION, MANUAL,
+  // GitHub triggers
+  GITHUB_COMMIT, GITHUB_PR, GITHUB_REVIEW,
+  // Economía social
+  MANUAL_PEER_AWARD,  // Otorgado por un compañero (Resonancia)
+  INVESTMENT,         // Otorgado por inversión/donación (Patron)
+  PEER_AWARDS_COUNT   // Cantidad de medallas peer-to-peer recibidas
 }
 ```
 
@@ -556,7 +590,7 @@ npm run db:push
 # Ejecutar migraciones
 npm run db:migrate
 
-# Poblar con datos iniciales (89 badges)
+# Poblar con datos iniciales (97 badges)
 npm run db:seed
 
 # Abrir Prisma Studio (GUI)
@@ -588,6 +622,10 @@ npm run db:studio
 | **Growth** | 🌱 | `#84CC16` → `#65A30D` | 5 |
 | **Milestones** | ❤️ | `#EF4444` → `#DC2626` | 9 |
 | **Special** | ⭐ | `#FBBF24` → `#F59E0B` | 1 |
+| **Community** | ❤️ | `#F472B6` → `#EC4899` | 4 |
+| **Premium** | 💎 | `#A78BFA` → `#7C3AED` | 4 |
+
+> 📖 Ver [ECONOMY.md](ECONOMY.md) para detalles sobre medallas Community (Peer-to-Peer) y Premium (Inversión).
 
 ### Referencia Completa por Categoría
 

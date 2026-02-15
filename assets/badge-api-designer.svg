@@ -20,15 +20,20 @@
   <circle cx="64" cy="64" r="58" fill="url(#silver)" filter="url(#shadow)"/>
   <circle cx="64" cy="64" r="50" fill="url(#bg)"/>
   <ellipse cx="64" cy="40" rx="35" ry="25" fill="url(#shine)"/>
-  <!-- Icon: Plug/API -->
-  <g transform="translate(64, 50)" fill="white" stroke="white" stroke-width="2">
-    <rect x="-8" y="-18" width="16" height="10" rx="2"/>
-    <rect x="-12" y="-8" width="24" height="12" rx="2"/>
-    <line x1="-4" y1="-18" x2="-4" y2="-22"/>
-    <line x1="4" y1="-18" x2="4" y2="-22"/>
-    <path d="M-6,4 L-6,12 Q-6,18 0,18 Q6,18 6,12 L6,4"/>
-    <circle cx="-4" cy="-2" r="2" fill="#4B5563"/>
-    <circle cx="4" cy="-2" r="2" fill="#4B5563"/>
+  <!-- Icon: Gem/Crystal - Piedra preciosa facetada -->
+  <g transform="translate(64, 50)">
+    <!-- Faceta superior (brillo) -->
+    <polygon points="0,-18 12,-8 0,0 -12,-8" fill="white"/>
+    <!-- Faceta izquierda -->
+    <polygon points="-12,-8 0,0 0,18 -14,4" fill="white" opacity="0.6"/>
+    <!-- Faceta derecha -->
+    <polygon points="12,-8 14,4 0,18 0,0" fill="white" opacity="0.8"/>
+    <!-- Líneas de facetado para efecto de gema -->
+    <line x1="0" y1="-18" x2="0" y2="18" stroke="white" stroke-width="0.5" opacity="0.4"/>
+    <line x1="-12" y1="-8" x2="14" y2="4" stroke="white" stroke-width="0.5" opacity="0.3"/>
+    <line x1="12" y1="-8" x2="-14" y2="4" stroke="white" stroke-width="0.5" opacity="0.3"/>
+    <!-- Destello superior -->
+    <polygon points="0,-18 4,-14 0,-10 -4,-14" fill="white" opacity="0.9"/>
   </g>
   <text x="64" y="95" text-anchor="middle" font-family="'Segoe UI',Roboto,sans-serif" font-size="9" font-weight="600" fill="white">API DESIGNER</text>
   <text x="64" y="108" text-anchor="middle" font-family="'Segoe UI',Roboto,sans-serif" font-size="7" fill="#C0C0C0">● SILVER</text>

@@ -1,8 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
   <defs>
     <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#06B6D4"/>
-      <stop offset="100%" stop-color="#0891B2"/>
+      <stop offset="0%" stop-color="#F472B6"/>
+      <stop offset="100%" stop-color="#EC4899"/>
     </linearGradient>
     <linearGradient id="bronze" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#D4A574"/>
@@ -35,6 +35,6 @@
     <!-- Destello superior -->
     <polygon points="0,-18 4,-14 0,-10 -4,-14" fill="white" opacity="0.9"/>
   </g>
-  <text x="64" y="95" text-anchor="middle" font-family="'Segoe UI',Roboto,sans-serif" font-size="7" font-weight="600" fill="white">FIRST FEEDBACK</text>
-  <text x="64" y="108" text-anchor="middle" font-family="'Segoe UI',Roboto,sans-serif" font-size="7" fill="#CD7F32">● BRONZE</text>
+  <text x="64" y="95" text-anchor="middle" font-family="'Segoe UI',Roboto,sans-serif" font-size="8" font-weight="600" fill="white">RESONANCIA</text>
+  <text x="64" y="108" text-anchor="middle" font-family="'Segoe UI',Roboto,sans-serif" font-size="7" fill="#D4A574">● BRONZE</text>
 </svg>

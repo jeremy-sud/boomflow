@@ -13,7 +13,7 @@
 <p align="center">
   <img src="https://img.shields.io/badge/🔒_Uso_Exclusivo-Sistemas_Ursol-8B5CF6.svg" alt="Exclusivo"/>
   <img src="https://img.shields.io/badge/version-3.0.0-blue.svg" alt="Version"/>
-  <img src="https://img.shields.io/badge/badges-89-gold.svg" alt="Badges"/>
+  <img src="https://img.shields.io/badge/badges-97-gold.svg" alt="Badges"/>
   <img src="https://img.shields.io/badge/Next.js-16-black.svg" alt="Next.js"/>
   <img src="https://img.shields.io/badge/Prisma-7-2D3748.svg" alt="Prisma"/>
   <img src="https://img.shields.io/badge/license-MIT-green.svg" alt="License"/>
@@ -206,7 +206,8 @@ BOOMFLOW/
 |-----------|-------------|-----------|
 | [ONBOARDING.md](ONBOARDING.md) | Guía para nuevos colaboradores | 👤 Nuevos miembros |
 | [GUIA_TOKEN.md](GUIA_TOKEN.md) | Configuración de tokens | 👤 Colaboradores |
-| [CATALOGO.md](CATALOGO.md) | Significado de las 89 medallas | 👤 Todos |
+| [CATALOGO.md](CATALOGO.md) | Significado de las 97 medallas | 👤 Todos |
+| [ECONOMY.md](ECONOMY.md) | Economía: medallas sociales y de inversión | 👤 Todos |
 | [DOCS.md](DOCS.md) | Referencia técnica completa | 👨‍💻 Desarrolladores |
 | [ARQUITECTURA.md](ARQUITECTURA.md) | Diseño del sistema | 👨‍💻 Desarrolladores |
 
@@ -233,7 +234,7 @@ BOOMFLOW incluye un **Dashboard Web completo** con:
 |------|-------------|
 | `/` | Dashboard principal con stats y actividad |
 | `/profile` | Perfil del usuario con badges |
-| `/catalog` | Catálogo completo de 89 badges |
+| `/catalog` | Catálogo completo de 97 badges |
 | `/feed` | Feed de kudos y formulario |
 | `/leaderboard` | Rankings por badges/kudos |
 | `/login` | Autenticación con GitHub |

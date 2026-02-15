@@ -20,10 +20,20 @@
   <circle cx="64" cy="64" r="58" fill="url(#silver)" filter="url(#shadow)"/>
   <circle cx="64" cy="64" r="50" fill="url(#bg)"/>
   <ellipse cx="64" cy="40" rx="35" ry="25" fill="url(#shine)"/>
-  <!-- Icon: Ninja star / code -->
-  <g transform="translate(64, 50)" fill="white">
-    <polygon points="0,-20 5,-5 20,0 5,5 0,20 -5,5 -20,0 -5,-5" fill="white"/>
-    <circle cx="0" cy="0" r="6" fill="#1D4ED8"/>
+  <!-- Icon: Gem/Crystal - Piedra preciosa facetada -->
+  <g transform="translate(64, 50)">
+    <!-- Faceta superior (brillo) -->
+    <polygon points="0,-18 12,-8 0,0 -12,-8" fill="white"/>
+    <!-- Faceta izquierda -->
+    <polygon points="-12,-8 0,0 0,18 -14,4" fill="white" opacity="0.6"/>
+    <!-- Faceta derecha -->
+    <polygon points="12,-8 14,4 0,18 0,0" fill="white" opacity="0.8"/>
+    <!-- Líneas de facetado para efecto de gema -->
+    <line x1="0" y1="-18" x2="0" y2="18" stroke="white" stroke-width="0.5" opacity="0.4"/>
+    <line x1="-12" y1="-8" x2="14" y2="4" stroke="white" stroke-width="0.5" opacity="0.3"/>
+    <line x1="12" y1="-8" x2="-14" y2="4" stroke="white" stroke-width="0.5" opacity="0.3"/>
+    <!-- Destello superior -->
+    <polygon points="0,-18 4,-14 0,-10 -4,-14" fill="white" opacity="0.9"/>
   </g>
   <text x="64" y="95" text-anchor="middle" font-family="'Segoe UI',Roboto,sans-serif" font-size="9" font-weight="600" fill="white">CODE NINJA</text>
   <text x="64" y="108" text-anchor="middle" font-family="'Segoe UI',Roboto,sans-serif" font-size="7" fill="#C0C0C0">● SILVER</text>
