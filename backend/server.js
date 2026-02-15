@@ -12,6 +12,9 @@ const REQUIRED_ORG = process.env.REQUIRED_ORG || "SistemasUrsol";
 app.use(cors());
 app.use(express.json());
 
+// Serve badge SVGs as static files
+app.use("/assets", express.static(path.join(__dirname, "../assets")));
+
 // ============================================================
 // MIDDLEWARE: Verify GitHub Token & Org Membership
 // ============================================================
@@ -33,9 +36,7 @@ async function verifyOrgMembership(req, res, next) {
     });
     const username = userRes.data.login;
 
-    // 2. Check if user belongs to the required org
-    // GET /orgs/{org}/members/{username}
-    // Returns 204 if member, 404 or 302 if not
+    // 2. Check org membership
     try {
       await axios.get(
         `https://api.github.com/orgs/${REQUIRED_ORG}/members/${username}`,
@@ -56,7 +57,7 @@ async function verifyOrgMembership(req, res, next) {
       throw orgError;
     }
 
-    // 3. Attach user info to request for downstream use
+    // 3. Attach user info to request
     req.githubUser = {
       username: username,
       avatar: userRes.data.avatar_url,
@@ -82,6 +83,7 @@ app.get("/api/health", (req, res) => {
   res.json({
     status: "ok",
     org: REQUIRED_ORG,
+    version: "2.0.0",
     timestamp: new Date().toISOString(),
   });
 });
@@ -119,15 +121,12 @@ app.get("/auth/github/callback", async (req, res) => {
 
     const accessToken = tokenRes.data.access_token;
     if (!accessToken) {
-      return res
-        .status(400)
-        .json({
-          error: "No se recibió token de acceso.",
-          details: tokenRes.data,
-        });
+      return res.status(400).json({
+        error: "No se recibió token de acceso.",
+        details: tokenRes.data,
+      });
     }
 
-    // In production, you'd set this as an HttpOnly cookie or return it securely
     res.json({
       message: "✅ Autenticación exitosa con GitHub",
       access_token: accessToken,
@@ -140,9 +139,29 @@ app.get("/auth/github/callback", async (req, res) => {
   }
 });
 
+// Public: Get full badge catalog (no auth required)
+app.get("/api/badges/catalog", (req, res) => {
+  const mockPath = path.join(__dirname, "../api-mock.json");
+  const badges = JSON.parse(fs.readFileSync(mockPath, "utf8"));
+
+  // Group by category
+  const categories = {};
+  for (const badge of badges) {
+    const cat = badge.category || "other";
+    if (!categories[cat]) categories[cat] = [];
+    categories[cat].push(badge);
+  }
+
+  res.json({
+    org: REQUIRED_ORG,
+    totalBadges: badges.length,
+    categories: categories,
+    badges: badges,
+  });
+});
+
 // Protected: Get user badges (requires org membership)
 app.get("/api/user/badges", verifyOrgMembership, (req, res) => {
-  // Read mock data (in production, this would be a database query)
   const mockPath = path.join(__dirname, "../api-mock.json");
   const badges = JSON.parse(fs.readFileSync(mockPath, "utf8"));
 
@@ -158,9 +177,11 @@ app.get("/api/user/badges", verifyOrgMembership, (req, res) => {
 // START
 // ============================================================
 app.listen(PORT, () => {
-  console.log(`\n🌸 Bloomflow API Server`);
-  console.log(`   Org:  ${REQUIRED_ORG}`);
-  console.log(`   Port: ${PORT}`);
-  console.log(`   Auth: http://localhost:${PORT}/auth/github`);
-  console.log(`   Health: http://localhost:${PORT}/api/health\n`);
+  console.log(`\n🌸 Bloomflow API Server v2.0`);
+  console.log(`   Org:     ${REQUIRED_ORG}`);
+  console.log(`   Port:    ${PORT}`);
+  console.log(`   Auth:    http://localhost:${PORT}/auth/github`);
+  console.log(`   Health:  http://localhost:${PORT}/api/health`);
+  console.log(`   Catalog: http://localhost:${PORT}/api/badges/catalog`);
+  console.log(`   Assets:  http://localhost:${PORT}/assets/\n`);
 });

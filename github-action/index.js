@@ -2,41 +2,194 @@ const fs = require("fs");
 const core = require("@actions/core");
 const path = require("path");
 
-// Mock API URL (in a real scenario, this would be an input)
-// For this MVP, we are reading the local mock file to simulate the API response
-const MOCK_API_PATH = path.join(__dirname, "../api-mock.json");
+// Configuration
+const CATALOG_PATH = path.join(__dirname, "../api-mock.json");
+const USERS_DIR = path.join(__dirname, "../users");
+const REPO_BASE_URL =
+  "https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets";
+const ORG_NAME = "SistemasUrsol";
+const ORG_URL = "https://www.ursol.com";
+
+// Tier icons
+const TIER_ICON = {
+  bronze: "🥉",
+  silver: "🥈",
+  gold: "🥇",
+};
+
+// Category labels
+const CATEGORIES = {
+  onboarding: { emoji: "🟢", label: "Onboarding" },
+  coding: { emoji: "🔵", label: "Coding" },
+  devops: { emoji: "🟣", label: "DevOps" },
+  collaboration: { emoji: "🟡", label: "Colaboración" },
+  leadership: { emoji: "🔴", label: "Liderazgo" },
+  documentation: { emoji: "⚪", label: "Documentación" },
+};
+
+/**
+ * Load full badge catalog and index by ID
+ */
+function loadCatalog() {
+  if (!fs.existsSync(CATALOG_PATH)) {
+    throw new Error(`Badge catalog not found at ${CATALOG_PATH}`);
+  }
+  const badges = JSON.parse(fs.readFileSync(CATALOG_PATH, "utf8"));
+  const index = {};
+  for (const b of badges) {
+    index[b.id] = b;
+  }
+  return { badges, index };
+}
+
+/**
+ * Load user-specific badge data
+ * @param {string} username - GitHub username
+ * @returns {object|null} User data or null if not found
+ */
+function loadUserData(username) {
+  const userPath = path.join(USERS_DIR, `${username}.json`);
+  if (!fs.existsSync(userPath)) {
+    return null;
+  }
+  return JSON.parse(fs.readFileSync(userPath, "utf8"));
+}
+
+/**
+ * Build badge section for a specific user
+ * @param {object} userData - User data from users/username.json
+ * @param {object} catalogIndex - Badge catalog indexed by ID
+ * @returns {string} Markdown/HTML badge section
+ */
+function buildUserBadgeSection(userData, catalogIndex) {
+  // Resolve user's badges with full catalog info
+  const userBadges = userData.badges
+    .map((ub) => {
+      const catalogBadge = catalogIndex[ub.id];
+      if (!catalogBadge) return null;
+      return { ...catalogBadge, ...ub };
+    })
+    .filter(Boolean);
+
+  // Group by category
+  const grouped = {};
+  for (const badge of userBadges) {
+    const cat = badge.category || "other";
+    if (!grouped[cat]) grouped[cat] = [];
+    grouped[cat].push(badge);
+  }
+
+  // Build section
+  const role = userData.role ? ` — ${userData.role}` : "";
+  let section = `\n### 🏅 ${
+    userData.displayName || userData.username
+  }${role}\n`;
+  section += `> ${userBadges.length} medallas obtenidas\n\n`;
+  section += `<table>\n`;
+
+  for (const [catKey, catInfo] of Object.entries(CATEGORIES)) {
+    const badges = grouped[catKey];
+    if (!badges || badges.length === 0) continue;
+
+    section += `<tr><td colspan="6"><strong>${catInfo.emoji} ${catInfo.label}</strong></td></tr>\n`;
+    section += `<tr>\n`;
+
+    for (const badge of badges) {
+      const tierIcon = TIER_ICON[badge.tier] || "";
+      const svgUrl = `${REPO_BASE_URL}/${badge.svg}`;
+      section += `<td align="center" width="80">\n`;
+      section += `  <img src="${svgUrl}" width="48" height="48" alt="${badge.label}"/><br/>\n`;
+      section += `  <sub>${tierIcon} <strong>${badge.label}</strong></sub><br/>\n`;
+      section += `  <sub>${badge.meta}</sub>\n`;
+      section += `</td>\n`;
+    }
+
+    section += `</tr>\n`;
+  }
+
+  section += `</table>\n\n`;
+
+  return section;
+}
+
+/**
+ * Build the full badge section for all users or a specific user
+ */
+function buildBadgeContent(targetUser) {
+  const { index } = loadCatalog();
+
+  let content = "\n";
+
+  if (targetUser) {
+    // Single user mode
+    const userData = loadUserData(targetUser);
+    if (!userData) {
+      throw new Error(`User data not found for: ${targetUser}`);
+    }
+    content += buildUserBadgeSection(userData, index);
+  } else {
+    // All users mode — read all files in users/
+    if (fs.existsSync(USERS_DIR)) {
+      const userFiles = fs
+        .readdirSync(USERS_DIR)
+        .filter((f) => f.endsWith(".json"));
+
+      for (const file of userFiles) {
+        const userData = JSON.parse(
+          fs.readFileSync(path.join(USERS_DIR, file), "utf8")
+        );
+        content += buildUserBadgeSection(userData, index);
+      }
+    } else {
+      // Fallback: use full catalog (legacy mode)
+      const allBadges = JSON.parse(fs.readFileSync(CATALOG_PATH, "utf8"));
+      const grouped = {};
+      for (const badge of allBadges) {
+        const cat = badge.category || "other";
+        if (!grouped[cat]) grouped[cat] = [];
+        grouped[cat].push(badge);
+      }
+
+      content += `### 🏅 Logros en ${ORG_NAME}\n\n<table>\n`;
+      for (const [catKey, catInfo] of Object.entries(CATEGORIES)) {
+        const badges = grouped[catKey];
+        if (!badges || badges.length === 0) continue;
+        content += `<tr><td colspan="6"><strong>${catInfo.emoji} ${catInfo.label}</strong></td></tr>\n<tr>\n`;
+        for (const badge of badges) {
+          const tierIcon = TIER_ICON[badge.tier] || "";
+          const svgUrl = `${REPO_BASE_URL}/${badge.svg}`;
+          content += `<td align="center" width="80">\n  <img src="${svgUrl}" width="48" height="48" alt="${badge.label}"/><br/>\n  <sub>${tierIcon} <strong>${badge.label}</strong></sub><br/>\n  <sub>${badge.meta}</sub>\n</td>\n`;
+        }
+        content += `</tr>\n`;
+      }
+      content += `</table>\n\n`;
+    }
+  }
+
+  content += `> 🌸 Verificado por [Bloomflow](https://github.com/jeremy-sud/boomflow) @ [${ORG_NAME}](${ORG_URL})\n`;
+
+  return content;
+}
 
 async function run() {
   try {
-    console.log("Fetching Bloomflow data...");
+    console.log("🌸 Bloomflow Badge Sync — Starting...");
 
-    // Simulate API call by reading the mock file
-    // In production: const response = await fetch('https://api.bloomflow.com/user/badges');
-    if (!fs.existsSync(MOCK_API_PATH)) {
-      throw new Error(`Mock API file not found at ${MOCK_API_PATH}`);
+    // Check for target user input (optional)
+    let targetUser = null;
+    try {
+      targetUser = core.getInput("github_username") || null;
+    } catch {
+      // Running locally without action context
     }
 
-    const rawData = fs.readFileSync(MOCK_API_PATH, "utf8");
-    const badgesFromApi = JSON.parse(rawData);
+    const badgeContent = buildBadgeContent(targetUser);
 
-    console.log(`Successfully fetched ${badgesFromApi.length} badges.`);
-
-    // 1. Create the text based on ID API emojis
-    const badgeSection = badgesFromApi
-      .map((b) => {
-        // Format: * 🥈 **Mentor** | *Nivel 2* | "Siempre dispuesto a explicar."
-        return `* ${b.emoji} **${b.label}** | *${b.meta}* | "${b.description}"`;
-      })
-      .join("\n");
-
-    // Add a header and footer for the section
-    const newContentSection = `\n### 🛠️ Logros en SistemasUrsol\n\n${badgeSection}\n\n> Verificado por Bloomflow @ SistemasUrsol\n`;
-
-    // 2. Define where our writing zone starts and ends
+    // Define markers
     const START_TAG = "<!-- BLOOMFLOW-BADGES-START -->";
     const END_TAG = "<!-- BLOOMFLOW-BADGES-END -->";
 
-    // Read the README.md
+    // Read README.md
     const readmePath = path.join(__dirname, "../README.md");
     if (!fs.existsSync(readmePath)) {
       throw new Error(`README.md not found at ${readmePath}`);
@@ -44,27 +197,35 @@ async function run() {
 
     let currentContent = fs.readFileSync(readmePath, "utf8");
 
-    // 3. Use Regex to replace whatever is between the tags
-    // We use [\s\S]* to match across newlines
+    // Replace content between markers
     const regex = new RegExp(`${START_TAG}[\\s\\S]*?${END_TAG}`, "g");
 
-    // Check if tags exist
     if (!regex.test(currentContent)) {
       console.log(
-        "Start/End tags not found in README.md. Please add <!-- BLOOMFLOW-BADGES-START --> and <!-- BLOOMFLOW-BADGES-END --> to your README."
+        "⚠️  Markers not found. Add <!-- BLOOMFLOW-BADGES-START --> and <!-- BLOOMFLOW-BADGES-END --> to your README."
       );
       return;
     }
 
-    const newContent = `${START_TAG}${newContentSection}${END_TAG}`;
-
+    regex.lastIndex = 0;
+    const newContent = `${START_TAG}${badgeContent}${END_TAG}`;
     const updatedReadme = currentContent.replace(regex, newContent);
 
     fs.writeFileSync(readmePath, updatedReadme);
-    console.log("README.md updated successfully!");
+
+    const userCount = targetUser
+      ? 1
+      : fs.existsSync(USERS_DIR)
+      ? fs.readdirSync(USERS_DIR).filter((f) => f.endsWith(".json")).length
+      : 0;
+    console.log(`✅ README.md updated! (${userCount} user(s), badges synced)`);
   } catch (error) {
-    console.error(error);
-    core.setFailed(error.message);
+    console.error("❌ Error:", error.message);
+    try {
+      core.setFailed(error.message);
+    } catch {
+      process.exit(1);
+    }
   }
 }
 

@@ -1,32 +1,262 @@
 [
   {
-    "emoji": "🥈",
-    "label": "Mentor de Plata",
-    "meta": "Nivel 2",
-    "description": "Siempre dispuesto a explicar el código."
-  },
-  {
-    "emoji": "🔥",
-    "label": "Resolución de Crisis",
-    "meta": "Nivel 5",
-    "description": "Salvó el despliegue del último Sprint."
-  },
-  {
-    "emoji": "🤝",
-    "label": "Espíritu de Equipo",
-    "meta": "Nivel 3",
-    "description": "Mantiene la moral alta en el equipo."
-  },
-  {
-    "emoji": "🦉",
-    "label": "Sabio del Código",
-    "meta": "Nivel 3",
-    "description": "Arquitectura sólida y escalable."
-  },
-  {
-    "emoji": "🚀",
-    "label": "Despliegue Impecable",
+    "id": "hello-world",
+    "emoji": "👋",
+    "label": "Hello World",
+    "category": "onboarding",
+    "tier": "bronze",
     "meta": "Nivel 1",
-    "description": "Primer despliegue sin errores en producción."
+    "description": "Primer día en el equipo. ¡Bienvenido!",
+    "svg": "badge-hello-world.svg"
+  },
+  {
+    "id": "first-commit",
+    "emoji": "✅",
+    "label": "First Commit",
+    "category": "onboarding",
+    "tier": "bronze",
+    "meta": "Nivel 1",
+    "description": "Primer commit al repositorio del equipo.",
+    "svg": "badge-first-commit.svg"
+  },
+  {
+    "id": "first-pr",
+    "emoji": "🔀",
+    "label": "First PR",
+    "category": "onboarding",
+    "tier": "bronze",
+    "meta": "Nivel 1",
+    "description": "Primer Pull Request aprobado y mergeado.",
+    "svg": "badge-first-pr.svg"
+  },
+  {
+    "id": "first-review",
+    "emoji": "🔍",
+    "label": "First Review",
+    "category": "onboarding",
+    "tier": "bronze",
+    "meta": "Nivel 1",
+    "description": "Primera code review realizada a un compañero.",
+    "svg": "badge-first-review.svg"
+  },
+  {
+    "id": "code-ninja",
+    "emoji": "🥷",
+    "label": "Code Ninja",
+    "category": "coding",
+    "tier": "silver",
+    "meta": "Nivel 2",
+    "description": "Código limpio, rápido y eficiente consistentemente.",
+    "svg": "badge-code-ninja.svg"
+  },
+  {
+    "id": "bug-hunter",
+    "emoji": "🐛",
+    "label": "Bug Hunter",
+    "category": "coding",
+    "tier": "silver",
+    "meta": "Nivel 2",
+    "description": "Detecta y corrige bugs antes de que lleguen a producción.",
+    "svg": "badge-bug-hunter.svg"
+  },
+  {
+    "id": "refactor-master",
+    "emoji": "♻️",
+    "label": "Refactor Master",
+    "category": "coding",
+    "tier": "silver",
+    "meta": "Nivel 2",
+    "description": "Mejora código legado sin romper funcionalidad.",
+    "svg": "badge-refactor-master.svg"
+  },
+  {
+    "id": "algorithm-ace",
+    "emoji": "🧮",
+    "label": "Algorithm Ace",
+    "category": "coding",
+    "tier": "gold",
+    "meta": "Nivel 3",
+    "description": "Resuelve problemas complejos con algoritmos óptimos.",
+    "svg": "badge-algorithm-ace.svg"
+  },
+  {
+    "id": "clean-code",
+    "emoji": "✨",
+    "label": "Clean Code",
+    "category": "coding",
+    "tier": "silver",
+    "meta": "Nivel 2",
+    "description": "Escribe código legible, bien documentado y mantenible.",
+    "svg": "badge-clean-code.svg"
+  },
+  {
+    "id": "full-stack",
+    "emoji": "🏗️",
+    "label": "Full Stack",
+    "category": "coding",
+    "tier": "gold",
+    "meta": "Nivel 3",
+    "description": "Domina frontend y backend con soltura.",
+    "svg": "badge-full-stack.svg"
+  },
+  {
+    "id": "pipeline-pro",
+    "emoji": "⚡",
+    "label": "Pipeline Pro",
+    "category": "devops",
+    "tier": "silver",
+    "meta": "Nivel 2",
+    "description": "Pipelines de CI/CD rápidos y confiables.",
+    "svg": "badge-pipeline-pro.svg"
+  },
+  {
+    "id": "docker-captain",
+    "emoji": "🐳",
+    "label": "Docker Captain",
+    "category": "devops",
+    "tier": "silver",
+    "meta": "Nivel 2",
+    "description": "Containerización limpia y eficiente.",
+    "svg": "badge-docker-captain.svg"
+  },
+  {
+    "id": "cloud-deployer",
+    "emoji": "☁️",
+    "label": "Cloud Deployer",
+    "category": "devops",
+    "tier": "gold",
+    "meta": "Nivel 3",
+    "description": "Despliegues en la nube sin downtime.",
+    "svg": "badge-cloud-deployer.svg"
+  },
+  {
+    "id": "cicd-master",
+    "emoji": "🔄",
+    "label": "CI/CD Master",
+    "category": "devops",
+    "tier": "gold",
+    "meta": "Nivel 3",
+    "description": "Automatización total del ciclo de desarrollo.",
+    "svg": "badge-cicd-master.svg"
+  },
+  {
+    "id": "mentor",
+    "emoji": "🎓",
+    "label": "Mentor",
+    "category": "collaboration",
+    "tier": "bronze",
+    "meta": "Nivel 1",
+    "description": "Guía a compañeros nuevos en el equipo.",
+    "svg": "badge-mentor.svg"
+  },
+  {
+    "id": "mentor-master",
+    "emoji": "🏆",
+    "label": "Mentor Master",
+    "category": "collaboration",
+    "tier": "gold",
+    "meta": "Nivel 3",
+    "description": "Ha guiado a 20+ colegas al éxito.",
+    "svg": "badge-mentor-master.svg"
+  },
+  {
+    "id": "team-spirit",
+    "emoji": "🤝",
+    "label": "Team Spirit",
+    "category": "collaboration",
+    "tier": "silver",
+    "meta": "Nivel 2",
+    "description": "Mantiene la moral alta y la cohesión del equipo.",
+    "svg": "badge-team-spirit.svg"
+  },
+  {
+    "id": "code-reviewer",
+    "emoji": "👁️",
+    "label": "Code Reviewer",
+    "category": "collaboration",
+    "tier": "silver",
+    "meta": "Nivel 2",
+    "description": "Reviews detallados y constructivos.",
+    "svg": "badge-code-reviewer.svg"
+  },
+  {
+    "id": "pair-programmer",
+    "emoji": "👥",
+    "label": "Pair Programmer",
+    "category": "collaboration",
+    "tier": "silver",
+    "meta": "Nivel 2",
+    "description": "Programación en pareja efectiva y productiva.",
+    "svg": "badge-pair-programmer.svg"
+  },
+  {
+    "id": "crisis-averted",
+    "emoji": "🔥",
+    "label": "Crisis Averted",
+    "category": "leadership",
+    "tier": "gold",
+    "meta": "Nivel 3",
+    "description": "Salvó el deploy en un momento crítico.",
+    "svg": "badge-crisis-averted.svg"
+  },
+  {
+    "id": "sprint-hero",
+    "emoji": "🚀",
+    "label": "Sprint Hero",
+    "category": "leadership",
+    "tier": "silver",
+    "meta": "Nivel 2",
+    "description": "Entrega excepcional en el sprint.",
+    "svg": "badge-sprint-hero.svg"
+  },
+  {
+    "id": "architect",
+    "emoji": "🏛️",
+    "label": "Architect",
+    "category": "leadership",
+    "tier": "gold",
+    "meta": "Nivel 3",
+    "description": "Arquitectura sólida, escalable y mantenible.",
+    "svg": "badge-architect.svg"
+  },
+  {
+    "id": "tech-lead",
+    "emoji": "👑",
+    "label": "Tech Lead",
+    "category": "leadership",
+    "tier": "gold",
+    "meta": "Nivel 3",
+    "description": "Lidera decisiones técnicas con visión estratégica.",
+    "svg": "badge-tech-lead.svg"
+  },
+  {
+    "id": "docs-hero",
+    "emoji": "📖",
+    "label": "Docs Hero",
+    "category": "documentation",
+    "tier": "bronze",
+    "meta": "Nivel 1",
+    "description": "Documentación clara y útil para todo el equipo.",
+    "svg": "badge-docs-hero.svg"
+  },
+  {
+    "id": "api-designer",
+    "emoji": "🔌",
+    "label": "API Designer",
+    "category": "documentation",
+    "tier": "silver",
+    "meta": "Nivel 2",
+    "description": "APIs bien diseñadas, documentadas y versionadas.",
+    "svg": "badge-api-designer.svg"
+  },
+  {
+    "id": "open-source",
+    "emoji": "🌐",
+    "label": "Open Source",
+    "category": "documentation",
+    "tier": "silver",
+    "meta": "Nivel 2",
+    "description": "Contribuciones activas a proyectos open source.",
+    "svg": "badge-open-source.svg"
   }
 ]
