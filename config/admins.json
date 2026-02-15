@@ -23,5 +23,45 @@
     "requireApproval": true,
     "allowSelfAssignment": false,
     "auditLog": true
+  },
+  "autoAward": {
+    "_comment": "Configuración del sistema de auto-otorgamiento de medallas",
+    "enabled": true,
+    "schedule": "0 6 * * *",
+    "scheduleDescription": "Diariamente a las 6:00 AM UTC (medianoche Costa Rica)",
+    "allowedSources": ["auto-award-system"],
+    "autoAwardableBadges": [
+      "hello-world",
+      "first-commit",
+      "first-pr",
+      "first-review",
+      "week-one",
+      "month-one",
+      "year-one",
+      "code-ninja",
+      "bug-hunter",
+      "commit-century",
+      "commit-500",
+      "commit-1000",
+      "pr-champion",
+      "review-guru",
+      "team-player",
+      "helpful-hero",
+      "docs-contributor",
+      "docs-hero",
+      "streak-7",
+      "streak-30",
+      "early-bird",
+      "night-owl"
+    ],
+    "manualOnlyBadges": [
+      "mentor",
+      "tech-lead",
+      "architect",
+      "team-spirit",
+      "sprint-hero",
+      "innovation-award",
+      "founder"
+    ]
   }
 }

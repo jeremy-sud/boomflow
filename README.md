@@ -346,7 +346,7 @@ BOOMFLOW es nuestra forma de:
 
 ---
 
-## �️ Sistema de Protección
+## 🛡️ Sistema de Protección
 
 BOOMFLOW implementa un **sistema de protección multinivel** para garantizar la integridad de las medallas:
 
@@ -356,14 +356,25 @@ BOOMFLOW implementa un **sistema de protección multinivel** para garantizar la 
 | **GitHub Actions** | Validación automática de permisos en cada cambio |
 | **CODEOWNERS** | Aprobación requerida de administradores para modificar datos |
 | **Trazabilidad** | Cada medalla registra quién la otorgó y cuándo |
+| **Auto-Award** | 🤖 Sistema automático que verifica métricas diariamente |
 
 > ⚠️ **No es posible auto-asignarse medallas.** Intentar modificar archivos de usuarios sin autorización será rechazado automáticamente.
+
+### 🤖 Sistema de Auto-Award
+
+Para colaboradores registrados, BOOMFLOW verifica automáticamente **una vez al día** las métricas de GitHub y otorga medallas basándose en:
+
+- 📊 Commits realizados
+- 🔀 Pull Requests mergeadas
+- 👀 Code Reviews completadas
+- 📝 Contribuciones a documentación
+- 🗓️ Aniversarios en el equipo
 
 📖 Ver [SECURITY.md](SECURITY.md) para documentación completa del sistema de protección.
 
 ---
 
-## �📋 Licencia
+## 📋 Licencia
 
 Este proyecto está bajo la licencia MIT. Sin embargo, **el uso del sistema de reconocimiento BOOMFLOW está reservado exclusivamente para colaboradores, contratistas y asociados de Sistemas Ursol**.
 

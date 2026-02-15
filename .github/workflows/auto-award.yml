@@ -1,0 +1,112 @@
+name: "🏅 BOOMFLOW Auto-Award (Diario)"
+
+on:
+  # Ejecutar diariamente a las 6:00 AM UTC (medianoche Costa Rica)
+  schedule:
+    - cron: '0 6 * * *'
+  
+  # Permitir ejecución manual
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Solo verificar, no otorgar medallas'
+        required: false
+        default: 'false'
+        type: boolean
+
+permissions:
+  contents: write
+
+jobs:
+  auto-award:
+    name: "🎯 Verificar y Otorgar Medallas"
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout BOOMFLOW
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      
+      - name: Mostrar usuarios registrados
+        run: |
+          echo "👥 Usuarios registrados en BOOMFLOW:"
+          ls -la users/
+          echo ""
+          echo "📋 Colaboradores actuales:"
+          for f in users/*.json; do
+            username=$(jq -r '.username' "$f")
+            displayName=$(jq -r '.displayName // .username' "$f")
+            badges=$(jq '.badges | length' "$f")
+            echo "   - @$username ($displayName) - $badges medallas"
+          done
+      
+      - name: Ejecutar Auto-Award
+        id: auto_award
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DRY_RUN: ${{ inputs.dry_run || 'false' }}
+        run: |
+          echo "🏅 Iniciando sistema de auto-award..."
+          echo ""
+          
+          node scripts/auto-award.js
+          
+          echo ""
+          echo "✅ Proceso completado"
+      
+      - name: Verificar cambios
+        id: changes
+        run: |
+          if [[ -n $(git status --porcelain users/) ]]; then
+            echo "has_changes=true" >> $GITHUB_OUTPUT
+            echo "📝 Se detectaron cambios en archivos de usuarios"
+            git diff --stat users/
+          else
+            echo "has_changes=false" >> $GITHUB_OUTPUT
+            echo "ℹ️ No hay cambios para commitear"
+          fi
+      
+      - name: Commit y Push medallas
+        if: steps.changes.outputs.has_changes == 'true' && inputs.dry_run != 'true'
+        run: |
+          git config user.name "BOOMFLOW Auto-Award"
+          git config user.email "boomflow@ursol.com"
+          
+          # Obtener resumen de medallas otorgadas
+          SUMMARY=$(git diff --name-only users/ | xargs -I {} basename {} .json | tr '\n' ', ' | sed 's/,$//')
+          
+          git add users/
+          git commit -m "🏅 Auto-award: Medallas otorgadas automáticamente
+
+          Usuarios actualizados: $SUMMARY
+          Fecha: $(date -u '+%Y-%m-%d %H:%M:%S UTC')
+          Workflow: ${{ github.run_id }}
+          
+          🤖 Otorgado automáticamente por BOOMFLOW Auto-Award System"
+          
+          git push
+          
+          echo "✅ Cambios pusheados exitosamente"
+      
+      - name: Resumen del workflow
+        run: |
+          echo "═══════════════════════════════════════════════════════"
+          echo "📊 RESUMEN DEL WORKFLOW"
+          echo "═══════════════════════════════════════════════════════"
+          echo "📅 Fecha: $(date -u '+%Y-%m-%d %H:%M:%S UTC')"
+          echo "🔄 Run ID: ${{ github.run_id }}"
+          echo "👤 Trigger: ${{ github.event_name }}"
+          if [ "${{ steps.changes.outputs.has_changes }}" == "true" ]; then
+            echo "✅ Estado: Medallas otorgadas y sincronizadas"
+          else
+            echo "ℹ️ Estado: Sin nuevas medallas para otorgar"
+          fi
+          echo "═══════════════════════════════════════════════════════"

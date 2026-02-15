@@ -81,6 +81,43 @@ Esto permite:
 - Verificar que fue un administrador autorizado
 - Mantener historial de reconocimientos
 
+### 5. Sistema de Auto-Award 🤖
+
+Para colaboradores registrados (como `jeremy-sud` y `ursolcr`), existe un **sistema automático** que verifica y otorga medallas diariamente.
+
+**Workflow:** `.github/workflows/auto-award.yml`
+
+**Horario:** Todos los días a las 6:00 AM UTC (medianoche Costa Rica)
+
+**Funcionamiento:**
+1. El workflow se ejecuta automáticamente según el cron
+2. El script `scripts/auto-award.js` analiza métricas de GitHub
+3. Verifica commits, PRs, reviews, issues, etc.
+4. Otorga medallas automáticamente si se cumplen los criterios
+5. Hace commit y push de los cambios
+
+**Medallas Auto-Otorgables:**
+
+| Categoría | Medallas |
+|-----------|----------|
+| **Onboarding** | hello-world, first-commit, first-pr, first-review, week-one, month-one, year-one |
+| **Coding** | code-ninja, bug-hunter, commit-century, commit-500, commit-1000 |
+| **Colaboración** | pr-champion, review-guru, team-player, helpful-hero |
+| **Documentación** | docs-contributor, docs-hero |
+| **Milestones** | streak-7, streak-30, early-bird, night-owl |
+
+**Medallas Solo Manuales:**
+- mentor, tech-lead, architect, team-spirit, sprint-hero, innovation-award, founder
+
+**Ejecución Manual:**
+```bash
+# Ejecutar localmente
+node scripts/auto-award.js
+
+# Ejecutar desde GitHub Actions (manual trigger)
+# Ve a Actions > "BOOMFLOW Auto-Award (Diario)" > Run workflow
+```
+
 ---
 
 ## 🛠️ Herramientas de Administración

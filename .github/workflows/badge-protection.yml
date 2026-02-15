@@ -36,6 +36,10 @@ jobs:
           ADMINS=$(cat config/admins.json | jq -r '.admins[].username' | tr '\n' '|' | sed 's/|$//')
           echo "📋 Administradores autorizados: $(echo $ADMINS | tr '|' ', ')"
           
+          # Sistemas automatizados permitidos
+          AUTO_SYSTEMS="github-actions|github-actions\[bot\]|BOOMFLOW Auto-Award"
+          echo "🤖 Sistemas automáticos permitidos: github-actions[bot]"
+          
           # Obtener el autor del cambio
           if [ "${{ github.event_name }}" == "pull_request" ]; then
             AUTHOR="${{ github.event.pull_request.user.login }}"
@@ -43,6 +47,14 @@ jobs:
           else
             AUTHOR="${{ github.actor }}"
             echo "👤 Autor del push: $AUTHOR"
+          fi
+          
+          # Verificar si es el sistema de auto-award
+          if echo "$AUTHOR" | grep -qiE "^($AUTO_SYSTEMS)$"; then
+            echo "🤖 Cambio realizado por el sistema automático de BOOMFLOW"
+            echo "✅ Auto-award system autorizado"
+            echo "authorized=true" >> $GITHUB_OUTPUT
+            exit 0
           fi
           
           # Verificar si el autor es administrador
