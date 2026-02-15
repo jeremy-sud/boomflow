@@ -450,10 +450,86 @@ El action busca y reemplaza el contenido entre estos marcadores:
 
 ```bash
 # Desde el repo BOOMFLOW
-node scripts/sync-profile.js <username> <ruta-readme>
+node scripts/sync-profile.js <username> <ruta-readme> [--view=modo]
 
 # Ejemplo
 node scripts/sync-profile.js jeremy-sud /home/user/jeremy-sud/README.md
+```
+
+---
+
+## Sistema de Vistas Adaptativas
+
+El script de sincronización detecta automáticamente la cantidad de medallas y ajusta la visualización para mantener los perfiles limpios y legibles.
+
+### Modos de Vista
+
+| Vista | Medallas | Descripción |
+|-------|----------|-------------|
+| **Normal** | 1-12 | Tabla completa con íconos 48px, nombres y tier |
+| **Compact** | 13-30 | Íconos 32px en filas de 8, ordenados por tier |
+| **Mini** | 31+ | Secciones colapsables `<details>` agrupadas por tier |
+
+### Umbrales
+
+```javascript
+const THRESHOLD_COMPACT = 12;  // Más de 12 → vista compacta
+const THRESHOLD_MINI = 30;     // Más de 30 → vista mini
+```
+
+### Vista Normal (1-12 medallas)
+
+Muestra una tabla detallada ideal para pocos reconocimientos:
+
+```markdown
+| Medalla | Nombre | Tier |
+|:-------:|--------|:----:|
+| <img src="..." width="48"> | Code Ninja | 🥈 Silver |
+```
+
+### Vista Compacta (13-30 medallas)
+
+Íconos más pequeños en filas horizontales, ordenados por tier (oro primero):
+
+```markdown
+### 🏅 Mis Medallas BOOMFLOW (25)
+
+<img src="..." width="32" title="Gold Master"> <img src="..." width="32"> ...
+
+**Resumen:** 🥇 3 Gold | 🥈 12 Silver | 🥉 10 Bronze
+```
+
+### Vista Mini (31+ medallas)
+
+Secciones colapsables para perfiles con muchas medallas:
+
+```markdown
+### 🏅 Mis Medallas BOOMFLOW (45)
+
+<details>
+<summary>🥇 Gold (5 medallas)</summary>
+<img src="..." width="28"> <img src="..." width="28"> ...
+</details>
+
+<details>
+<summary>🥈 Silver (20 medallas)</summary>
+...
+</details>
+```
+
+### Forzar Vista Específica
+
+Usa el flag `--view` para anular la detección automática:
+
+```bash
+# Forzar vista compacta
+node scripts/sync-profile.js jeremy-sud README.md --view=compact
+
+# Forzar vista mini (útil para testing)
+node scripts/sync-profile.js jeremy-sud README.md --view=mini
+
+# Forzar vista normal
+node scripts/sync-profile.js jeremy-sud README.md --view=normal
 ```
 
 ---
