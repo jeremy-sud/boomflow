@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import Image from 'next/image';
+import { NotificationBell } from './NotificationBell';
 
 interface User {
   name?: string | null;
@@ -88,6 +89,7 @@ export default function Sidebar({ user, badgeCount = 0 }: SidebarProps) {
                 </p>
                 <p className="text-xs text-zinc-500">{badgeCount} medallas</p>
               </div>
+              <NotificationBell />
             </div>
             <form action="/api/auth/signout" method="POST">
               <button
@@ -110,7 +112,7 @@ export default function Sidebar({ user, badgeCount = 0 }: SidebarProps) {
 
       {/* Footer */}
       <div className="p-4 text-center text-xs text-zinc-600">
-        BOOMFLOW v2.1.0
+        BOOMFLOW v3.0.0
       </div>
     </aside>
   );

@@ -33,6 +33,10 @@ model User {
   kudosReceived Kudo[]      @relation("KudosReceived")
   badges        UserBadge[]
 
+  // Notificaciones y GitHub
+  notifications Notification[]
+  githubStats   GitHubStats?
+
   // NextAuth
   accounts      Account[]
   sessions      Session[]
@@ -174,6 +178,58 @@ enum TriggerType {
   STREAK_DAYS       // X días consecutivos activo
   FIRST_ACTION      // Primera acción de tipo
   MANUAL            // Otorgado manualmente
+  // GitHub triggers
+  GITHUB_COMMIT     // Commits de GitHub sincronizados
+  GITHUB_PR         // PRs de GitHub sincronizados
+  GITHUB_REVIEW     // Reviews de GitHub sincronizados
+}
+
+enum NotificationType {
+  KUDO_RECEIVED     // Te enviaron un kudo
+  BADGE_EARNED      // Ganaste un badge
+  BADGE_PROGRESS    // Estás cerca de un badge
+  MENTION           // Te mencionaron
+  SYSTEM            // Notificación del sistema
+}
+
+// ==================== NOTIFICACIONES ====================
+
+model Notification {
+  id        String           @id @default(cuid())
+  type      NotificationType
+  title     String
+  message   String
+  data      Json?            // Datos adicionales (badgeId, kudoId, etc)
+  read      Boolean          @default(false)
+  createdAt DateTime         @default(now())
+
+  // Relaciones
+  userId    String
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, read])
+  @@map("notifications")
+}
+
+// ==================== GITHUB STATS ====================
+
+model GitHubStats {
+  id            String   @id @default(cuid())
+  userId        String   @unique
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Stats de GitHub
+  commits       Int      @default(0)
+  pullRequests  Int      @default(0)
+  reviews       Int      @default(0)
+  issuesClosed  Int      @default(0)
+  contributions Int      @default(0)
+  
+  // Metadatos
+  lastSyncAt    DateTime @default(now())
+  syncError     String?
+  
+  @@map("github_stats")
 }
 
 // ==================== NEXTAUTH ====================

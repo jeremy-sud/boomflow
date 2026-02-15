@@ -14,6 +14,11 @@
 1. [Conceptos Fundamentales](#conceptos-fundamentales)
 2. [Dashboard Web](#dashboard-web)
 3. [API REST Reference](#api-rest-reference)
+   - [Kudos](#kudos)
+   - [Badges](#badges)
+   - [Leaderboard](#leaderboard)
+   - [Notificaciones](#notificaciones)
+   - [GitHub Sync](#github-sync)
 4. [Badge Engine](#badge-engine)
 5. [Base de Datos](#base-de-datos)
 6. [Catálogo de Medallas](#catálogo-de-medallas)
@@ -324,6 +329,86 @@ Rankings de usuarios.
 }
 ```
 
+### Notificaciones
+
+#### `GET /api/notifications`
+
+Lista de notificaciones del usuario autenticado.
+
+**Query Params:**
+- `limit` (int, default: 20) - Cantidad de notificaciones
+- `unreadOnly` (boolean, default: false) - Solo no leídas
+
+**Response:**
+```json
+{
+  "notifications": [
+    {
+      "id": "clxyz...",
+      "type": "BADGE_EARNED",
+      "title": "🏆 Nueva Medalla!",
+      "message": "Has obtenido Code Ninja",
+      "data": { "badgeSlug": "code-ninja" },
+      "read": false,
+      "createdAt": "2026-02-15T10:00:00Z"
+    }
+  ],
+  "unreadCount": 3
+}
+```
+
+#### `PATCH /api/notifications`
+
+Marca notificaciones como leídas.
+
+**Body:**
+```json
+{
+  "notificationIds": ["clxyz...", "clxyz2..."],
+  "markAll": false  // Si true, marca todas como leídas
+}
+```
+
+### GitHub Sync
+
+#### `GET /api/github/sync`
+
+Obtiene estadísticas de GitHub del usuario.
+
+**Response:**
+```json
+{
+  "stats": {
+    "commits": 156,
+    "pullRequests": 42,
+    "reviews": 89,
+    "issues": 23,
+    "totalContributions": 310,
+    "lastSyncAt": "2026-02-15T10:00:00Z"
+  },
+  "needsSync": false
+}
+```
+
+#### `POST /api/github/sync`
+
+Sincroniza estadísticas de GitHub y evalúa badges.
+
+**Response:**
+```json
+{
+  "success": true,
+  "stats": {
+    "commits": 156,
+    "pullRequests": 42,
+    "reviews": 89,
+    "issues": 23,
+    "totalContributions": 310
+  },
+  "syncedAt": "2026-02-15T10:00:00Z"
+}
+```
+
 ---
 
 ## Badge Engine
@@ -371,6 +456,9 @@ Rankings de usuarios.
 | `STREAK_DAYS` | X días activo | 1 Year (365), 3 Years (1095) |
 | `FIRST_ACTION` | Primera acción | Hello World, First Commit |
 | `MANUAL` | Solo manual | Tech Lead, Architect |
+| `GITHUB_COMMIT` | Commits sincronizados | First Commit (1), Code Ninja (50) |
+| `GITHUB_PR` | PRs sincronizados | First PR (1) |
+| `GITHUB_REVIEW` | Reviews sincronizados | First Review (1), Code Reviewer (10) |
 
 ### Uso Programático
 

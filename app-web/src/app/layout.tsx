@@ -4,6 +4,7 @@ import "./globals.css";
 import { auth } from "@/auth";
 import Sidebar from "@/components/Sidebar";
 import { getUserByUsername } from "@/lib/data";
+import { ToastProvider } from "@/components/Toast";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -37,10 +38,12 @@ export default async function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Sidebar user={user} badgeCount={badgeCount} />
-        <main className="ml-64 min-h-screen p-8">
-          {children}
-        </main>
+        <ToastProvider>
+          <Sidebar user={user} badgeCount={badgeCount} />
+          <main className="ml-64 min-h-screen p-8">
+            {children}
+          </main>
+        </ToastProvider>
       </body>
     </html>
   );

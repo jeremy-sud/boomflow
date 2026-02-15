@@ -225,6 +225,7 @@ BOOMFLOW incluye un **Dashboard Web completo** con:
 | PostgreSQL | 15+ | Base de datos |
 | NextAuth | 5 (beta) | Autenticación GitHub OAuth |
 | Tailwind CSS | 4 | Estilos con glassmorphism |
+| Octokit | Latest | Integración GitHub API |
 
 ### Páginas Incluidas
 
@@ -249,7 +250,23 @@ POST/DEL  /api/badges/award       # Otorgar/revocar badge
 GET       /api/badges/progress    # Progreso hacia badges
 POST      /api/badges/evaluate    # Evaluar badges automáticos
 GET       /api/leaderboard        # Rankings
+GET/PATCH /api/notifications      # Sistema de notificaciones
+GET/POST  /api/github/sync        # Sincronización con GitHub
 ```
+
+### 🔔 Sistema de Notificaciones (NUEVO)
+
+- **Toast con confetti** cuando ganas un badge
+- **NotificationBell** en sidebar con contador de no leídas
+- **Tipos**: `KUDO_RECEIVED`, `BADGE_EARNED`, `BADGE_PROGRESS`, `MENTION`, `SYSTEM`
+- **Auto-refresh** cada 30 segundos
+
+### 🔗 GitHub Sync (NUEVO)
+
+Sincroniza automáticamente tu actividad de GitHub:
+- Commits, PRs, Reviews, Issues
+- Evalúa badges basados en tu actividad real
+- Sincronización bajo demanda vía API
 
 ### Badge Engine
 
@@ -262,6 +279,9 @@ Sistema de **otorgamiento automático** de badges basado en triggers:
 | `CODE_REVIEWS` | Hacer X reviews | Code Reviewer (100 reviews) |
 | `PULL_REQUESTS` | Crear X PRs | First PR (1 PR) |
 | `STREAK_DAYS` | X días activo | 1 Year (365 días) |
+| `GITHUB_COMMIT` | Commits de GitHub | First Commit (1), Code Ninja (50) |
+| `GITHUB_PR` | PRs de GitHub | First PR (1) |
+| `GITHUB_REVIEW` | Reviews de GitHub | Code Reviewer (10) |
 
 ### Instalación del Dashboard
 

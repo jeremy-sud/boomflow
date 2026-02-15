@@ -6,6 +6,9 @@
 import prisma from '@/lib/prisma'
 import { TriggerType } from '@/generated/prisma'
 
+// Re-export TriggerType for external use
+export { TriggerType }
+
 export interface BadgeCheckResult {
   awarded: boolean
   badge?: {
@@ -24,6 +27,10 @@ export interface UserStats {
   pullRequests: number
   issuesClosed: number
   streakDays: number
+  // GitHub stats
+  githubCommits: number
+  githubPRs: number
+  githubReviews: number
 }
 
 /**
@@ -233,20 +240,23 @@ export class BadgeEngine {
    * Obtiene estadísticas de un usuario
    */
   static async getUserStats(userId: string): Promise<UserStats> {
-    const [kudosReceived, kudosSent] = await Promise.all([
+    const [kudosReceived, kudosSent, githubStats] = await Promise.all([
       prisma.kudo.count({ where: { toId: userId } }),
       prisma.kudo.count({ where: { fromId: userId } }),
+      prisma.gitHubStats.findUnique({ where: { userId } }),
     ])
 
-    // TODO: Integrar con GitHub API para stats reales
-    // Por ahora retornamos valores mock para PRs, reviews, issues
     return {
       kudosReceived,
       kudosSent,
-      codeReviews: 0,    // TODO: Integrar con GitHub
-      pullRequests: 0,   // TODO: Integrar con GitHub
-      issuesClosed: 0,   // TODO: Integrar con GitHub
-      streakDays: 0,     // TODO: Calcular desde actividad
+      codeReviews: githubStats?.reviews || 0,
+      pullRequests: githubStats?.pullRequests || 0,
+      issuesClosed: githubStats?.issuesClosed || 0,
+      streakDays: 0, // TODO: Calcular desde actividad
+      // GitHub stats
+      githubCommits: githubStats?.commits || 0,
+      githubPRs: githubStats?.pullRequests || 0,
+      githubReviews: githubStats?.reviews || 0,
     }
   }
 
@@ -286,6 +296,16 @@ export class BadgeEngine {
       case 'MANUAL':
         // Badges manuales nunca se otorgan automáticamente
         return false
+
+      // GitHub triggers
+      case 'GITHUB_COMMIT':
+        return stats.githubCommits >= triggerValue
+
+      case 'GITHUB_PR':
+        return stats.githubPRs >= triggerValue
+
+      case 'GITHUB_REVIEW':
+        return stats.githubReviews >= triggerValue
       
       default:
         return false

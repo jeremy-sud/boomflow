@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/auth'
 import prisma from '@/lib/prisma'
 import { BadgeEngine } from '@/lib/badge-engine'
+import { NotificationService } from '@/lib/notification-service'
 import { TriggerType } from '@/generated/prisma'
 
 // GET /api/kudos - Obtener feed de kudos
@@ -120,6 +121,27 @@ export async function POST(request: NextRequest) {
       session.user.id, 
       TriggerType.KUDOS_SENT
     )
+
+    // Enviar notificaciones
+    const senderUsername = session.user.username || session.user.name || 'Alguien'
+    
+    // Notificar kudo recibido
+    await NotificationService.notifyKudoReceived(
+      toUser.id,
+      senderUsername,
+      kudo.id,
+      message
+    )
+
+    // Notificar badges ganados al receptor
+    for (const result of receiverBadges.filter(b => b.awarded && b.badge)) {
+      await NotificationService.notifyBadgeEarned(toUser.id, result.badge!)
+    }
+
+    // Notificar badges ganados al emisor
+    for (const result of senderBadges.filter(b => b.awarded && b.badge)) {
+      await NotificationService.notifyBadgeEarned(session.user.id, result.badge!)
+    }
 
     return NextResponse.json({
       kudo,
