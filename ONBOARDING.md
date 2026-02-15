@@ -4,42 +4,64 @@
   <img src="https://img.shields.io/badge/🔒_Documento_Interno-Sistemas_Ursol-8B5CF6.svg" alt="Interno"/>
 </p>
 
-> **Guía oficial para integrar nuevos colaboradores al sistema de reconocimiento BOOMFLOW de Sistemas Ursol**
+> **Guía paso a paso para integrar nuevos colaboradores al sistema BOOMFLOW de Sistemas Ursol**
 
 ---
 
-## ⚠️ Acceso Restringido
+## 📖 Índice
 
-Este documento está destinado a:
-- 👤 Líderes de equipo de Sistemas Ursol
-- 👤 Personal de Recursos Humanos
-- 👤 Administradores del sistema BOOMFLOW
-
-Solo colaboradores oficiales de Sistemas Ursol pueden ser agregados al sistema.
-
----
-
-## 📋 Resumen del Proceso
-
-Agregar un nuevo miembro al ecosistema Bloomflow toma **menos de 5 minutos** y requiere solo **2 pasos**:
-
-1. Crear el archivo de datos del usuario
-2. Agregar los marcadores en su README de perfil de GitHub
+1. [¿Quién puede usar BOOMFLOW?](#-quién-puede-usar-boomflow)
+2. [Proceso de Registro (5 minutos)](#-proceso-de-registro-5-minutos)
+3. [Configurar tu Perfil para Mostrar Medallas](#-configurar-tu-perfil-para-mostrar-medallas)
+4. [Tus Primeras Medallas](#-tus-primeras-medallas)
+5. [Preguntas Frecuentes](#-preguntas-frecuentes)
 
 ---
 
-## Paso 1: Crear el archivo de usuario
+## 🔒 ¿Quién puede usar BOOMFLOW?
 
-Cada miembro tiene un archivo JSON en la carpeta `/users/` del repositorio [boomflow](https://github.com/jeremy-sud/boomflow).
+BOOMFLOW está reservado **exclusivamente** para:
 
-### Formato del archivo
+| ✅ Permitido | ❌ No Permitido |
+|--------------|-----------------|
+| Colaboradores oficiales de Sistemas Ursol | Usuarios externos |
+| Contratistas con acuerdo vigente | Auto-registro |
+| Asociados y partners autorizados | Uso personal fuera de Ursol |
 
-Crear `users/{github_username}.json`:
+> **¿No eres parte del equipo?** Contacta a [RRHH](mailto:rrhh@ursol.com) o revisa nuestras [vacantes](https://www.ursol.com/careers).
+
+---
+
+## ⚡ Proceso de Registro (5 minutos)
+
+### Requisitos Previos
+
+Antes de empezar, asegúrate de tener:
+
+- [ ] Cuenta de GitHub activa
+- [ ] Confirmación de tu líder de equipo o RRHH
+
+### Paso 1: Solicitar Registro
+
+Envía a tu líder de equipo o al admin de BOOMFLOW:
+
+```
+Solicitud de Registro BOOMFLOW
+──────────────────────────────
+GitHub Username: tu-usuario
+Nombre Completo: Tu Nombre
+Fecha de Ingreso: YYYY-MM-DD
+Rol: Tu rol en el equipo
+```
+
+### Paso 2: El Admin Crea tu Perfil
+
+Un administrador creará tu archivo en `users/tu-usuario.json`:
 
 ```json
 {
-  "username": "nuevo-usuario",
-  "displayName": "Nombre Completo",
+  "username": "tu-usuario",
+  "displayName": "Tu Nombre Completo",
   "role": "Desarrollador Frontend",
   "org": "SistemasUrsol",
   "joinedAt": "2026-02-15",
@@ -53,178 +75,241 @@ Crear `users/{github_username}.json`:
 }
 ```
 
-### Campos requeridos
+> 🎉 **¡Tu primera medalla!** Al crearte el perfil, recibes automáticamente la medalla **Hello World**.
 
-| Campo         | Descripción                   | Ejemplo                           |
-| ------------- | ----------------------------- | --------------------------------- |
-| `username`    | Nombre de usuario de GitHub   | `"ursolcr"`                       |
-| `displayName` | Nombre para mostrar           | `"Eduardo Ureña"`                 |
-| `role`        | Rol en el equipo              | `"Co-Fundador & Gerente General"` |
-| `org`         | Organización                  | `"SistemasUrsol"`                 |
-| `joinedAt`    | Fecha de ingreso (YYYY-MM-DD) | `"2024-01-15"`                    |
-| `badges`      | Array de medallas otorgadas   | Ver abajo                         |
+### Paso 3: Verificar tu Registro
 
-### Campos de cada medalla
-
-| Campo       | Descripción                     | Ejemplo                     |
-| ----------- | ------------------------------- | --------------------------- |
-| `id`        | ID de la medalla (del catálogo) | `"code-ninja"`              |
-| `awardedAt` | Fecha de otorgamiento           | `"2024-05-20"`              |
-| `awardedBy` | Quién otorgó la medalla         | `"jeremy-sud"` o `"system"` |
+Puedes verificar que tu perfil existe visitando:
+```
+https://github.com/jeremy-sud/boomflow/blob/main/users/tu-usuario.json
+```
 
 ---
 
-## Paso 2: Agregar marcadores al README del perfil
+## 🖼️ Configurar tu Perfil para Mostrar Medallas
 
-El usuario nuevo debe agregar estos marcadores en su `README.md` de perfil de GitHub:
+### ¿Qué es un Perfil README de GitHub?
+
+GitHub permite crear un README especial que aparece en tu perfil público. BOOMFLOW sincroniza tus medallas allí.
 
 ```
-<!-- BLOOMFLOW-BADGES-START -->
-<!-- BLOOMFLOW-BADGES-END -->
+┌─────────────────────────────────────────────────────────────────┐
+│  github.com/tu-usuario                                          │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  # 👋 Hola, soy Tu Nombre                                      │
+│                                                                 │
+│  Desarrollador en Sistemas Ursol                               │
+│                                                                 │
+│  ### 🏅 Mis Medallas BOOMFLOW                                  │
+│  ┌─────────────────────────────────────────┐                   │
+│  │ 🥉 Hello World  │ 🥉 First Commit  │    │ ◄── Tus medallas │
+│  │ 🥈 Code Ninja   │ 🥇 Tech Lead     │    │     aparecen aquí │
+│  └─────────────────────────────────────────┘                   │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
 ```
 
-> **¿Cómo editar mi perfil README?** Crea un repositorio con el mismo nombre que tu usuario de GitHub (ej: `ursolcr/ursolcr`) y agrega un `README.md`.
+### Paso 1: Crear el Repositorio de Perfil
+
+1. Ve a [github.com/new](https://github.com/new)
+2. **Repository name**: Escribe **exactamente tu username** (ej: `tu-usuario`)
+3. Marca **Public**
+4. Marca **Add a README file**
+5. Click **Create repository**
+
+> ℹ️ GitHub detecta automáticamente que es un perfil README cuando el repo tiene el mismo nombre que tu usuario.
+
+### Paso 2: Agregar los Marcadores BOOMFLOW
+
+Edita tu `README.md` y agrega estos marcadores donde quieras que aparezcan tus medallas:
+
+```markdown
+## 👋 Hola, soy [Tu Nombre]
+
+Desarrollador en Sistemas Ursol
+
+### 🏅 Mis Logros Profesionales
+
+<!-- BOOMFLOW-BADGES-START -->
+<!-- BOOMFLOW-BADGES-END -->
 
 ---
+Más sobre mí...
+```
 
-## Paso 3 (Opcional): Configurar sincronización automática
+⚠️ **Importante**: Los marcadores deben ser exactamente:
+```markdown
+<!-- BOOMFLOW-BADGES-START -->
+<!-- BOOMFLOW-BADGES-END -->
+```
 
-Agregar este workflow en el repo del perfil en `.github/workflows/bloomflow.yml`:
+### Paso 3: Configurar Sincronización Automática (Opcional)
+
+Para que las medallas se actualicen automáticamente, crea el archivo `.github/workflows/boomflow.yml`:
 
 ```yaml
-name: Bloomflow Badge Sync
+name: 🏅 BOOMFLOW Badge Sync
+
 on:
   schedule:
-    - cron: "0 0 * * *" # Diario a medianoche
-  workflow_dispatch: # Permite ejecución manual
+    - cron: '0 0 * * *'  # Diario a medianoche UTC
+  workflow_dispatch:      # Permite ejecución manual
 
 jobs:
   sync-badges:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: jeremy-sud/boomflow@main
+      
+      - uses: jeremy-sud/boomflow/github-action@main
         with:
-          bloomflow_token: ${{ secrets.BLOOMFLOW_TOKEN }}
+          boomflow_token: ${{ secrets.BOOMFLOW_TOKEN }}
           github_username: ${{ github.actor }}
+      
       - uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "🌸 Update Bloomflow badges"
+          commit_message: "🏅 Update BOOMFLOW badges"
 ```
+
+### Paso 4: Configurar el Token
+
+Para que el workflow funcione, necesitas un token de GitHub:
+
+1. Ve a **Settings** → **Developer settings** → **Personal access tokens** → **Tokens (classic)**
+2. **Generate new token (classic)**
+3. Nombre: `BOOMFLOW Sync`
+4. Permisos: Marca `repo` (Full control)
+5. **Generate token** y copia el código `ghp_...`
+6. Ve a tu repo de perfil → **Settings** → **Secrets and variables** → **Actions**
+7. **New repository secret**:
+   - Name: `BOOMFLOW_TOKEN`
+   - Value: (pega el token)
+
+📖 Guía detallada: [GUIA_TOKEN.md](GUIA_TOKEN.md)
+
+### Paso 5: Ejecutar Primera Sincronización
+
+1. Ve a tu repo de perfil
+2. Click en **Actions**
+3. Selecciona **BOOMFLOW Badge Sync**
+4. Click **Run workflow**
+5. ¡Espera unos segundos y revisa tu perfil!
 
 ---
 
-## 📦 IDs de Medallas Disponibles
+## 🎖️ Tus Primeras Medallas
 
-### 🟢 Onboarding
+### Medallas Automáticas
 
-`hello-world` · `first-commit` · `first-pr` · `first-review`
+Estas medallas se otorgan **automáticamente** basándose en tu actividad en GitHub:
 
-### 🔵 Coding
+| Medalla | Criterio | Cuándo se verifica |
+|---------|----------|-------------------|
+| 🥉 **Hello World** | Perfil creado en BOOMFLOW | Al registrarte |
+| 🥉 **First Commit** | 1+ commit en repos de Ursol | Diariamente 6AM UTC |
+| 🥉 **First PR** | 1+ PR mergeada | Diariamente 6AM UTC |
+| 🥉 **First Review** | 1+ code review | Diariamente 6AM UTC |
+| 🥉 **Week One** | 7 días en el equipo | Diariamente 6AM UTC |
+| 🥈 **Month One** | 30 días en el equipo | Diariamente 6AM UTC |
+| 🥇 **Year One** | 365 días en el equipo | Diariamente 6AM UTC |
 
-`code-ninja` · `bug-hunter` · `refactor-master` · `algorithm-ace` · `clean-code` · `full-stack`
+### ¿Cómo conseguir tu primera medalla de código?
 
-### 🟣 DevOps
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│                    RUTA A TU PRIMERA MEDALLA DE CÓDIGO                  │
+├─────────────────────────────────────────────────────────────────────────┤
+│                                                                         │
+│   1. Haz tu primer commit a cualquier repo de SistemasUrsol            │
+│      └─► Recibirás 🥉 First Commit                                     │
+│                                                                         │
+│   2. Crea tu primer Pull Request y que lo aprueben                     │
+│      └─► Recibirás 🥉 First PR                                         │
+│                                                                         │
+│   3. Revisa el código de un compañero y aprueba/comenta                │
+│      └─► Recibirás 🥉 First Review                                     │
+│                                                                         │
+│   4. Continúa contribuyendo: a los 50 commits conseguirás              │
+│      └─► 🥈 Code Ninja                                                 │
+│                                                                         │
+│   5. A los 100 commits:                                                │
+│      └─► 🥈 Commit Century                                             │
+│                                                                         │
+└─────────────────────────────────────────────────────────────────────────┘
+```
 
-`pipeline-pro` · `docker-captain` · `cloud-deployer` · `cicd-master`
+### Medallas que Requieren Nominación
 
-### 🟡 Colaboración
+Estas medallas son otorgadas por administradores cuando demuestras habilidades especiales:
 
-`mentor` · `mentor-master` · `team-spirit` · `code-reviewer` · `pair-programmer`
+| Medalla | Descripción | ¿Cómo conseguirla? |
+|---------|-------------|-------------------|
+| 🥇 **Tech Lead** | Liderazgo técnico demostrado | Lidera decisiones técnicas en proyectos |
+| 🥇 **Architect** | Diseña arquitecturas sólidas | Propón y diseña sistemas escalables |
+| 🥉 **Mentor** | Ayuda a nuevos miembros | Guía activamente a compañeros nuevos |
+| 🥈 **Crisis Averted** | Salvó una situación crítica | Resuelve un incidente de producción |
+| 🥇 **Innovator** | Ideas transformadoras | Propón e implementa mejoras significativas |
 
-### 🔴 Liderazgo
-
-`crisis-averted` · `sprint-hero` · `architect` · `tech-lead`
-
-### ⚪ Documentación
-
-`docs-hero` · `api-designer` · `open-source`
+> 💡 **Tip**: Tu líder de equipo puede nominar a cualquier miembro para estas medallas.
 
 ---
 
-## ✅ Ejemplo Completo: Agregar a `ursolcr`
+## ❓ Preguntas Frecuentes
 
-### 1. Se creó `users/ursolcr.json`:
+### ¿Cuánto tiempo tarda en aparecer una medalla?
 
-```json
-{
-  "username": "ursolcr",
-  "displayName": "Eduardo Ureña",
-  "role": "Co-Fundador & Gerente General",
-  "org": "SistemasUrsol",
-  "joinedAt": "2024-01-15",
-  "badges": [
-    { "id": "hello-world", "awardedAt": "2024-01-15", "awardedBy": "system" },
-    { "id": "first-commit", "awardedAt": "2024-01-22", "awardedBy": "system" },
-    { "id": "first-pr", "awardedAt": "2024-02-05", "awardedBy": "system" },
-    {
-      "id": "first-review",
-      "awardedAt": "2024-02-12",
-      "awardedBy": "jeremy-sud"
-    },
-    { "id": "mentor", "awardedAt": "2024-03-01", "awardedBy": "jeremy-sud" },
-    {
-      "id": "team-spirit",
-      "awardedAt": "2024-04-10",
-      "awardedBy": "jeremy-sud"
-    },
-    { "id": "docs-hero", "awardedAt": "2024-05-15", "awardedBy": "jeremy-sud" },
-    {
-      "id": "sprint-hero",
-      "awardedAt": "2024-06-20",
-      "awardedBy": "jeremy-sud"
-    }
-  ]
-}
+- **Medallas automáticas**: Hasta 24 horas (verificación diaria a las 6AM UTC)
+- **Medallas manuales**: Inmediatamente después de que un admin la otorgue
+- **Sincronización a perfil**: Depende de tu configuración (manual o diaria)
+
+### ¿Puedo auto-asignarme medallas?
+
+**No.** El sistema está diseñado para que el reconocimiento venga de:
+- El sistema automático (métricas de GitHub)
+- Administradores autorizados ([@jeremy-sud](https://github.com/jeremy-sud), [@ursolcr](https://github.com/ursolcr))
+
+### ¿Qué pasa si dejo Sistemas Ursol?
+
+Tus medallas permanecen en tu perfil como parte de tu historial profesional. Representan logros reales que conseguiste durante tu tiempo en el equipo.
+
+### ¿Puedo ver las medallas de otros?
+
+Sí, los archivos de usuario son públicos:
+```
+https://github.com/jeremy-sud/boomflow/tree/main/users
 ```
 
-### 2. Eduardo agrega los marcadores a su README de perfil (`ursolcr/ursolcr/README.md`):
+### ¿Cómo nomino a alguien para una medalla?
 
-```markdown
-# Hola 👋 Soy Eduardo Ureña
+Contacta a un administrador:
+- [@jeremy-sud](https://github.com/jeremy-sud)
+- [@ursolcr](https://github.com/ursolcr)
 
-Co-Fundador de Sistemas Ursol — ¡Su Puerto Seguro en Informática!
+O abre un issue en el repo de BOOMFLOW con la nominación.
 
-<!-- BLOOMFLOW-BADGES-START -->
-<!-- BLOOMFLOW-BADGES-END -->
-```
+### Mi medalla no aparece en mi perfil
 
-### 3. Se ejecuta el Action y las medallas aparecen automáticamente ✨
+Verifica:
+1. ¿Tienes los marcadores `<!-- BOOMFLOW-BADGES-START -->` en tu README?
+2. ¿El workflow se ejecutó correctamente? (revisa la pestaña Actions)
+3. ¿Tu token tiene permisos `repo`?
+
+Si todo está bien, ejecuta manualmente: **Actions** → **Run workflow**
 
 ---
 
-## 🔧 Otorgar nuevas medallas
+## 📞 Soporte
 
-Para otorgar una medalla nueva a un usuario, simplemente agrega un objeto al array `badges` en su archivo JSON:
+¿Problemas o dudas? Contacta a:
 
-```json
-{ "id": "algorithm-ace", "awardedAt": "2026-02-15", "awardedBy": "jeremy-sud" }
-```
-
-Luego ejecuta el Action para sincronizar los cambios al README.
+- **Slack**: #boomflow-support
+- **Email**: [boomflow@ursol.com](mailto:boomflow@ursol.com)
+- **GitHub Issues**: [Crear issue](https://github.com/jeremy-sud/boomflow/issues/new)
 
 ---
 
-## 🏗️ Arquitectura del Sistema de Usuarios
-
-```
-BOOMFLOW/
-├── api-mock.json          → Catálogo maestro (26 medallas)
-├── users/
-│   ├── jeremy-sud.json    → 20 medallas (Dev Lead)
-│   └── ursolcr.json       → 8 medallas (Nuevo integrante)
-├── github-action/
-│   └── index.js           → Lee users/*.json + api-mock.json → genera HTML
-└── assets/
-    └── badge-*.svg        → 26 medallas SVG
-```
-
-**Flujo de datos:**
-
-```
-users/username.json → index.js → cruza con api-mock.json → genera HTML → inyecta en README.md
-```
-
----
-
-> 🌸 Bloomflow — Verificado por [Sistemas Ursol](https://www.ursol.com)
+<p align="center">
+  <strong>🌸 BOOMFLOW</strong><br/>
+  <sub>Bienvenido al equipo — Sistemas Ursol</sub>
+</p>
