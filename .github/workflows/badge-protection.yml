@@ -1,0 +1,127 @@
+name: "🛡️ BOOMFLOW Badge Protection"
+
+on:
+  pull_request:
+    paths:
+      - 'users/**'
+      - 'config/admins.json'
+  push:
+    paths:
+      - 'users/**'
+      - 'config/admins.json'
+
+jobs:
+  validate-badge-permissions:
+    name: "🔐 Validar Permisos de Medallas"
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      
+      - name: Validate Badge Changes
+        id: validate
+        run: |
+          echo "🛡️ BOOMFLOW Badge Protection System"
+          echo "===================================="
+          
+          # Cargar lista de administradores
+          ADMINS=$(cat config/admins.json | jq -r '.admins[].username' | tr '\n' '|' | sed 's/|$//')
+          echo "📋 Administradores autorizados: $(echo $ADMINS | tr '|' ', ')"
+          
+          # Obtener el autor del cambio
+          if [ "${{ github.event_name }}" == "pull_request" ]; then
+            AUTHOR="${{ github.event.pull_request.user.login }}"
+            echo "👤 Autor del PR: $AUTHOR"
+          else
+            AUTHOR="${{ github.actor }}"
+            echo "👤 Autor del push: $AUTHOR"
+          fi
+          
+          # Verificar si el autor es administrador
+          if echo "$AUTHOR" | grep -qE "^($ADMINS)$"; then
+            echo "✅ $AUTHOR es un administrador autorizado"
+            echo "authorized=true" >> $GITHUB_OUTPUT
+          else
+            echo "❌ ERROR: $AUTHOR NO está autorizado para modificar medallas"
+            echo "authorized=false" >> $GITHUB_OUTPUT
+            echo ""
+            echo "🚫 Solo los siguientes usuarios pueden otorgar medallas:"
+            cat config/admins.json | jq -r '.admins[] | "   - \(.username) (\(.displayName))"'
+            echo ""
+            echo "📧 Si crees que esto es un error, contacta a un administrador de Sistemas Ursol."
+            exit 1
+          fi
+      
+      - name: Validate Badge Data Structure
+        if: steps.validate.outputs.authorized == 'true'
+        run: |
+          echo "🔍 Validando estructura de datos de medallas..."
+          
+          # Verificar archivos de usuario modificados
+          if [ "${{ github.event_name }}" == "pull_request" ]; then
+            CHANGED_FILES=$(git diff --name-only ${{ github.event.pull_request.base.sha }} ${{ github.sha }} -- 'users/*.json' 2>/dev/null || echo "")
+          else
+            CHANGED_FILES=$(git diff --name-only HEAD~1 HEAD -- 'users/*.json' 2>/dev/null || echo "")
+          fi
+          
+          if [ -n "$CHANGED_FILES" ]; then
+            echo "📝 Archivos de usuario modificados:"
+            echo "$CHANGED_FILES"
+            
+            for file in $CHANGED_FILES; do
+              if [ -f "$file" ]; then
+                echo ""
+                echo "📄 Validando $file..."
+                
+                # Verificar JSON válido
+                if ! jq empty "$file" 2>/dev/null; then
+                  echo "❌ JSON inválido en $file"
+                  exit 1
+                fi
+                
+                # Verificar estructura requerida
+                if ! jq -e '.username' "$file" > /dev/null 2>&1; then
+                  echo "❌ Campo 'username' requerido en $file"
+                  exit 1
+                fi
+                
+                if ! jq -e '.badges | type == "array"' "$file" > /dev/null 2>&1; then
+                  echo "❌ Campo 'badges' debe ser un array en $file"
+                  exit 1
+                fi
+                
+                # Verificar que cada badge tenga awardedBy
+                BADGES_WITHOUT_AWARDER=$(jq '[.badges[] | select(.awardedBy == null)] | length' "$file")
+                if [ "$BADGES_WITHOUT_AWARDER" -gt 0 ]; then
+                  echo "⚠️  Advertencia: $BADGES_WITHOUT_AWARDER medalla(s) sin campo 'awardedBy' en $file"
+                fi
+                
+                echo "✅ $file válido"
+              fi
+            done
+          fi
+          
+          echo ""
+          echo "✅ Validación completa"
+      
+      - name: Log Badge Changes
+        if: steps.validate.outputs.authorized == 'true'
+        run: |
+          echo "📊 Registrando cambios de medallas..."
+          echo ""
+          echo "🕐 Timestamp: $(date -u '+%Y-%m-%d %H:%M:%S UTC')"
+          echo "👤 Modificado por: ${{ github.actor }}"
+          echo "🔗 Commit: ${{ github.sha }}"
+          echo "📝 Evento: ${{ github.event_name }}"
+          
+          if [ "${{ github.event_name }}" == "pull_request" ]; then
+            echo "🔀 PR: #${{ github.event.pull_request.number }}"
+          fi

@@ -1,0 +1,44 @@
+# =============================================================================
+# BOOMFLOW CODEOWNERS - Sistemas Ursol
+# =============================================================================
+# Este archivo define quién debe aprobar cambios en diferentes partes del código.
+# Solo los propietarios listados pueden aprobar Pull Requests que modifiquen
+# estos archivos.
+#
+# 🛡️ SISTEMA DE PROTECCIÓN DE MEDALLAS
+# Solo los administradores autorizados de Sistemas Ursol pueden otorgar medallas.
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# 🏅 DATOS DE USUARIOS Y MEDALLAS
+# Solo administradores pueden modificar archivos de usuarios/medallas
+# -----------------------------------------------------------------------------
+/users/                         @jeremy-sud @ursolcr
+
+# -----------------------------------------------------------------------------
+# ⚙️ CONFIGURACIÓN DE ADMINISTRADORES
+# Máxima protección - requiere ambos propietarios principales
+# -----------------------------------------------------------------------------
+/config/admins.json             @jeremy-sud @ursolcr
+
+# -----------------------------------------------------------------------------
+# 🔐 ARCHIVOS DE SEGURIDAD Y WORKFLOWS
+# Protección de infraestructura de CI/CD
+# -----------------------------------------------------------------------------
+/.github/                       @jeremy-sud @ursolcr
+/github-action/                 @jeremy-sud @ursolcr
+
+# -----------------------------------------------------------------------------
+# 📦 CATÁLOGO DE MEDALLAS
+# Control sobre definiciones de medallas disponibles
+# -----------------------------------------------------------------------------
+/api-mock.json                  @jeremy-sud @ursolcr
+/assets/                        @jeremy-sud @ursolcr
+
+# -----------------------------------------------------------------------------
+# 📋 DOCUMENTACIÓN CRÍTICA
+# Branding y documentación oficial de Sistemas Ursol
+# -----------------------------------------------------------------------------
+/README.md                      @jeremy-sud @ursolcr
+/LICENSE                        @jeremy-sud @ursolcr
+/DOCS.md                        @jeremy-sud @ursolcr

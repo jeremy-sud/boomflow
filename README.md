@@ -346,7 +346,24 @@ BOOMFLOW es nuestra forma de:
 
 ---
 
-## 📋 Licencia
+## �️ Sistema de Protección
+
+BOOMFLOW implementa un **sistema de protección multinivel** para garantizar la integridad de las medallas:
+
+| Capa | Protección |
+|------|------------|
+| **Administradores** | Solo [@jeremy-sud](https://github.com/jeremy-sud) y [@ursolcr](https://github.com/ursolcr) pueden otorgar medallas |
+| **GitHub Actions** | Validación automática de permisos en cada cambio |
+| **CODEOWNERS** | Aprobación requerida de administradores para modificar datos |
+| **Trazabilidad** | Cada medalla registra quién la otorgó y cuándo |
+
+> ⚠️ **No es posible auto-asignarse medallas.** Intentar modificar archivos de usuarios sin autorización será rechazado automáticamente.
+
+📖 Ver [SECURITY.md](SECURITY.md) para documentación completa del sistema de protección.
+
+---
+
+## �📋 Licencia
 
 Este proyecto está bajo la licencia MIT. Sin embargo, **el uso del sistema de reconocimiento BOOMFLOW está reservado exclusivamente para colaboradores, contratistas y asociados de Sistemas Ursol**.
 
