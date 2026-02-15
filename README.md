@@ -122,7 +122,7 @@ AUTOMÁTICAS (verificadas por GitHub)          MANUALES (otorgadas por admins)
 ✓ year-one        - 365 días en equipo       ✓ visionary    - Visión estratégica
 ```
 
-> 📖 Catálogo completo: [DOCS.md#catálogo-de-medallas](DOCS.md#catálogo-de-medallas)
+> 📖 Catálogo completo con significados: [CATALOGO.md](CATALOGO.md)
 
 ---
 
@@ -200,6 +200,7 @@ BOOMFLOW/
 |-----------|-------------|-----------|
 | [ONBOARDING.md](ONBOARDING.md) | Guía para nuevos colaboradores | 👤 Nuevos miembros |
 | [GUIA_TOKEN.md](GUIA_TOKEN.md) | Configuración de tokens | 👤 Colaboradores |
+| [CATALOGO.md](CATALOGO.md) | Significado de las 89 medallas | 👤 Todos |
 | [DOCS.md](DOCS.md) | Referencia técnica completa | 👨‍💻 Desarrolladores |
 | [ARQUITECTURA.md](ARQUITECTURA.md) | Diseño del sistema | 👨‍💻 Desarrolladores |
 
