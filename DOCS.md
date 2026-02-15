@@ -1,134 +1,152 @@
-# 📚 Bloomflow — Documentación Completa
+# 📚 BOOMFLOW — Technical Documentation
 
-> Plataforma de reconocimiento profesional para [Sistemas Ursol](https://www.ursol.com)
-
----
-
-## 🏗️ Arquitectura del Proyecto
-
-```
-BOOMFLOW/
-├── app-web/          → Frontend (Next.js + React + TailwindCSS)
-├── backend/          → API Server (Express + Node.js)
-├── github-action/    → GitHub Action (Node.js)
-├── assets/           → 26 medallas SVG
-├── users/            → Datos de medallas por usuario
-├── api-mock.json     → Catálogo maestro de medallas
-├── README.md         → README con medallas inyectadas
-├── DOCS.md           → Documentación técnica
-└── ONBOARDING.md     → Guía de integración de nuevos miembros
-```
+> Complete technical reference for the BOOMFLOW Professional Recognition System
 
 ---
 
-## 🏅 Catálogo de Medallas (26 total)
+## Table of Contents
 
-### 🟢 Onboarding (4 medallas)
-
-| Medalla         | Tier      | Descripción                   |
-| --------------- | --------- | ----------------------------- |
-| 👋 Hello World  | 🥉 Bronce | Primer día en el equipo       |
-| ✅ First Commit | 🥉 Bronce | Primer commit al repositorio  |
-| 🔀 First PR     | 🥉 Bronce | Primer Pull Request aprobado  |
-| 🔍 First Review | 🥉 Bronce | Primera code review realizada |
-
-### 🔵 Coding (6 medallas)
-
-| Medalla            | Tier     | Descripción                                 |
-| ------------------ | -------- | ------------------------------------------- |
-| 🥷 Code Ninja      | 🥈 Plata | Código limpio, rápido y eficiente           |
-| 🐛 Bug Hunter      | 🥈 Plata | Detecta bugs antes de producción            |
-| ♻️ Refactor Master | 🥈 Plata | Mejora código legado sin romper nada        |
-| 🧮 Algorithm Ace   | 🥇 Oro   | Algoritmos óptimos para problemas complejos |
-| ✨ Clean Code      | 🥈 Plata | Código legible y mantenible                 |
-| 🏗️ Full Stack      | 🥇 Oro   | Domina frontend y backend                   |
-
-### 🟣 DevOps (4 medallas)
-
-| Medalla           | Tier     | Descripción                          |
-| ----------------- | -------- | ------------------------------------ |
-| ⚡ Pipeline Pro   | 🥈 Plata | Pipelines CI/CD rápidos y confiables |
-| 🐳 Docker Captain | 🥈 Plata | Containerización eficiente           |
-| ☁️ Cloud Deployer | 🥇 Oro   | Despliegues sin downtime             |
-| 🔄 CI/CD Master   | 🥇 Oro   | Automatización total del ciclo       |
-
-### 🟡 Colaboración (5 medallas)
-
-| Medalla            | Tier      | Descripción                        |
-| ------------------ | --------- | ---------------------------------- |
-| 🎓 Mentor          | 🥉 Bronce | Guía a compañeros nuevos           |
-| 🏆 Mentor Master   | 🥇 Oro    | Ha guiado a 20+ colegas            |
-| 🤝 Team Spirit     | 🥈 Plata  | Mantiene la moral del equipo       |
-| 👁️ Code Reviewer   | 🥈 Plata  | Reviews detallados y constructivos |
-| 👥 Pair Programmer | 🥈 Plata  | Programación en pareja efectiva    |
-
-### 🔴 Liderazgo (4 medallas)
-
-| Medalla           | Tier     | Descripción                        |
-| ----------------- | -------- | ---------------------------------- |
-| 🔥 Crisis Averted | 🥇 Oro   | Salvó el deploy en momento crítico |
-| 🚀 Sprint Hero    | 🥈 Plata | Entrega excepcional en sprint      |
-| 🏛️ Architect      | 🥇 Oro   | Arquitectura sólida y escalable    |
-| 👑 Tech Lead      | 🥇 Oro   | Lidera decisiones técnicas         |
-
-### ⚪ Documentación (3 medallas)
-
-| Medalla         | Tier      | Descripción                            |
-| --------------- | --------- | -------------------------------------- |
-| 📖 Docs Hero    | 🥉 Bronce | Documentación clara para el equipo     |
-| 🔌 API Designer | 🥈 Plata  | APIs bien diseñadas y documentadas     |
-| 🌐 Open Source  | 🥈 Plata  | Contribuciones a proyectos open source |
+- [Architecture Overview](#architecture-overview)
+- [Badge System](#badge-system)
+- [GitHub Action](#github-action)
+- [API Reference](#api-reference)
+- [Data Models](#data-models)
+- [SVG Badge Specification](#svg-badge-specification)
+- [Development Guide](#development-guide)
+- [Deployment](#deployment)
 
 ---
 
-## 🔌 API Endpoints
+## Architecture Overview
 
-| Método | Endpoint                | Auth | Descripción                      |
-| ------ | ----------------------- | ---- | -------------------------------- |
-| `GET`  | `/api/health`           | ❌   | Health check del servidor        |
-| `GET`  | `/api/badges/catalog`   | ❌   | Catálogo completo de medallas    |
-| `GET`  | `/api/user/badges`      | ✅   | Medallas del usuario autenticado |
-| `GET`  | `/auth/github`          | ❌   | Inicio de flujo OAuth            |
-| `GET`  | `/auth/github/callback` | ❌   | Callback de OAuth                |
-| `GET`  | `/assets/:file`         | ❌   | Servir archivos SVG              |
-
-### Ejemplo: Catálogo de medallas
-
-```bash
-curl http://localhost:3001/api/badges/catalog
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                        BOOMFLOW Architecture                      │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                   │
+│  ┌──────────────┐     ┌──────────────┐     ┌──────────────┐     │
+│  │   Frontend   │────▶│   Backend    │────▶│   GitHub     │     │
+│  │  (Next.js)   │     │  (Express)   │     │    API       │     │
+│  └──────────────┘     └──────────────┘     └──────────────┘     │
+│         │                    │                    │              │
+│         │                    ▼                    │              │
+│         │            ┌──────────────┐             │              │
+│         │            │  PostgreSQL  │             │              │
+│         │            │   Database   │             │              │
+│         │            └──────────────┘             │              │
+│         │                                         │              │
+│         ▼                                         ▼              │
+│  ┌──────────────┐                        ┌──────────────┐       │
+│  │  User        │                        │  GitHub      │       │
+│  │  Browser     │                        │  Action      │       │
+│  └──────────────┘                        └──────────────┘       │
+│                                                                   │
+└─────────────────────────────────────────────────────────────────┘
 ```
 
-Respuesta:
+### Components
 
-```json
-{
-  "org": "SistemasUrsol",
-  "totalBadges": 26,
-  "categories": { ... },
-  "badges": [ ... ]
-}
-```
+| Component | Technology | Description |
+|-----------|------------|-------------|
+| **Frontend** | Next.js 14, React 18, TailwindCSS | Web dashboard for badge management |
+| **Backend** | Express.js, Node.js 20 | REST API server |
+| **Database** | PostgreSQL / JSON files | User and badge data storage |
+| **GitHub Action** | Node.js 20 | Automated badge sync to profiles |
 
 ---
 
-## 🚀 GitHub Action — Integración con Perfiles
+## Badge System
 
-### Instalación Rápida
+### Tier System
 
-1. **Agrega los marcadores** en tu `README.md` de perfil de GitHub:
+| Tier | Icon | Points Required | Badge Ring Color |
+|------|------|-----------------|------------------|
+| **Bronze** | 🥉 | 1-49 | `#CD7F32` |
+| **Silver** | 🥈 | 50-199 | `#C0C0C0` |
+| **Gold** | 🥇 | 200+ | `#FFD700` |
 
-```markdown
-<!-- BLOOMFLOW-BADGES-START -->
-<!-- BLOOMFLOW-BADGES-END -->
-```
+### Categories
 
-2. **Crea un workflow** en `.github/workflows/bloomflow.yml`:
+| Category | Color | Hex Codes | Badge Count |
+|----------|-------|-----------|-------------|
+| 🟢 Onboarding | Green | `#10B981` → `#059669` | 4 |
+| 🔵 Coding | Blue | `#3B82F6` → `#1D4ED8` | 6 |
+| 🟣 DevOps | Purple | `#8B5CF6` → `#6D28D9` | 4 |
+| 🟡 Collaboration | Amber | `#F59E0B` → `#D97706` | 5 |
+| 🔴 Leadership | Red | `#EF4444` → `#DC2626` | 4 |
+| ⚪ Documentation | Gray | `#6B7280` → `#4B5563` | 3 |
+
+### Complete Badge Reference
+
+#### 🟢 Onboarding
+
+| ID | Label | Tier | Description |
+|----|-------|------|-------------|
+| `hello-world` | Hello World | Bronze | First day on the team |
+| `first-commit` | First Commit | Bronze | First commit to repository |
+| `first-pr` | First PR | Bronze | First Pull Request approved |
+| `first-review` | First Review | Bronze | First code review completed |
+
+#### 🔵 Coding
+
+| ID | Label | Tier | Description |
+|----|-------|------|-------------|
+| `code-ninja` | Code Ninja | Silver | Clean, fast, efficient code |
+| `bug-hunter` | Bug Hunter | Silver | Catches bugs before production |
+| `refactor-master` | Refactor Master | Silver | Improves legacy code safely |
+| `clean-code` | Clean Code | Silver | Readable, maintainable code |
+| `algorithm-ace` | Algorithm Ace | Gold | Optimal algorithms for complex problems |
+| `full-stack` | Full Stack | Gold | Masters frontend and backend |
+
+#### 🟣 DevOps
+
+| ID | Label | Tier | Description |
+|----|-------|------|-------------|
+| `pipeline-pro` | Pipeline Pro | Silver | Fast, reliable CI/CD pipelines |
+| `docker-captain` | Docker Captain | Silver | Efficient containerization |
+| `cloud-deployer` | Cloud Deployer | Gold | Zero-downtime deployments |
+| `cicd-master` | CI/CD Master | Gold | Total development cycle automation |
+
+#### 🟡 Collaboration
+
+| ID | Label | Tier | Description |
+|----|-------|------|-------------|
+| `mentor` | Mentor | Bronze | Guides new team members |
+| `mentor-master` | Mentor Master | Gold | Has guided 20+ colleagues |
+| `team-spirit` | Team Spirit | Silver | Maintains team morale |
+| `code-reviewer` | Code Reviewer | Silver | Detailed, constructive reviews |
+| `pair-programmer` | Pair Programmer | Silver | Effective pair programming |
+
+#### 🔴 Leadership
+
+| ID | Label | Tier | Description |
+|----|-------|------|-------------|
+| `crisis-averted` | Crisis Averted | Gold | Saved a critical deployment |
+| `sprint-hero` | Sprint Hero | Silver | Exceptional sprint delivery |
+| `architect` | Architect | Gold | Solid, scalable architecture |
+| `tech-lead` | Tech Lead | Gold | Leads technical decisions |
+
+#### ⚪ Documentation
+
+| ID | Label | Tier | Description |
+|----|-------|------|-------------|
+| `docs-hero` | Docs Hero | Bronze | Clear documentation for the team |
+| `api-designer` | API Designer | Silver | Well-designed, documented APIs |
+| `open-source` | Open Source | Silver | Open source contributions |
+
+---
+
+## GitHub Action
+
+### Installation
 
 ```yaml
-name: Bloomflow Badge Sync
+# .github/workflows/boomflow.yml
+name: BOOMFLOW Badge Sync
+
 on:
   schedule:
-    - cron: "0 0 * * *" # Diario
+    - cron: "0 0 * * *"
   workflow_dispatch:
 
 jobs:
@@ -136,68 +154,335 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: jeremy-sud/boomflow@main
+      
+      - uses: jeremy-sud/boomflow/github-action@main
         with:
-          bloomflow_token: ${{ secrets.BLOOMFLOW_TOKEN }}
+          boomflow_token: ${{ secrets.BOOMFLOW_TOKEN }}
           github_username: ${{ github.actor }}
-          org_name: SistemasUrsol
+      
       - uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "🌸 Update Bloomflow badges"
+          commit_message: "🏅 Update BOOMFLOW badges"
 ```
 
-3. **Agrega tu token** en Settings → Secrets → `BLOOMFLOW_TOKEN`
+### Inputs
 
-### Compatibilidad con Perfiles GitHub
+| Input | Required | Default | Description |
+|-------|----------|---------|-------------|
+| `boomflow_token` | ✅ | - | Personal access token |
+| `github_username` | ❌ | `github.actor` | Target username |
+| `org_name` | ❌ | `SistemasUrsol` | Organization name |
 
-Las medallas se renderizan como **tablas HTML con imágenes SVG**, lo que garantiza:
+### How It Works
 
-- ✅ Renderizado correcto en perfiles de GitHub
-- ✅ SVGs se muestran como imágenes (usando `<img>` tags)
-- ✅ Layout responsivo en diferentes tamaños de pantalla
-- ✅ Sin dependencias externas (todos los SVGs son del mismo repo)
-- ✅ Compatible con GitHub Dark Mode y Light Mode
+1. **Checkout**: The action checks out your profile repository
+2. **Fetch Data**: Reads user badge data from `users/{username}.json`
+3. **Build HTML**: Generates badge table HTML from templates
+4. **Update README**: Replaces content between markers
+5. **Commit**: Auto-commits the changes
+
+### Markers
+
+Add these markers to your `README.md`:
+
+```markdown
+<!-- BOOMFLOW-BADGES-START -->
+<!-- BOOMFLOW-BADGES-END -->
+```
+
+Everything between these markers will be replaced with your badge table.
 
 ---
 
-## 🛠️ Desarrollo Local
+## API Reference
 
-### Backend
+### Base URL
 
-```bash
-cd backend
-npm install
-cp .env.example .env  # Configurar variables
-npm start             # → http://localhost:3001
+```
+Production: https://api.boomflow.dev
+Development: http://localhost:3001
 ```
 
-### Frontend
+### Endpoints
 
-```bash
-cd app-web
-npm install
-npm run dev           # → http://localhost:3000
+#### Health Check
+
+```http
+GET /api/health
 ```
 
-### GitHub Action (test local)
+Response:
+```json
+{
+  "status": "ok",
+  "timestamp": "2026-02-15T00:00:00.000Z",
+  "version": "1.0.0"
+}
+```
+
+#### Get Badge Catalog
+
+```http
+GET /api/badges/catalog
+```
+
+Response:
+```json
+[
+  {
+    "id": "code-ninja",
+    "emoji": "🥷",
+    "label": "Code Ninja",
+    "category": "coding",
+    "tier": "silver",
+    "meta": "Nivel 2",
+    "description": "Código limpio, rápido y eficiente.",
+    "svg": "badge-code-ninja.svg"
+  }
+]
+```
+
+#### Get User Badges (Authenticated)
+
+```http
+GET /api/user/badges
+Authorization: Bearer {token}
+```
+
+Response:
+```json
+{
+  "username": "jeremy-sud",
+  "displayName": "Jeremy Alva",
+  "badges": [
+    {
+      "id": "code-ninja",
+      "awardedAt": "2024-02-10",
+      "awardedBy": "ursolcr"
+    }
+  ]
+}
+```
+
+#### OAuth Flow
+
+```http
+GET /auth/github
+```
+Redirects to GitHub OAuth authorization page.
+
+```http
+GET /auth/github/callback?code={code}
+```
+Handles OAuth callback, creates session.
+
+---
+
+## Data Models
+
+### Badge (Catalog)
+
+```typescript
+interface Badge {
+  id: string;           // Unique identifier
+  emoji: string;        // Display emoji
+  label: string;        // Human-readable name
+  category: Category;   // Category key
+  tier: Tier;           // bronze | silver | gold
+  meta: string;         // Tier level label
+  description: string;  // Full description
+  svg: string;          // SVG filename
+}
+
+type Category = 
+  | 'onboarding' 
+  | 'coding' 
+  | 'devops' 
+  | 'collaboration' 
+  | 'leadership' 
+  | 'documentation';
+
+type Tier = 'bronze' | 'silver' | 'gold';
+```
+
+### User Data
+
+```typescript
+interface UserData {
+  username: string;
+  displayName: string;
+  role?: string;
+  org: string;
+  joinedAt: string;     // ISO date
+  badges: UserBadge[];
+}
+
+interface UserBadge {
+  id: string;           // Badge ID reference
+  awardedAt: string;    // ISO date
+  awardedBy: string;    // Username who awarded
+}
+```
+
+---
+
+## SVG Badge Specification
+
+### Dimensions
+
+- **Canvas**: 128x128 pixels
+- **Outer Ring**: 58px radius (tier indicator)
+- **Inner Circle**: 50px radius (category background)
+- **Icon Area**: ~40px centered
+
+### Structure
+
+```xml
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
+  <defs>
+    <!-- Gradient for category background -->
+    <linearGradient id="bg">...</linearGradient>
+    <!-- Gradient for tier ring (bronze/silver/gold) -->
+    <linearGradient id="tier">...</linearGradient>
+    <!-- Shine effect -->
+    <linearGradient id="shine">...</linearGradient>
+    <!-- Drop shadow filter -->
+    <filter id="shadow">...</filter>
+  </defs>
+  
+  <!-- Tier ring (outer) -->
+  <circle cx="64" cy="64" r="58" fill="url(#tier)" filter="url(#shadow)"/>
+  
+  <!-- Category background (inner) -->
+  <circle cx="64" cy="64" r="50" fill="url(#bg)"/>
+  
+  <!-- Shine effect -->
+  <ellipse cx="64" cy="40" rx="35" ry="25" fill="url(#shine)"/>
+  
+  <!-- Icon (vector graphics) -->
+  <g transform="translate(64, 50)">...</g>
+  
+  <!-- Label text -->
+  <text x="64" y="95">BADGE NAME</text>
+  
+  <!-- Tier indicator -->
+  <text x="64" y="108">● BRONZE / ● SILVER / ★ GOLD</text>
+</svg>
+```
+
+### Tier Colors
+
+```css
+/* Bronze */
+#D4A574 → #CD7F32 → #8B5A2B
+
+/* Silver */
+#E8E8E8 → #C0C0C0 → #A0A0A0
+
+/* Gold */
+#FFE55C → #FFD700 → #DAA520
+```
+
+---
+
+## Development Guide
+
+### Prerequisites
+
+```bash
+node --version  # >= 20.0.0
+npm --version   # >= 10.0.0
+```
+
+### Setup
+
+```bash
+# Clone repository
+git clone https://github.com/jeremy-sud/boomflow.git
+cd boomflow
+
+# Install dependencies
+npm install
+
+# Start backend
+cd backend && npm run dev
+
+# Start frontend (new terminal)
+cd app-web && npm run dev
+```
+
+### Testing the GitHub Action Locally
 
 ```bash
 cd github-action
-npm install
-node index.js         # Actualiza README.md
+node index.js
+```
+
+### Environment Variables
+
+Create `.env` in backend/:
+
+```env
+PORT=3001
+GITHUB_CLIENT_ID=your_client_id
+GITHUB_CLIENT_SECRET=your_client_secret
+SESSION_SECRET=random_secret_string
 ```
 
 ---
 
-## 🔐 Variables de Entorno
+## Deployment
 
-| Variable               | Descripción                   | Default         |
-| ---------------------- | ----------------------------- | --------------- |
-| `PORT`                 | Puerto del API server         | `3001`          |
-| `REQUIRED_ORG`         | Organización GitHub requerida | `SistemasUrsol` |
-| `GITHUB_CLIENT_ID`     | Client ID de OAuth            | —               |
-| `GITHUB_CLIENT_SECRET` | Client Secret de OAuth        | —               |
+### Backend (Railway/Vercel)
+
+```bash
+cd backend
+railway up
+# or
+vercel
+```
+
+### Frontend (Vercel)
+
+```bash
+cd app-web
+vercel
+```
+
+### GitHub Action
+
+The action is automatically available at:
+```
+jeremy-sud/boomflow/github-action@main
+```
 
 ---
 
-> 🌸 Bloomflow — Verificado por [Sistemas Ursol](https://www.ursol.com) — ¡Su Puerto Seguro en Informática!
+## Troubleshooting
+
+### Badges not appearing
+
+1. Check markers exist in README.md
+2. Verify `BOOMFLOW_TOKEN` secret is set
+3. Check workflow run logs for errors
+4. Ensure user data file exists in `users/{username}.json`
+
+### SVGs not rendering
+
+1. Check raw GitHub URLs are accessible
+2. Verify SVG syntax is valid
+3. Clear browser cache
+
+### OAuth errors
+
+1. Verify GitHub OAuth app credentials
+2. Check callback URL matches configuration
+3. Ensure scopes include `repo` permission
+
+---
+
+<p align="center">
+  <sub>Documentation version 1.0.0</sub>
+  <br/>
+  <sub>© 2026 <a href="https://www.ursol.com">Sistemas Ursol</a></sub>
+</p>

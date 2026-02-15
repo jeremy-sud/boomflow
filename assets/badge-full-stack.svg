@@ -1,12 +1,31 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 120 120">
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
   <defs>
-    <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#42A5F5"/>
-      <stop offset="100%" stop-color="#1565C0"/>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3B82F6"/>
+      <stop offset="100%" stop-color="#1D4ED8"/>
     </linearGradient>
+    <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFE55C"/>
+      <stop offset="50%" stop-color="#FFD700"/>
+      <stop offset="100%" stop-color="#DAA520"/>
+    </linearGradient>
+    <linearGradient id="shine" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="white" stop-opacity="0.4"/>
+      <stop offset="50%" stop-color="white" stop-opacity="0"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.3"/>
+    </filter>
   </defs>
-  <polygon points="60,5 110,30 110,90 60,115 10,90 10,30" fill="url(#g)" stroke="#90CAF9" stroke-width="2"/>
-  <text x="60" y="52" text-anchor="middle" font-family="Arial,sans-serif" font-size="28" fill="white">🏗️</text>
-  <text x="60" y="78" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" font-weight="bold" fill="white">Full Stack</text>
-  <text x="60" y="92" text-anchor="middle" font-family="Arial,sans-serif" font-size="7" fill="#BBDEFB">Coding</text>
+  <circle cx="64" cy="64" r="58" fill="url(#gold)" filter="url(#shadow)"/>
+  <circle cx="64" cy="64" r="50" fill="url(#bg)"/>
+  <ellipse cx="64" cy="40" rx="35" ry="25" fill="url(#shine)"/>
+  <!-- Icon: Layers/Stack -->
+  <g transform="translate(64, 48)" fill="none" stroke="white" stroke-width="2.5" stroke-linejoin="round">
+    <polygon points="0,-18 20,-8 0,2 -20,-8" fill="white" fill-opacity="0.3"/>
+    <polygon points="0,-10 20,0 0,10 -20,0" fill="white" fill-opacity="0.5"/>
+    <polygon points="0,-2 20,8 0,18 -20,8" fill="white" fill-opacity="0.8"/>
+  </g>
+  <text x="64" y="95" text-anchor="middle" font-family="'Segoe UI',Roboto,sans-serif" font-size="9" font-weight="600" fill="white">FULL STACK</text>
+  <text x="64" y="108" text-anchor="middle" font-family="'Segoe UI',Roboto,sans-serif" font-size="7" fill="#FFD700">★ GOLD</text>
 </svg>
