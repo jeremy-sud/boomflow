@@ -4,5 +4,27 @@
   "role": "Co-Fundador & Dev Lead",
   "org": "SistemasUrsol",
   "joinedAt": "2024-01-15",
-  "badges": []
+  "badges": [
+    {
+      "id": "hello-world",
+      "awardedAt": "2026-02-15",
+      "awardedBy": "auto-award-system",
+      "autoAwarded": true,
+      "reason": "Perfil creado en BOOMFLOW"
+    },
+    {
+      "id": "first-commit",
+      "awardedAt": "2026-02-15",
+      "awardedBy": "auto-award-system",
+      "autoAwarded": true,
+      "reason": "Primer commit realizado"
+    },
+    {
+      "id": "code-ninja",
+      "awardedAt": "2026-02-15",
+      "awardedBy": "auto-award-system",
+      "autoAwarded": true,
+      "reason": "50+ commits"
+    }
+  ]
 }
