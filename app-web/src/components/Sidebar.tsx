@@ -2,6 +2,19 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import Image from 'next/image';
+
+interface User {
+  name?: string | null;
+  email?: string | null;
+  image?: string | null;
+  username?: string;
+}
+
+interface SidebarProps {
+  user?: User | null;
+  badgeCount?: number;
+}
 
 const NAV_ITEMS = [
   { href: '/', label: 'Dashboard', icon: '🏠' },
@@ -11,7 +24,7 @@ const NAV_ITEMS = [
   { href: '/leaderboard', label: 'Ranking', icon: '🏆' },
 ];
 
-export default function Sidebar() {
+export default function Sidebar({ user, badgeCount = 0 }: SidebarProps) {
   const pathname = usePathname();
 
   return (
@@ -53,15 +66,46 @@ export default function Sidebar() {
 
       {/* User Section */}
       <div className="p-4 border-t border-white/10">
-        <div className="flex items-center gap-3 px-4 py-3 rounded-lg bg-white/5">
-          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold">
-            J
+        {user ? (
+          <div className="space-y-3">
+            <div className="flex items-center gap-3 px-4 py-3 rounded-lg bg-white/5">
+              {user.image ? (
+                <Image
+                  src={user.image}
+                  alt={user.name || 'Avatar'}
+                  width={40}
+                  height={40}
+                  className="rounded-full"
+                />
+              ) : (
+                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold">
+                  {(user.name || user.username || 'U')[0].toUpperCase()}
+                </div>
+              )}
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-medium text-white truncate">
+                  {user.username || user.name}
+                </p>
+                <p className="text-xs text-zinc-500">{badgeCount} medallas</p>
+              </div>
+            </div>
+            <form action="/api/auth/signout" method="POST">
+              <button
+                type="submit"
+                className="w-full px-4 py-2 text-sm text-zinc-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors flex items-center gap-2 justify-center"
+              >
+                <span>🚪</span> Cerrar sesión
+              </button>
+            </form>
           </div>
-          <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium text-white truncate">jeremy-sud</p>
-            <p className="text-xs text-zinc-500">6 medallas</p>
-          </div>
-        </div>
+        ) : (
+          <Link
+            href="/login"
+            className="flex items-center justify-center gap-2 px-4 py-3 rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 text-white font-medium hover:from-blue-500 hover:to-purple-500 transition-all"
+          >
+            <span>🔐</span> Iniciar sesión
+          </Link>
+        )}
       </div>
 
       {/* Footer */}
