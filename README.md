@@ -208,6 +208,7 @@ BOOMFLOW/
 | [GUIA_TOKEN.md](GUIA_TOKEN.md) | Configuración de tokens | 👤 Colaboradores |
 | [CATALOGO.md](CATALOGO.md) | Significado de las 97 medallas | 👤 Todos |
 | [ECONOMY.md](ECONOMY.md) | Economía: medallas sociales y de inversión | 👤 Todos |
+| [SKINS.md](SKINS.md) | Personalización visual de medallas | 🎨 Todos |
 | [DOCS.md](DOCS.md) | Referencia técnica completa | 👨‍💻 Desarrolladores |
 | [ARQUITECTURA.md](ARQUITECTURA.md) | Diseño del sistema | 👨‍💻 Desarrolladores |
 

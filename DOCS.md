@@ -1176,6 +1176,71 @@ node scripts/sync-profile.js jeremy-sud README.md --view=normal
 
 ---
 
+## Sistema de Skins
+
+BOOMFLOW permite personalizar la apariencia de las medallas con diferentes "skins" o estilos visuales.
+
+### Paquetes Disponibles
+
+| Skin | Descripción | Acceso |
+|------|-------------|--------|
+| DEFAULT | Diseño original colorido | Gratis |
+| CRYSTAL | Estilo gema/cristal facetado | Gratis |
+| ACADEMIC | Escudo formal con laureles | Gratis |
+| MINIMALIST | Diseño limpio y simple | Gratis |
+| VINTAGE | Estilo retro con ornamentos | Gratis |
+| NEON | Cyberpunk con efectos de brillo | Premium |
+
+### Cambiar Skin via API
+
+```http
+GET /api/badges/skins
+```
+**Respuesta:**
+```json
+{
+  "skins": [
+    {
+      "id": "skin_crystal_v1",
+      "name": "Crystal",
+      "slug": "crystal",
+      "style": "CRYSTAL",
+      "isPremium": false,
+      "hasAccess": true
+    }
+  ],
+  "hasPremiumAccess": false
+}
+```
+
+### Crear Skins Personalizadas
+
+Usa el generador interactivo:
+```bash
+node scripts/generate-custom-skin.js
+```
+
+O en modo CLI:
+```bash
+node scripts/generate-custom-skin.js \
+  --shape hexagon \
+  --palette ocean \
+  --effect glow \
+  --icon gem \
+  --text "EPIC" \
+  --name "Mi Skin"
+```
+
+**Opciones disponibles:**
+- `--shape`: circle, hexagon, shield, octagon, oval, diamond
+- `--palette`: ocean, forest, sunset, lavender, midnight, rose, gold, slate, neon, corporate
+- `--effect`: none, glow, shadow, gradient, noise
+- `--icon`: gem, star, badge, lightning, code, heart, trophy, rocket, none
+
+Para documentación completa sobre skins, ver [SKINS.md](SKINS.md).
+
+---
+
 ## API Reference
 
 ### Endpoints (Backend en desarrollo)
