@@ -1,0 +1,218 @@
+// BOOMFLOW - Schema de Base de Datos
+// Sistema de gamificación corporativa con kudos y badges
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ==================== USUARIOS Y ORGANIZACIONES ====================
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  name          String?
+  username      String    @unique
+  image         String?
+  githubId      String?   @unique
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // Relaciones
+  organizationId String?
+  organization   Organization? @relation(fields: [organizationId], references: [id])
+  teamId         String?
+  team           Team?         @relation(fields: [teamId], references: [id])
+
+  // Kudos y Badges
+  kudosSent     Kudo[]      @relation("KudosSent")
+  kudosReceived Kudo[]      @relation("KudosReceived")
+  badges        UserBadge[]
+
+  // NextAuth
+  accounts      Account[]
+  sessions      Session[]
+
+  @@map("users")
+}
+
+model Organization {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique
+  description String?
+  logo        String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relaciones
+  users       User[]
+  teams       Team[]
+  badges      Badge[]
+
+  @@map("organizations")
+}
+
+model Team {
+  id             String       @id @default(cuid())
+  name           String
+  slug           String
+  description    String?
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  // Relaciones
+  members        User[]
+
+  @@unique([organizationId, slug])
+  @@map("teams")
+}
+
+// ==================== SISTEMA DE KUDOS ====================
+
+model Kudo {
+  id         String   @id @default(cuid())
+  message    String
+  isPublic   Boolean  @default(true)
+  createdAt  DateTime @default(now())
+
+  // Relaciones
+  fromId     String
+  from       User     @relation("KudosSent", fields: [fromId], references: [id], onDelete: Cascade)
+  toId       String
+  to         User     @relation("KudosReceived", fields: [toId], references: [id], onDelete: Cascade)
+  categoryId String?
+  category   KudoCategory? @relation(fields: [categoryId], references: [id])
+
+  @@map("kudos")
+}
+
+model KudoCategory {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  emoji       String
+  description String?
+  kudos       Kudo[]
+
+  @@map("kudo_categories")
+}
+
+// ==================== SISTEMA DE BADGES ====================
+
+model Badge {
+  id             String        @id @default(cuid())
+  name           String
+  slug           String        @unique
+  description    String
+  svgIcon        String        // SVG como string
+  category       BadgeCategory
+  tier           BadgeTier     @default(BRONZE)
+  isAutomatic    Boolean       @default(false)
+  triggerType    TriggerType?
+  triggerValue   Int?          // Valor para trigger automático
+  isActive       Boolean       @default(true)
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  // Relaciones (badges custom por org)
+  organizationId String?
+  organization   Organization? @relation(fields: [organizationId], references: [id])
+  userBadges     UserBadge[]
+
+  @@map("badges")
+}
+
+model UserBadge {
+  id        String   @id @default(cuid())
+  awardedAt DateTime @default(now())
+  awardedBy String?  // username de quien otorgó (null si automático)
+  reason    String?
+  isVisible Boolean  @default(true)
+
+  // Relaciones
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  badgeId   String
+  badge     Badge    @relation(fields: [badgeId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, badgeId])
+  @@map("user_badges")
+}
+
+// ==================== ENUMS ====================
+
+enum BadgeCategory {
+  COLABORACION
+  CODIGO
+  LIDERAZGO
+  INNOVACION
+  CULTURA
+  ONBOARDING
+  COMUNICACION
+  CALIDAD
+  ESPECIALES
+}
+
+enum BadgeTier {
+  BRONZE
+  SILVER
+  GOLD
+}
+
+enum TriggerType {
+  KUDOS_RECEIVED    // Recibir X kudos
+  KUDOS_SENT        // Enviar X kudos
+  CODE_REVIEWS      // Hacer X code reviews
+  PULL_REQUESTS     // Crear X PRs
+  ISSUES_CLOSED     // Cerrar X issues
+  STREAK_DAYS       // X días consecutivos activo
+  FIRST_ACTION      // Primera acción de tipo
+  MANUAL            // Otorgado manualmente
+}
+
+// ==================== NEXTAUTH ====================
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verification_tokens")
+}

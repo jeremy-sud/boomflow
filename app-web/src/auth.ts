@@ -1,7 +1,10 @@
 import NextAuth from "next-auth";
 import GitHub from "next-auth/providers/github";
+import { PrismaAdapter } from "@auth/prisma-adapter";
+import prisma from "@/lib/prisma";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
+  adapter: PrismaAdapter(prisma),
   providers: [
     GitHub({
       clientId: process.env.GITHUB_CLIENT_ID!,
@@ -12,22 +15,43 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           scope: "read:user user:email",
         },
       },
+      // Mapear datos de GitHub al modelo de User
+      profile(profile) {
+        return {
+          id: profile.id.toString(),
+          email: profile.email,
+          name: profile.name || profile.login,
+          username: profile.login,
+          image: profile.avatar_url,
+          githubId: profile.id.toString(),
+        };
+      },
     }),
   ],
   callbacks: {
-    async jwt({ token, account, profile }) {
-      // Guardar el username de GitHub en el token
-      if (account && profile) {
-        token.username = (profile as { login?: string }).login;
-        token.id = profile.id as string;
-      }
-      return token;
-    },
-    async session({ session, token }) {
-      // Exponer el username en la sesión
-      if (session.user) {
-        session.user.username = token.username as string;
-        session.user.id = token.id as string;
+    async session({ session, user }) {
+      // Cargar datos completos del usuario desde Prisma
+      if (user) {
+        const dbUser = await prisma.user.findUnique({
+          where: { id: user.id },
+          include: {
+            badges: { include: { badge: true } },
+            organization: true,
+            team: true,
+          },
+        });
+        
+        if (dbUser) {
+          session.user.id = dbUser.id;
+          session.user.username = dbUser.username;
+          session.user.badges = dbUser.badges.map(ub => ({
+            id: ub.badge.id,
+            name: ub.badge.name,
+            slug: ub.badge.slug,
+          }));
+          session.user.organization = dbUser.organization?.name;
+          session.user.team = dbUser.team?.name;
+        }
       }
       return session;
     },
@@ -49,6 +73,9 @@ declare module "next-auth" {
       email?: string | null;
       image?: string | null;
       username?: string;
+      badges?: Array<{ id: string; name: string; slug: string }>;
+      organization?: string;
+      team?: string;
     };
   }
 }
