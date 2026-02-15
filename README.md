@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-tech-lead.svg" width="120" height="120" alt="BOOMFLOW"/>
+  <img src="https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/logo-boomflow.svg" width="120" height="120" alt="BOOMFLOW"/>
 </p>
 
 <h1 align="center">🌸 BOOMFLOW</h1>
