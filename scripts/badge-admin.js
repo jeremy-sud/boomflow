@@ -1,13 +1,13 @@
 #!/usr/bin/env node
 /**
- * 🏅 BOOMFLOW - CLI de Administración de Medallas
+ * 🏅 BOOMFLOW - Badge Administration CLI
  * ================================================
- * Herramienta exclusiva para administradores de Sistemas Ursol
+ * Exclusive tool for Sistemas Ursol administrators
  * 
- * Uso:
- *   node scripts/grant-badge.js <usuario> <badge-id> [--admin <admin>]
+ * Usage:
+ *   node scripts/grant-badge.js <user> <badge-id> [--admin <admin>]
  * 
- * Ejemplos:
+ * Examples:
  *   node scripts/grant-badge.js jeremy-sud first-commit --admin ursolcr
  *   node scripts/grant-badge.js ursolcr code-ninja --admin jeremy-sud
  */
@@ -15,12 +15,12 @@
 const fs = require('fs');
 const path = require('path');
 
-// Rutas
+// Paths
 const ADMINS_PATH = path.join(__dirname, '../config/admins.json');
 const USERS_DIR = path.join(__dirname, '../users');
 const CATALOG_PATH = path.join(__dirname, '../api-mock.json');
 
-// Colores para consola
+// Console colors
 const colors = {
   reset: '\x1b[0m',
   red: '\x1b[31m',
@@ -37,14 +37,14 @@ function log(color, ...args) {
 
 function loadAdmins() {
   if (!fs.existsSync(ADMINS_PATH)) {
-    throw new Error('No se encontró config/admins.json');
+    throw new Error('config/admins.json not found');
   }
   return JSON.parse(fs.readFileSync(ADMINS_PATH, 'utf8'));
 }
 
 function loadCatalog() {
   if (!fs.existsSync(CATALOG_PATH)) {
-    throw new Error('No se encontró api-mock.json');
+    throw new Error('api-mock.json not found');
   }
   return JSON.parse(fs.readFileSync(CATALOG_PATH, 'utf8'));
 }
@@ -73,13 +73,13 @@ function getBadgeInfo(badgeId) {
 }
 
 function grantBadge(targetUser, badgeId, adminUser) {
-  log(colors.cyan, '🏅 BOOMFLOW - Otorgar Medalla');
+  log(colors.cyan, '🏅 BOOMFLOW - Award Badge');
   log(colors.cyan, '============================\n');
 
-  // Verificar que el administrador sea válido
+  // Verify that the administrator is valid
   if (!isAdmin(adminUser)) {
-    log(colors.red, `❌ Error: "${adminUser}" no es un administrador autorizado.`);
-    log(colors.yellow, '\n📋 Administradores autorizados:');
+    log(colors.red, `❌ Error: "${adminUser}" is not an authorized administrator.`);
+    log(colors.yellow, '\n📋 Authorized administrators:');
     const adminsData = loadAdmins();
     adminsData.admins.forEach(a => {
       log(colors.yellow, `   - ${a.username} (${a.displayName})`);
@@ -87,18 +87,18 @@ function grantBadge(targetUser, badgeId, adminUser) {
     process.exit(1);
   }
 
-  // Verificar que la medalla exista
+  // Verify that the badge exists
   const badge = getBadgeInfo(badgeId);
   if (!badge) {
-    log(colors.red, `❌ Error: Medalla "${badgeId}" no encontrada en el catálogo.`);
-    log(colors.yellow, '\n💡 Usa "node scripts/list-badges.js" para ver medallas disponibles.');
+    log(colors.red, `❌ Error: Badge "${badgeId}" not found in catalog.`);
+    log(colors.yellow, '\n💡 Use "node scripts/list-badges.js" to see available badges.');
     process.exit(1);
   }
 
-  // Cargar o crear usuario
+  // Load or create user
   let userData = loadUser(targetUser);
   if (!userData) {
-    log(colors.yellow, `⚠️  Usuario "${targetUser}" no existe. Creando perfil nuevo...`);
+    log(colors.yellow, `⚠️  User "${targetUser}" doesn't exist. Creating new profile...`);
     userData = {
       username: targetUser,
       displayName: targetUser,
@@ -109,15 +109,15 @@ function grantBadge(targetUser, badgeId, adminUser) {
     };
   }
 
-  // Verificar si ya tiene la medalla
+  // Check if user already has the badge
   const existingBadge = userData.badges.find(b => b.id === badgeId);
   if (existingBadge) {
-    log(colors.yellow, `⚠️  "${targetUser}" ya tiene la medalla "${badge.label}".`);
-    log(colors.yellow, `   Otorgada el ${existingBadge.awardedAt} por ${existingBadge.awardedBy}`);
+    log(colors.yellow, `⚠️  "${targetUser}" already has the badge "${badge.label}".`);
+    log(colors.yellow, `   Awarded on ${existingBadge.awardedAt} by ${existingBadge.awardedBy}`);
     process.exit(0);
   }
 
-  // Otorgar medalla
+  // Award badge
   const newBadge = {
     id: badgeId,
     awardedAt: new Date().toISOString().split('T')[0],
@@ -128,39 +128,39 @@ function grantBadge(targetUser, badgeId, adminUser) {
   userData.badges.push(newBadge);
   saveUser(targetUser, userData);
 
-  log(colors.green, '✅ ¡Medalla otorgada exitosamente!\n');
-  log(colors.blue, '📋 Detalles:');
-  log(colors.reset, `   👤 Usuario:    ${targetUser}`);
-  log(colors.reset, `   🏅 Medalla:    ${badge.label} (${badge.tier})`);
-  log(colors.reset, `   📅 Fecha:      ${newBadge.awardedAt}`);
-  log(colors.reset, `   👑 Otorgada por: ${adminUser}`);
-  log(colors.reset, `   📁 Categoría:  ${badge.category}`);
+  log(colors.green, '✅ Badge awarded successfully!\n');
+  log(colors.blue, '📋 Details:');
+  log(colors.reset, `   👤 User:       ${targetUser}`);
+  log(colors.reset, `   🏅 Badge:      ${badge.label} (${badge.tier})`);
+  log(colors.reset, `   📅 Date:       ${newBadge.awardedAt}`);
+  log(colors.reset, `   👑 Awarded by: ${adminUser}`);
+  log(colors.reset, `   📁 Category:   ${badge.category}`);
   
-  log(colors.magenta, `\n🎉 ${targetUser} ahora tiene ${userData.badges.length} medalla(s).`);
-  log(colors.yellow, '\n💡 Recuerda hacer commit y push para sincronizar los cambios.');
+  log(colors.magenta, `\n🎉 ${targetUser} now has ${userData.badges.length} badge(s).`);
+  log(colors.yellow, '\n💡 Remember to commit and push to sync changes.');
 }
 
 function revokeBadge(targetUser, badgeId, adminUser) {
-  log(colors.cyan, '🏅 BOOMFLOW - Revocar Medalla');
+  log(colors.cyan, '🏅 BOOMFLOW - Revoke Badge');
   log(colors.cyan, '============================\n');
 
-  // Verificar administrador
+  // Verify administrator
   if (!isAdmin(adminUser)) {
-    log(colors.red, `❌ Error: "${adminUser}" no es un administrador autorizado.`);
+    log(colors.red, `❌ Error: "${adminUser}" is not an authorized administrator.`);
     process.exit(1);
   }
 
-  // Cargar usuario
+  // Load user
   const userData = loadUser(targetUser);
   if (!userData) {
-    log(colors.red, `❌ Error: Usuario "${targetUser}" no encontrado.`);
+    log(colors.red, `❌ Error: User "${targetUser}" not found.`);
     process.exit(1);
   }
 
-  // Buscar medalla
+  // Find badge
   const badgeIndex = userData.badges.findIndex(b => b.id === badgeId);
   if (badgeIndex === -1) {
-    log(colors.yellow, `⚠️  "${targetUser}" no tiene la medalla "${badgeId}".`);
+    log(colors.yellow, `⚠️  "${targetUser}" doesn't have the badge "${badgeId}".`);
     process.exit(0);
   }
 
@@ -168,11 +168,11 @@ function revokeBadge(targetUser, badgeId, adminUser) {
   userData.badges.splice(badgeIndex, 1);
   saveUser(targetUser, userData);
 
-  log(colors.green, '✅ Medalla revocada exitosamente.\n');
-  log(colors.reset, `   👤 Usuario:    ${targetUser}`);
-  log(colors.reset, `   🏅 Medalla:    ${badgeId}`);
-  log(colors.reset, `   👑 Revocada por: ${adminUser}`);
-  log(colors.reset, `\n   ${targetUser} ahora tiene ${userData.badges.length} medalla(s).`);
+  log(colors.green, '✅ Badge revoked successfully.\n');
+  log(colors.reset, `   👤 User:       ${targetUser}`);
+  log(colors.reset, `   🏅 Badge:      ${badgeId}`);
+  log(colors.reset, `   👑 Revoked by: ${adminUser}`);
+  log(colors.reset, `\n   ${targetUser} now has ${userData.badges.length} badge(s).`);
 }
 
 // CLI
@@ -181,27 +181,27 @@ const command = args[0];
 
 function showHelp() {
   console.log(`
-🏅 BOOMFLOW - CLI de Administración de Medallas
+🏅 BOOMFLOW - Badge Administration CLI
 ================================================
-Herramienta exclusiva para administradores de Sistemas Ursol
+Exclusive tool for Sistemas Ursol administrators
 
-USO:
-  node scripts/badge-admin.js <comando> [opciones]
+USAGE:
+  node scripts/badge-admin.js <command> [options]
 
-COMANDOS:
-  grant <usuario> <badge-id> --admin <admin>
-    Otorga una medalla a un usuario
+COMMANDS:
+  grant <user> <badge-id> --admin <admin>
+    Awards a badge to a user
     
-  revoke <usuario> <badge-id> --admin <admin>
-    Revoca una medalla de un usuario
+  revoke <user> <badge-id> --admin <admin>
+    Revokes a badge from a user
     
   list-admins
-    Muestra los administradores autorizados
+    Shows authorized administrators
     
-  user <usuario>
-    Muestra las medallas de un usuario
+  user <username>
+    Shows a user's badges
 
-EJEMPLOS:
+EXAMPLES:
   node scripts/badge-admin.js grant jeremy-sud first-commit --admin ursolcr
   node scripts/badge-admin.js revoke jeremy-sud code-ninja --admin jeremy-sud
   node scripts/badge-admin.js list-admins
@@ -211,45 +211,45 @@ EJEMPLOS:
 
 function listAdmins() {
   const adminsData = loadAdmins();
-  log(colors.cyan, '\n🛡️ Administradores Autorizados de BOOMFLOW');
+  log(colors.cyan, '\n🛡️ Authorized BOOMFLOW Administrators');
   log(colors.cyan, '==========================================\n');
   
   adminsData.admins.forEach(admin => {
     log(colors.green, `👑 ${admin.username}`);
-    log(colors.reset, `   Nombre:    ${admin.displayName}`);
-    log(colors.reset, `   Rol:       ${admin.role}`);
-    log(colors.reset, `   Permisos:  ${admin.permissions.join(', ')}`);
-    log(colors.reset, `   Desde:     ${admin.addedAt}\n`);
+    log(colors.reset, `   Name:      ${admin.displayName}`);
+    log(colors.reset, `   Role:      ${admin.role}`);
+    log(colors.reset, `   Permissions: ${admin.permissions.join(', ')}`);
+    log(colors.reset, `   Since:     ${admin.addedAt}\n`);
   });
 }
 
 function showUser(username) {
   const userData = loadUser(username);
   if (!userData) {
-    log(colors.red, `❌ Usuario "${username}" no encontrado.`);
+    log(colors.red, `❌ User "${username}" not found.`);
     process.exit(1);
   }
   
-  log(colors.cyan, `\n👤 Perfil de ${userData.displayName || username}`);
+  log(colors.cyan, `\n👤 Profile of ${userData.displayName || username}`);
   log(colors.cyan, '==========================================\n');
   log(colors.reset, `   Username:  ${userData.username}`);
-  log(colors.reset, `   Rol:       ${userData.role || 'N/A'}`);
+  log(colors.reset, `   Role:      ${userData.role || 'N/A'}`);
   log(colors.reset, `   Org:       ${userData.org || 'N/A'}`);
-  log(colors.reset, `   Desde:     ${userData.joinedAt || 'N/A'}`);
-  log(colors.reset, `   Medallas:  ${userData.badges.length}\n`);
+  log(colors.reset, `   Since:     ${userData.joinedAt || 'N/A'}`);
+  log(colors.reset, `   Badges:    ${userData.badges.length}\n`);
   
   if (userData.badges.length > 0) {
-    log(colors.yellow, '🏅 Medallas:');
+    log(colors.yellow, '🏅 Badges:');
     userData.badges.forEach(badge => {
       const info = getBadgeInfo(badge.id);
       const label = info ? info.label : badge.id;
       log(colors.reset, `   - ${label}`);
-      log(colors.reset, `     Otorgada: ${badge.awardedAt} por ${badge.awardedBy}`);
+      log(colors.reset, `     Awarded: ${badge.awardedAt} by ${badge.awardedBy}`);
     });
   }
 }
 
-// Parsear argumentos
+// Parse arguments
 if (args.length === 0 || command === 'help' || command === '--help') {
   showHelp();
   process.exit(0);
@@ -263,7 +263,7 @@ if (command === 'list-admins') {
 if (command === 'user') {
   const username = args[1];
   if (!username) {
-    log(colors.red, '❌ Error: Especifica un usuario.');
+    log(colors.red, '❌ Error: Specify a user.');
     process.exit(1);
   }
   showUser(username);
@@ -277,13 +277,13 @@ if (command === 'grant' || command === 'revoke') {
   const adminUser = adminIndex !== -1 ? args[adminIndex + 1] : null;
   
   if (!targetUser || !badgeId) {
-    log(colors.red, '❌ Error: Especifica usuario y badge-id.');
+    log(colors.red, '❌ Error: Specify user and badge-id.');
     showHelp();
     process.exit(1);
   }
   
   if (!adminUser) {
-    log(colors.red, '❌ Error: Especifica --admin <admin-username>');
+    log(colors.red, '❌ Error: Specify --admin <admin-username>');
     process.exit(1);
   }
   
@@ -295,6 +295,6 @@ if (command === 'grant' || command === 'revoke') {
   process.exit(0);
 }
 
-log(colors.red, `❌ Comando desconocido: ${command}`);
+log(colors.red, `❌ Unknown command: ${command}`);
 showHelp();
 process.exit(1);

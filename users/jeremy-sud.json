@@ -1,7 +1,7 @@
 {
   "username": "jeremy-sud",
   "displayName": "Jeremy Alva",
-  "role": "Co-Fundador & Dev Lead",
+  "role": "Co-Founder & Dev Lead",
   "org": "SistemasUrsol",
   "joinedAt": "2024-01-15",
   "badges": [
@@ -10,14 +10,14 @@
       "awardedAt": "2026-02-15",
       "awardedBy": "auto-award-system",
       "autoAwarded": true,
-      "reason": "Perfil creado en BOOMFLOW"
+      "reason": "Profile created in BOOMFLOW"
     },
     {
       "id": "first-commit",
       "awardedAt": "2026-02-15",
       "awardedBy": "auto-award-system",
       "autoAwarded": true,
-      "reason": "Primer commit realizado"
+      "reason": "First commit made"
     },
     {
       "id": "code-ninja",
@@ -30,19 +30,19 @@
       "id": "tech-lead",
       "awardedAt": "2026-02-15",
       "awardedBy": "ursolcr",
-      "meta": "Nivel 3"
+      "meta": "Level 3"
     },
     {
       "id": "architect",
       "awardedAt": "2026-02-15",
       "awardedBy": "ursolcr",
-      "meta": "Nivel 3"
+      "meta": "Level 3"
     },
     {
       "id": "mentor",
       "awardedAt": "2026-02-15",
       "awardedBy": "ursolcr",
-      "meta": "Nivel 1"
+      "meta": "Level 1"
     }
   ]
 }

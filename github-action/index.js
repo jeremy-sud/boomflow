@@ -28,9 +28,9 @@ const CATEGORIES = {
   onboarding: { emoji: "🟢", label: "Onboarding" },
   coding: { emoji: "🔵", label: "Coding" },
   devops: { emoji: "🟣", label: "DevOps" },
-  collaboration: { emoji: "🟡", label: "Colaboración" },
-  leadership: { emoji: "🔴", label: "Liderazgo" },
-  documentation: { emoji: "⚪", label: "Documentación" },
+  collaboration: { emoji: "🟡", label: "Collaboration" },
+  leadership: { emoji: "🔴", label: "Leadership" },
+  documentation: { emoji: "⚪", label: "Documentation" },
 };
 
 /**
@@ -90,7 +90,7 @@ function buildUserBadgeSection(userData, catalogIndex) {
   let section = `\n### 🏅 ${
     userData.displayName || userData.username
   }${role}\n`;
-  section += `> ${userBadges.length} medallas obtenidas\n\n`;
+  section += `> ${userBadges.length} badges earned\n\n`;
   section += `<table>\n`;
 
   for (const [catKey, catInfo] of Object.entries(CATEGORIES)) {
@@ -156,7 +156,7 @@ function buildBadgeContent(targetUser) {
         grouped[cat].push(badge);
       }
 
-      content += `### 🏅 Logros en ${ORG_NAME}\n\n<table>\n`;
+      content += `### 🏅 Achievements in ${ORG_NAME}\n\n<table>\n`;
       for (const [catKey, catInfo] of Object.entries(CATEGORIES)) {
         const badges = grouped[catKey];
         if (!badges || badges.length === 0) continue;
@@ -172,7 +172,7 @@ function buildBadgeContent(targetUser) {
     }
   }
 
-  content += `> 🌸 Verificado por [BOOMFLOW](https://github.com/jeremy-sud/boomflow) @ [${ORG_NAME}](${ORG_URL})\n`;
+  content += `> 🌸 Verified by [BOOMFLOW](https://github.com/jeremy-sud/boomflow) @ [${ORG_NAME}](${ORG_URL})\n`;
 
   return content;
 }

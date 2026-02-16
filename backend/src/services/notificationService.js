@@ -3,8 +3,8 @@
  * Handles creating and managing notifications for users
  * 
  * @module services/notificationService
- * @description Servicio de notificaciones en tiempo real para BOOMFLOW.
- *              Crea notificaciones para eventos como kudos recibidos, badges ganados, etc.
+ * @description Real-time notification service for BOOMFLOW.
+ *              Creates notifications for events like kudos received, badges earned, etc.
  */
 
 import { prisma } from '../lib/prisma.js'
@@ -91,8 +91,8 @@ export async function notifyKudoReceived({ toUserId, fromUsername, kudoId, messa
   return createNotification({
     userId: toUserId,
     type: NotificationType.KUDO_RECEIVED,
-    title: '💜 ¡Recibiste un Kudo!',
-    body: `${fromUsername} te reconoció: "${truncatedMessage}"`,
+    title: '💜 You received a Kudo!',
+    body: `${fromUsername} recognized you: "${truncatedMessage}"`,
     data: {
       kudoId,
       fromUsername,
@@ -126,8 +126,8 @@ export async function notifyBadgeEarned({ userId, badge }) {
   return createNotification({
     userId,
     type: NotificationType.BADGE_EARNED,
-    title: `${emoji} ¡Nuevo Badge Desbloqueado!`,
-    body: `Has obtenido el badge "${badge.name}"`,
+    title: `${emoji} New Badge Unlocked!`,
+    body: `You earned the badge "${badge.name}"`,
     data: {
       badgeId: badge.id,
       badgeSlug: badge.slug,

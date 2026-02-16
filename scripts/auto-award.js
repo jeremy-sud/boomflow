@@ -1,32 +1,32 @@
 #!/usr/bin/env node
 /**
- * 🏅 BOOMFLOW - Sistema de Auto-Award
+ * 🏅 BOOMFLOW - Auto-Award System
  * ====================================
- * Verifica automáticamente las métricas de GitHub de los colaboradores
- * registrados y otorga medallas basándose en su actividad.
+ * Automatically verifies GitHub metrics of registered collaborators
+ * and awards badges based on their activity.
  * 
- * Este script corre diariamente via GitHub Actions.
+ * This script runs daily via GitHub Actions.
  * 
- * Métricas verificadas:
- * - Commits totales
- * - Pull Requests (abiertas, mergeadas)
- * - Code Reviews realizadas
- * - Issues (reportadas, cerradas)
- * - Tiempo en el equipo (aniversarios)
- * - Contribuciones a documentación
+ * Verified metrics:
+ * - Total commits
+ * - Pull Requests (opened, merged)
+ * - Code Reviews performed
+ * - Issues (reported, closed)
+ * - Time on team (anniversaries)
+ * - Documentation contributions
  */
 
 const fs = require('fs');
 const path = require('path');
 const https = require('https');
 
-// Configuración
+// Configuration
 const USERS_DIR = path.join(__dirname, '../users');
 const CATALOG_PATH = path.join(__dirname, '../api-mock.json');
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN || process.env.GH_TOKEN;
-const ORG_REPOS = ['jeremy-sud/boomflow']; // Repositorios a monitorear
+const ORG_REPOS = ['jeremy-sud/boomflow']; // Repositories to monitor
 
-// Colores para consola
+// Console colors
 const colors = {
   reset: '\x1b[0m',
   red: '\x1b[31m',
@@ -42,42 +42,42 @@ function log(color, ...args) {
 }
 
 // ============================================================================
-// REGLAS DE AUTO-AWARD
+// AUTO-AWARD RULES
 // ============================================================================
-// Cada regla define:
-// - badgeId: ID de la medalla a otorgar
-// - check: Función que recibe métricas y retorna true si se cumple
-// - description: Descripción para logs
+// Each rule defines:
+// - badgeId: ID of the badge to award
+// - check: Function that receives metrics and returns true if met
+// - description: Description for logs
 // ============================================================================
 
 const AUTO_AWARD_RULES = [
   // === ONBOARDING ===
   {
     badgeId: 'hello-world',
-    description: 'Perfil creado en BOOMFLOW',
+    description: 'Profile created in BOOMFLOW',
     check: (metrics, userData) => {
-      // Se otorga al crear el perfil (si tiene joinedAt)
+      // Awarded when profile is created (if it has joinedAt)
       return userData.joinedAt && !hasBadge(userData, 'hello-world');
     }
   },
   {
     badgeId: 'first-commit',
-    description: 'Primer commit realizado',
+    description: 'First commit made',
     check: (metrics) => metrics.commits >= 1
   },
   {
     badgeId: 'first-pr',
-    description: 'Primer PR mergeado',
+    description: 'First PR merged',
     check: (metrics) => metrics.prs_merged >= 1
   },
   {
     badgeId: 'first-review',
-    description: 'Primera code review realizada',
+    description: 'First code review performed',
     check: (metrics) => metrics.reviews >= 1
   },
   {
     badgeId: 'week-one',
-    description: 'Una semana en el equipo',
+    description: 'One week on the team',
     check: (metrics, userData) => {
       const days = daysSinceJoined(userData);
       return days >= 7;
@@ -85,7 +85,7 @@ const AUTO_AWARD_RULES = [
   },
   {
     badgeId: 'month-one',
-    description: 'Un mes en el equipo',
+    description: 'One month on the team',
     check: (metrics, userData) => {
       const days = daysSinceJoined(userData);
       return days >= 30;
@@ -93,7 +93,7 @@ const AUTO_AWARD_RULES = [
   },
   {
     badgeId: 'year-one',
-    description: 'Un año en el equipo',
+    description: 'One year on the team',
     check: (metrics, userData) => {
       const days = daysSinceJoined(userData);
       return days >= 365;
@@ -108,12 +108,12 @@ const AUTO_AWARD_RULES = [
   },
   {
     badgeId: 'bug-hunter',
-    description: '10+ issues de bugs cerradas',
+    description: '10+ bug issues closed',
     check: (metrics) => metrics.bugs_closed >= 10
   },
   {
     badgeId: 'refactor-master',
-    description: '20+ PRs de refactor',
+    description: '20+ refactor PRs',
     check: (metrics) => metrics.refactor_prs >= 20
   },
   {
@@ -135,7 +135,7 @@ const AUTO_AWARD_RULES = [
   // === COLLABORATION ===
   {
     badgeId: 'pr-champion',
-    description: '25+ PRs mergeadas',
+    description: '25+ PRs merged',
     check: (metrics) => metrics.prs_merged >= 25
   },
   {
@@ -145,52 +145,52 @@ const AUTO_AWARD_RULES = [
   },
   {
     badgeId: 'team-player',
-    description: '10+ PRs revisadas',
+    description: '10+ PRs reviewed',
     check: (metrics) => metrics.reviews >= 10
   },
   {
     badgeId: 'helpful-hero',
-    description: '20+ comentarios en PRs de otros',
+    description: '20+ comments on others\' PRs',
     check: (metrics) => metrics.pr_comments >= 20
   },
 
   // === DOCUMENTATION ===
   {
     badgeId: 'docs-contributor',
-    description: '5+ commits a documentación',
+    description: '5+ documentation commits',
     check: (metrics) => metrics.docs_commits >= 5
   },
   {
     badgeId: 'docs-hero',
-    description: '20+ commits a documentación',
+    description: '20+ documentation commits',
     check: (metrics) => metrics.docs_commits >= 20
   },
 
   // === MILESTONES ===
   {
     badgeId: 'streak-7',
-    description: '7 días consecutivos de commits',
+    description: '7 consecutive days of commits',
     check: (metrics) => metrics.longest_streak >= 7
   },
   {
     badgeId: 'streak-30',
-    description: '30 días consecutivos de commits',
+    description: '30 consecutive days of commits',
     check: (metrics) => metrics.longest_streak >= 30
   },
   {
     badgeId: 'early-bird',
-    description: '10+ commits antes de las 8am',
+    description: '10+ commits before 8am',
     check: (metrics) => metrics.early_commits >= 10
   },
   {
     badgeId: 'night-owl',
-    description: '10+ commits después de las 10pm',
+    description: '10+ commits after 10pm',
     check: (metrics) => metrics.late_commits >= 10
   },
 ];
 
 // ============================================================================
-// UTILIDADES
+// UTILITIES
 // ============================================================================
 
 function hasBadge(userData, badgeId) {
@@ -214,7 +214,7 @@ function loadUsers() {
       const data = JSON.parse(fs.readFileSync(path.join(USERS_DIR, file), 'utf8'));
       users.push(data);
     } catch (e) {
-      log(colors.yellow, `⚠️ Error leyendo ${file}: ${e.message}`);
+      log(colors.yellow, `⚠️ Error reading ${file}: ${e.message}`);
     }
   }
   return users;
@@ -272,7 +272,7 @@ function githubRequest(endpoint) {
 }
 
 async function fetchUserMetrics(username) {
-  log(colors.blue, `📊 Obteniendo métricas de GitHub para @${username}...`);
+  log(colors.blue, `📊 Getting GitHub metrics for @${username}...`);
   
   const metrics = {
     commits: 0,
@@ -291,7 +291,7 @@ async function fetchUserMetrics(username) {
   };
 
   try {
-    // Obtener eventos del usuario
+    // Get user events
     const events = await githubRequest(`/users/${username}/events?per_page=100`);
     
     if (Array.isArray(events)) {
@@ -301,7 +301,7 @@ async function fetchUserMetrics(username) {
             const commits = event.payload.commits || [];
             metrics.commits += commits.length;
             
-            // Analizar commits para docs
+            // Analyze commits for docs
             for (const commit of commits) {
               const msg = (commit.message || '').toLowerCase();
               if (msg.includes('doc') || msg.includes('readme') || msg.includes('docs:')) {
@@ -336,7 +336,7 @@ async function fetchUserMetrics(username) {
             }
             if (event.payload.action === 'closed') {
               metrics.issues_closed++;
-              // Verificar si es bug
+              // Check if it's a bug
               const labels = event.payload.issue?.labels || [];
               if (labels.some(l => l.name?.toLowerCase().includes('bug'))) {
                 metrics.bugs_closed++;
@@ -347,13 +347,13 @@ async function fetchUserMetrics(username) {
       }
     }
 
-    // Obtener estadísticas adicionales del perfil
+    // Get additional profile statistics
     const user = await githubRequest(`/users/${username}`);
     if (user && user.public_repos !== undefined) {
-      log(colors.cyan, `   📈 Repos públicos: ${user.public_repos}`);
+      log(colors.cyan, `   📈 Public repos: ${user.public_repos}`);
     }
 
-    // Intentar obtener contribuciones (limitado sin auth)
+    // Try to get contributions (limited without auth)
     const searchCommits = await githubRequest(
       `/search/commits?q=author:${username}&per_page=1`
     );
@@ -362,7 +362,7 @@ async function fetchUserMetrics(username) {
     }
 
   } catch (error) {
-    log(colors.yellow, `⚠️ Error obteniendo métricas: ${error.message}`);
+    log(colors.yellow, `⚠️ Error getting metrics: ${error.message}`);
   }
 
   log(colors.green, `   ✅ Commits: ${metrics.commits}, PRs: ${metrics.prs_merged}, Reviews: ${metrics.reviews}`);
@@ -371,30 +371,30 @@ async function fetchUserMetrics(username) {
 }
 
 // ============================================================================
-// MOTOR DE AUTO-AWARD
+// AUTO-AWARD ENGINE
 // ============================================================================
 
 async function processUser(userData) {
-  log(colors.cyan, `\n👤 Procesando: ${userData.displayName || userData.username}`);
+  log(colors.cyan, `\n👤 Processing: ${userData.displayName || userData.username}`);
   
   const metrics = await fetchUserMetrics(userData.username);
   const newBadges = [];
   
   for (const rule of AUTO_AWARD_RULES) {
-    // Saltar si ya tiene la medalla
+    // Skip if already has the badge
     if (hasBadge(userData, rule.badgeId)) {
       continue;
     }
     
-    // Saltar si la medalla no existe en el catálogo
+    // Skip if badge doesn't exist in catalog
     if (!badgeExists(rule.badgeId)) {
       continue;
     }
     
-    // Verificar si cumple la regla
+    // Check if rule is met
     try {
       if (rule.check(metrics, userData)) {
-        log(colors.green, `   🏅 ¡Nueva medalla! ${rule.badgeId} - ${rule.description}`);
+        log(colors.green, `   🏅 New badge! ${rule.badgeId} - ${rule.description}`);
         
         newBadges.push({
           id: rule.badgeId,
@@ -405,7 +405,7 @@ async function processUser(userData) {
         });
       }
     } catch (e) {
-      log(colors.yellow, `   ⚠️ Error evaluando ${rule.badgeId}: ${e.message}`);
+      log(colors.yellow, `   ⚠️ Error evaluating ${rule.badgeId}: ${e.message}`);
     }
   }
   
@@ -413,9 +413,9 @@ async function processUser(userData) {
     userData.badges = userData.badges || [];
     userData.badges.push(...newBadges);
     saveUser(userData);
-    log(colors.magenta, `   🎉 ${newBadges.length} nueva(s) medalla(s) otorgada(s)`);
+    log(colors.magenta, `   🎉 ${newBadges.length} new badge(s) awarded`);
   } else {
-    log(colors.blue, `   ℹ️ No hay nuevas medallas para otorgar`);
+    log(colors.blue, `   ℹ️ No new badges to award`);
   }
   
   return newBadges;
@@ -429,10 +429,10 @@ async function runAutoAward() {
   log(colors.reset, `🔑 Token: ${GITHUB_TOKEN ? 'Configurado ✓' : 'No configurado (limitado)'}`);
   
   const users = loadUsers();
-  log(colors.reset, `👥 Usuarios registrados: ${users.length}`);
+  log(colors.reset, `👥 Registered users: ${users.length}`);
   
   if (users.length === 0) {
-    log(colors.yellow, '\n⚠️ No hay usuarios registrados en /users/');
+    log(colors.yellow, '\n⚠️ No registered users in /users/');
     return;
   }
   
@@ -456,31 +456,31 @@ async function runAutoAward() {
         });
       }
       
-      // Esperar un poco entre usuarios para no exceder rate limits
+      // Wait a bit between users to avoid exceeding rate limits
       await new Promise(r => setTimeout(r, 1000));
       
     } catch (error) {
-      log(colors.red, `❌ Error procesando ${user.username}: ${error.message}`);
+      log(colors.red, `❌ Error processing ${user.username}: ${error.message}`);
       summary.errors++;
     }
   }
   
-  // Resumen final
+  // Final summary
   log(colors.cyan, '\n═══════════════════════════════════════════════════════');
-  log(colors.cyan, '📊 RESUMEN');
+  log(colors.cyan, '📊 SUMMARY');
   log(colors.cyan, '═══════════════════════════════════════════════════════');
-  log(colors.reset, `✅ Usuarios procesados: ${summary.processed}`);
-  log(colors.green, `🏅 Medallas otorgadas: ${summary.badgesAwarded}`);
-  log(colors.red, `❌ Errores: ${summary.errors}`);
+  log(colors.reset, `✅ Users processed: ${summary.processed}`);
+  log(colors.green, `🏅 Badges awarded: ${summary.badgesAwarded}`);
+  log(colors.red, `❌ Errors: ${summary.errors}`);
   
   if (summary.details.length > 0) {
-    log(colors.yellow, '\n📋 Detalle de medallas otorgadas:');
+    log(colors.yellow, '\n📋 Badge award details:');
     for (const detail of summary.details) {
       log(colors.reset, `   @${detail.user}: ${detail.badges.join(', ')}`);
     }
   }
   
-  // Escribir resumen para GitHub Actions
+  // Write summary for GitHub Actions
   if (process.env.GITHUB_OUTPUT) {
     const output = `badges_awarded=${summary.badgesAwarded}\nusers_processed=${summary.processed}`;
     fs.appendFileSync(process.env.GITHUB_OUTPUT, output);
@@ -490,19 +490,19 @@ async function runAutoAward() {
 }
 
 // ============================================================================
-// EJECUCIÓN
+// EXECUTION
 // ============================================================================
 
 if (require.main === module) {
   runAutoAward()
     .then(summary => {
       if (summary.badgesAwarded > 0) {
-        log(colors.green, '\n✅ Auto-award completado. Recuerda hacer commit y push de los cambios.');
+        log(colors.green, '\n✅ Auto-award completed. Remember to commit and push changes.');
       }
       process.exit(0);
     })
     .catch(error => {
-      log(colors.red, `\n❌ Error fatal: ${error.message}`);
+      log(colors.red, `\n❌ Fatal error: ${error.message}`);
       process.exit(1);
     });
 }

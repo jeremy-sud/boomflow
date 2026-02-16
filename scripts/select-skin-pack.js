@@ -1,15 +1,15 @@
 #!/usr/bin/env node
 /**
- * BOOMFLOW - Selector de Paquetes de Skins
+ * BOOMFLOW - Skin Pack Selector
  * 
- * Script para previsualizar y aplicar skins a las medallas de usuarios.
- * Permite cambiar el estilo visual de todas las medallas de forma masiva.
+ * Script to preview and apply skins to user badges.
+ * Allows changing the visual style of all badges in bulk.
  * 
- * Uso:
- *   node scripts/select-skin-pack.js                    # Modo interactivo
- *   node scripts/select-skin-pack.js --list             # Listar skins disponibles
+ * Usage:
+ *   node scripts/select-skin-pack.js                    # Interactive mode
+ *   node scripts/select-skin-pack.js --list             # List available skins
  *   node scripts/select-skin-pack.js --user jeremy-sud --skin crystal
- *   node scripts/select-skin-pack.js --preview neon     # Preview ASCII de una skin
+ *   node scripts/select-skin-pack.js --preview neon     # ASCII preview of a skin
  * 
  * @author Sistemas Ursol
  * @license MIT
@@ -20,19 +20,19 @@ const path = require('path');
 const readline = require('readline');
 
 // ============================================================
-// CONFIGURACIÓN
+// CONFIGURATION
 // ============================================================
 
 const USERS_DIR = path.join(__dirname, '..', 'users');
 const SKINS_DIR = path.join(__dirname, '..', 'assets', 'skins');
 
-// Definición de paquetes de skins disponibles
+// Definition of available skin packs
 const SKIN_PACKS = {
   default: {
     id: 'default',
     name: 'Default',
     emoji: '🎯',
-    description: 'Diseño original de BOOMFLOW - Colorido y profesional',
+    description: 'BOOMFLOW original design - Colorful and professional',
     preview: `
     ╭──────────────╮
     │   ◉◉◉◉◉◉◉    │
@@ -52,7 +52,7 @@ const SKIN_PACKS = {
     id: 'crystal',
     name: 'Crystal',
     emoji: '💎',
-    description: 'Estilo gema facetada con reflejos brillantes',
+    description: 'Faceted gem style with bright reflections',
     preview: `
         ╱╲
        ╱░░╲
@@ -73,7 +73,7 @@ const SKIN_PACKS = {
     id: 'academic',
     name: 'Academic',
     emoji: '🎓',
-    description: 'Escudo formal con laureles y medallón dorado',
+    description: 'Formal shield with laurels and golden medallion',
     preview: `
        ╭─────╮
       ╱│░░░░░│╲
@@ -91,7 +91,7 @@ const SKIN_PACKS = {
     id: 'minimalist',
     name: 'Minimalist',
     emoji: '◻️',
-    description: 'Diseño ultra-limpio con líneas simples',
+    description: 'Ultra-clean design with simple lines',
     preview: `
     ╭────────────╮
     │            │
@@ -109,7 +109,7 @@ const SKIN_PACKS = {
     id: 'vintage',
     name: 'Vintage',
     emoji: '🏛️',
-    description: 'Estilo retro con ornamentos clásicos',
+    description: 'Retro style with classic ornaments',
     preview: `
     ╭~~~~~~~~~~~~~╮
     │  ┌───────┐  │
@@ -127,7 +127,7 @@ const SKIN_PACKS = {
     id: 'neon',
     name: 'Neon',
     emoji: '⚡',
-    description: 'Cyberpunk con efectos de brillo neón',
+    description: 'Cyberpunk with neon glow effects',
     preview: `
     ┏━━━━━━━━━━━━┓
     ┃ ╔════════╗ ┃
@@ -143,11 +143,11 @@ const SKIN_PACKS = {
 };
 
 // ============================================================
-// FUNCIONES PRINCIPALES
+// MAIN FUNCTIONS
 // ============================================================
 
 /**
- * Lista todos los usuarios disponibles
+ * Lists all available users
  */
 function listUsers() {
   if (!fs.existsSync(USERS_DIR)) {
@@ -160,18 +160,18 @@ function listUsers() {
 }
 
 /**
- * Lee el archivo JSON de un usuario
+ * Reads a user's JSON file
  */
 function readUserFile(username) {
   const filePath = path.join(USERS_DIR, `${username}.json`);
   if (!fs.existsSync(filePath)) {
-    throw new Error(`Usuario no encontrado: ${username}`);
+    throw new Error(`User not found: ${username}`);
   }
   return JSON.parse(fs.readFileSync(filePath, 'utf-8'));
 }
 
 /**
- * Escribe el archivo JSON de un usuario
+ * Writes a user's JSON file
  */
 function writeUserFile(username, data) {
   const filePath = path.join(USERS_DIR, `${username}.json`);
@@ -179,20 +179,20 @@ function writeUserFile(username, data) {
 }
 
 /**
- * Aplica una skin a todas las medallas de un usuario
+ * Applies a skin to all of a user's badges
  */
 function applySkinToUser(username, skinId) {
   const skin = SKIN_PACKS[skinId];
   if (!skin) {
-    throw new Error(`Skin no encontrada: ${skinId}`);
+    throw new Error(`Skin not found: ${skinId}`);
   }
   
   const userData = readUserFile(username);
   
-  // Agregar preferencia de skin al usuario
+  // Add skin preference to user
   userData.skinPreference = skinId;
   
-  // Si el usuario tiene badges, agregar skinPreference a cada uno
+  // If user has badges, add skinPreference to each one
   if (userData.badges && Array.isArray(userData.badges)) {
     userData.badges = userData.badges.map(badge => ({
       ...badge,
@@ -210,12 +210,12 @@ function applySkinToUser(username, skinId) {
 }
 
 /**
- * Muestra el preview de una skin
+ * Shows the preview of a skin
  */
 function showSkinPreview(skinId) {
   const skin = SKIN_PACKS[skinId];
   if (!skin) {
-    console.log(`❌ Skin no encontrada: ${skinId}`);
+    console.log(`❌ Skin not found: ${skinId}`);
     return;
   }
   
@@ -230,11 +230,11 @@ function showSkinPreview(skinId) {
 }
 
 /**
- * Lista todas las skins disponibles
+ * Lists all available skins
  */
 function listSkins() {
   console.log('\n╔════════════════════════════════════════════════════════════╗');
-  console.log('║           📦 PAQUETES DE SKINS DISPONIBLES                 ║');
+  console.log('║           📦 AVAILABLE SKIN PACKS                        ║');
   console.log('╚════════════════════════════════════════════════════════════╝\n');
   
   Object.values(SKIN_PACKS).forEach((skin, index) => {
@@ -245,12 +245,12 @@ function listSkins() {
   });
   
   console.log('─'.repeat(60));
-  console.log('💡 Usa --preview <nombre> para ver el preview ASCII de una skin');
-  console.log('💡 Usa --user <usuario> --skin <nombre> para aplicar una skin\n');
+  console.log('💡 Use --preview <name> to see the ASCII preview of a skin');
+  console.log('💡 Use --user <username> --skin <name> to apply a skin\n');
 }
 
 /**
- * Verifica si el archivo de skin template existe
+ * Checks if the skin template file exists
  */
 function checkSkinTemplateExists(skinId) {
   const templatePath = path.join(SKINS_DIR, `skin-${skinId}-template.svg`);
@@ -258,7 +258,7 @@ function checkSkinTemplateExists(skinId) {
 }
 
 // ============================================================
-// MODO INTERACTIVO
+// INTERACTIVE MODE
 // ============================================================
 
 async function interactiveMode() {
@@ -270,70 +270,70 @@ async function interactiveMode() {
   const ask = (q) => new Promise(resolve => rl.question(q, resolve));
   
   console.log('\n╔════════════════════════════════════════════════════════════╗');
-  console.log('║      🎨 BOOMFLOW - Selector de Paquetes de Skins 🎨        ║');
+  console.log('║      🎨 BOOMFLOW - Skin Pack Selector 🎨                  ║');
   console.log('╚════════════════════════════════════════════════════════════╝\n');
   
-  // Mostrar usuarios disponibles
+  // Show available users
   const users = listUsers();
   if (users.length === 0) {
-    console.log('⚠️  No hay usuarios registrados en /users/');
+    console.log('⚠️  No registered users in /users/');
     rl.close();
     return;
   }
   
-  console.log('👥 Usuarios disponibles:');
+  console.log('👥 Available users:');
   users.forEach((user, i) => console.log(`   ${i + 1}. ${user}`));
   
-  // Seleccionar usuario
-  const userIndex = parseInt(await ask('\n📌 Selecciona usuario (número): ')) - 1;
+  // Select user
+  const userIndex = parseInt(await ask('\n📌 Select user (number): ')) - 1;
   const username = users[userIndex];
   
   if (!username) {
-    console.log('❌ Usuario inválido');
+    console.log('❌ Invalid user');
     rl.close();
     return;
   }
   
-  // Leer datos del usuario
+  // Read user data
   const userData = readUserFile(username);
-  console.log(`\n✅ Usuario: ${userData.displayName || username}`);
-  console.log(`   🏅 Medallas: ${userData.badges?.length || 0}`);
-  console.log(`   🎨 Skin actual: ${userData.skinPreference || 'default'}`);
+  console.log(`\n✅ User: ${userData.displayName || username}`);
+  console.log(`   🏅 Badges: ${userData.badges?.length || 0}`);
+  console.log(`   🎨 Current skin: ${userData.skinPreference || 'default'}`);
   
-  // Mostrar skins disponibles
-  console.log('\n📦 Paquetes de skins:');
+  // Show available skins
+  console.log('\n📦 Skin packs:');
   Object.values(SKIN_PACKS).forEach((skin, i) => {
-    const current = userData.skinPreference === skin.id ? ' ← ACTUAL' : '';
+    const current = userData.skinPreference === skin.id ? ' ← CURRENT' : '';
     const premium = skin.isPremium ? ' ⭐' : '';
     console.log(`   ${i + 1}. ${skin.emoji} ${skin.name}${premium}${current}`);
   });
   
-  // Seleccionar skin
-  const skinIndex = parseInt(await ask('\n🎨 Selecciona skin (número): ')) - 1;
+  // Select skin
+  const skinIndex = parseInt(await ask('\n🎨 Select skin (number): ')) - 1;
   const skinId = Object.keys(SKIN_PACKS)[skinIndex];
   const skin = SKIN_PACKS[skinId];
   
   if (!skin) {
-    console.log('❌ Skin inválida');
+    console.log('❌ Invalid skin');
     rl.close();
     return;
   }
   
   // Preview
-  console.log('\n👀 Preview de la skin seleccionada:');
+  console.log('\n👀 Preview of selected skin:');
   showSkinPreview(skinId);
   
-  // Confirmar
-  const confirm = await ask('¿Aplicar esta skin? (s/n): ');
+  // Confirm
+  const confirm = await ask('Apply this skin? (y/n): ');
   
   if (confirm.toLowerCase() === 's' || confirm.toLowerCase() === 'y') {
     const result = applySkinToUser(username, skinId);
-    console.log('\n✅ ¡Skin aplicada exitosamente!');
-    console.log(`   👤 Usuario: ${result.username}`);
+    console.log('\n✅ Skin applied successfully!');
+    console.log(`   👤 User: ${result.username}`);
     console.log(`   🎨 Skin: ${result.skinApplied}`);
-    console.log(`   🏅 Medallas actualizadas: ${result.badgesUpdated}`);
+    console.log(`   🏅 Badges updated: ${result.badgesUpdated}`);
   } else {
-    console.log('\n❌ Operación cancelada');
+    console.log('\n❌ Operation cancelled');
   }
   
   rl.close();
@@ -372,44 +372,44 @@ function parseArgs() {
 function printHelp() {
   console.log(`
 ╔════════════════════════════════════════════════════════════╗
-║        BOOMFLOW - Selector de Paquetes de Skins            ║
+║        BOOMFLOW - Skin Pack Selector                      ║
 ╚════════════════════════════════════════════════════════════╝
 
-Uso:
-  node scripts/select-skin-pack.js [opciones]
+Usage:
+  node scripts/select-skin-pack.js [options]
 
-Opciones:
-  --list, -l              Lista todas las skins disponibles
-  --preview, -p <skin>    Muestra el preview de una skin
-  --user, -u <username>   Usuario al que aplicar la skin
-  --skin, -s <id>         ID de la skin a aplicar
-  --all                   Aplicar a todos los usuarios
-  --help, -h              Muestra esta ayuda
+Options:
+  --list, -l              Lists all available skins
+  --preview, -p <skin>    Shows the preview of a skin
+  --user, -u <username>   User to apply skin to
+  --skin, -s <id>         ID of skin to apply
+  --all                   Apply to all users
+  --help, -h              Shows this help
 
-Ejemplos:
-  # Modo interactivo
+Examples:
+  # Interactive mode
   node scripts/select-skin-pack.js
 
-  # Listar skins
+  # List skins
   node scripts/select-skin-pack.js --list
 
-  # Preview de una skin
+  # Preview of a skin
   node scripts/select-skin-pack.js --preview neon
   node scripts/select-skin-pack.js --preview crystal
 
-  # Aplicar skin a un usuario
+  # Apply skin to a user
   node scripts/select-skin-pack.js --user jeremy-sud --skin crystal
 
-  # Aplicar skin a todos los usuarios
+  # Apply skin to all users
   node scripts/select-skin-pack.js --skin minimalist --all
 
-Skins disponibles:
-  default     - Diseño original (gratis)
-  crystal     - Estilo gema facetada (gratis)
-  academic    - Escudo formal (gratis)
-  minimalist  - Diseño limpio (gratis)
-  vintage     - Estilo retro (gratis)
-  neon        - Cyberpunk brillante (premium)
+Available skins:
+  default     - Original design (free)
+  crystal     - Faceted gem style (free)
+  academic    - Formal shield (free)
+  minimalist  - Clean design (free)
+  vintage     - Retro style (free)
+  neon        - Bright cyberpunk (premium)
 `);
 }
 
@@ -427,8 +427,8 @@ async function main() {
       
     case 'preview':
       if (!options.skinId) {
-        console.log('❌ Especifica una skin: --preview <nombre>');
-        console.log('   Ejemplo: --preview crystal');
+        console.log('❌ Specify a skin: --preview <name>');
+        console.log('   Example: --preview crystal');
       } else {
         showSkinPreview(options.skinId);
       }
@@ -439,33 +439,33 @@ async function main() {
       break;
       
     default:
-      // Si se especificó usuario y skin, aplicar directamente
+      // If user and skin are specified, apply directly
       if (options.username && options.skinId) {
         try {
           const result = applySkinToUser(options.username, options.skinId);
-          console.log('\n✅ ¡Skin aplicada exitosamente!');
-          console.log(`   👤 Usuario: ${result.username}`);
+          console.log('\n✅ Skin applied successfully!');
+          console.log(`   👤 User: ${result.username}`);
           console.log(`   🎨 Skin: ${result.skinApplied}`);
-          console.log(`   🏅 Medallas actualizadas: ${result.badgesUpdated}`);
+          console.log(`   🏅 Badges updated: ${result.badgesUpdated}`);
         } catch (error) {
           console.log(`❌ Error: ${error.message}`);
         }
       }
-      // Si se especificó --all y skin, aplicar a todos
+      // If --all and skin are specified, apply to all
       else if (options.applyToAll && options.skinId) {
         const users = listUsers();
-        console.log(`\n🔄 Aplicando skin "${options.skinId}" a ${users.length} usuarios...\n`);
+        console.log(`\n🔄 Applying skin "${options.skinId}" to ${users.length} users...\n`);
         
         for (const username of users) {
           try {
             const result = applySkinToUser(username, options.skinId);
-            console.log(`   ✅ ${username}: ${result.badgesUpdated} medallas actualizadas`);
+            console.log(`   ✅ ${username}: ${result.badgesUpdated} badges updated`);
           } catch (error) {
             console.log(`   ❌ ${username}: ${error.message}`);
           }
         }
         
-        console.log('\n✅ Proceso completado');
+        console.log('\n✅ Process completed');
       }
       // Modo interactivo
       else {

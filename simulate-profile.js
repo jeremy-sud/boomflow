@@ -14,9 +14,9 @@ const CATEGORIES = {
   onboarding: { emoji: "🟢", label: "Onboarding" },
   coding: { emoji: "🔵", label: "Coding" },
   devops: { emoji: "🟣", label: "DevOps" },
-  collaboration: { emoji: "🟡", label: "Colaboración" },
-  leadership: { emoji: "🔴", label: "Liderazgo" },
-  documentation: { emoji: "⚪", label: "Documentación" },
+  collaboration: { emoji: "🟡", label: "Collaboration" },
+  leadership: { emoji: "🔴", label: "Leadership" },
+  documentation: { emoji: "⚪", label: "Documentation" },
 };
 
 function loadCatalog() {
@@ -41,7 +41,7 @@ function buildUserBadgeSection(username) {
     grouped[b.category].push(b);
   }
 
-  let section = `\n### 🏅 Logros en Bloomflow (${userBadges.length})\n\n<table>\n`;
+  let section = `\n### 🏅 Bloomflow Achievements (${userBadges.length})\n\n<table>\n`;
   for (const [catKey, catInfo] of Object.entries(CATEGORIES)) {
     const badges = grouped[catKey];
     if (!badges || badges.length === 0) continue;
@@ -57,7 +57,7 @@ function buildUserBadgeSection(username) {
     }
     section += `</tr>\n`;
   }
-  section += `</table>\n\n> 🌸 Verificado por [Bloomflow](https://github.com/jeremy-sud/boomflow) @ [SistemasUrsol](https://www.ursol.com)\n`;
+  section += `</table>\n\n> 🌸 Verified by [Bloomflow](https://github.com/jeremy-sud/boomflow) @ [SistemasUrsol](https://www.ursol.com)\n`;
   return section;
 }
 

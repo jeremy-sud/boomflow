@@ -1,7 +1,7 @@
 {
   "username": "ursolcr",
   "displayName": "Eduardo Ureña",
-  "role": "Fundador",
+  "role": "Founder",
   "org": "SistemasUrsol",
   "joinedAt": "2024-01-15",
   "badges": [
@@ -49,13 +49,13 @@
       "id": "tech-lead",
       "awardedAt": "2026-02-15",
       "awardedBy": "jeremy-sud",
-      "meta": "Nivel 3"
+      "meta": "Level 3"
     },
     {
       "id": "architect",
       "awardedAt": "2026-02-15",
       "awardedBy": "jeremy-sud",
-      "meta": "Nivel 3"
+      "meta": "Level 3"
     }
   ]
 }

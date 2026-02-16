@@ -1,11 +1,11 @@
 {
   "$schema": "./admins.schema.json",
-  "_comment": "Lista oficial de administradores autorizados para otorgar medallas BOOMFLOW - Solo Sistemas Ursol",
+  "_comment": "Official list of authorized administrators for awarding BOOMFLOW badges - Sistemas Ursol only",
   "admins": [
     {
       "username": "jeremy-sud",
       "displayName": "Jeremy Alva",
-      "role": "Co-Fundador & Dev Lead",
+      "role": "Co-Founder & Dev Lead",
       "permissions": ["grant_badges", "revoke_badges", "manage_users", "manage_admins"],
       "addedAt": "2024-01-15",
       "addedBy": "system"
@@ -13,7 +13,7 @@
     {
       "username": "ursolcr",
       "displayName": "Eduardo Ureña",
-      "role": "Fundador",
+      "role": "Founder",
       "permissions": ["grant_badges", "revoke_badges", "manage_users", "manage_admins"],
       "addedAt": "2024-01-15",
       "addedBy": "system"
@@ -25,10 +25,10 @@
     "auditLog": true
   },
   "autoAward": {
-    "_comment": "Configuración del sistema de auto-otorgamiento de medallas",
+    "_comment": "Auto-award badge system configuration",
     "enabled": true,
     "schedule": "0 6 * * *",
-    "scheduleDescription": "Diariamente a las 6:00 AM UTC (medianoche Costa Rica)",
+    "scheduleDescription": "Daily at 6:00 AM UTC (midnight Costa Rica)",
     "allowedSources": ["auto-award-system"],
     "autoAwardableBadges": [
       "hello-world",

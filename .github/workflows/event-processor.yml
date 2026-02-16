@@ -17,15 +17,15 @@ on:
   release:
     types: [published]
   
-  # === También ejecutar con push (para tracking de commits) ===
+  # === Also run on push (for commit tracking) ===
   push:
     branches: [main]
   
-  # === Manual trigger para testing ===
+  # === Manual trigger for testing ===
   workflow_dispatch:
     inputs:
       test_user:
-        description: 'Usuario para simular evento'
+        description: 'User to simulate event'
         required: false
         default: 'jeremy-sud'
 
@@ -34,10 +34,10 @@ permissions:
 
 jobs:
   process-event:
-    name: "🏅 Procesar Evento → Medallas"
+    name: "🏅 Process Event → Badges"
     runs-on: ubuntu-latest
     
-    # No ejecutar para bots
+    # Don't run for bots
     if: github.actor != 'dependabot[bot]' && github.actor != 'github-actions[bot]'
     
     steps:
@@ -51,16 +51,16 @@ jobs:
         with:
           node-version: '20'
       
-      - name: Determinar tipo de evento
+      - name: Determine event type
         id: event_type
         run: |
           EVENT_NAME="${{ github.event_name }}"
           ACTION="${{ github.event.action }}"
           
-          echo "📝 Evento: $EVENT_NAME"
-          echo "🔄 Acción: $ACTION"
+          echo "📝 Event: $EVENT_NAME"
+          echo "🔄 Action: $ACTION"
           
-          # Construir el tipo de evento completo
+          # Build the full event type
           if [ "$EVENT_NAME" == "pull_request" ]; then
             if [ "$ACTION" == "closed" ] && [ "${{ github.event.pull_request.merged }}" == "true" ]; then
               EVENT_TYPE="pull_request.merged"
@@ -80,19 +80,19 @@ jobs:
           fi
           
           echo "event_type=$EVENT_TYPE" >> $GITHUB_OUTPUT
-          echo "✅ Tipo de evento: $EVENT_TYPE"
+          echo "✅ Event type: $EVENT_TYPE"
       
-      - name: Mostrar información del evento
+      - name: Show event information
         run: |
           echo "═══════════════════════════════════════════════════════"
-          echo "📋 INFORMACIÓN DEL EVENTO"
+          echo "📋 EVENT INFORMATION"
           echo "═══════════════════════════════════════════════════════"
-          echo "🎯 Evento: ${{ steps.event_type.outputs.event_type }}"
+          echo "🎯 Event: ${{ steps.event_type.outputs.event_type }}"
           echo "👤 Actor: ${{ github.actor }}"
           echo "📦 Repo: ${{ github.repository }}"
           echo "🔀 Ref: ${{ github.ref }}"
           
-          # Info específica por tipo de evento
+          # Specific info per event type
           if [ "${{ github.event_name }}" == "pull_request" ]; then
             echo "📝 PR: #${{ github.event.pull_request.number }}"
             echo "📌 Título: ${{ github.event.pull_request.title }}"
@@ -101,65 +101,65 @@ jobs:
           elif [ "${{ github.event_name }}" == "pull_request_review" ]; then
             echo "📝 PR: #${{ github.event.pull_request.number }}"
             echo "👤 Reviewer: ${{ github.event.review.user.login }}"
-            echo "📊 Estado: ${{ github.event.review.state }}"
+            echo "📊 Status: ${{ github.event.review.state }}"
           elif [ "${{ github.event_name }}" == "issues" ]; then
             echo "📝 Issue: #${{ github.event.issue.number }}"
             echo "📌 Título: ${{ github.event.issue.title }}"
           fi
           echo "═══════════════════════════════════════════════════════"
       
-      - name: Procesar evento y otorgar medallas
+      - name: Process event and award badges
         id: process
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          echo "🏅 Procesando evento..."
+          echo "🏅 Processing event..."
           node scripts/process-event.js "${{ steps.event_type.outputs.event_type }}"
       
-      - name: Verificar cambios
+      - name: Check for changes
         id: changes
         run: |
           if [[ -n $(git status --porcelain users/) ]]; then
             echo "has_changes=true" >> $GITHUB_OUTPUT
-            echo "📝 Se detectaron cambios en archivos de usuarios:"
+            echo "📝 Changes detected in user files:"
             git diff --stat users/
           else
             echo "has_changes=false" >> $GITHUB_OUTPUT
-            echo "ℹ️ No hay cambios para commitear"
+            echo "ℹ️ No changes to commit"
           fi
       
-      - name: Commit y Push medallas
+      - name: Commit and Push badges
         if: steps.changes.outputs.has_changes == 'true'
         run: |
           git config user.name "BOOMFLOW Bot"
           git config user.email "boomflow@ursol.com"
           
-          # Info del evento para el commit
+          # Event info for the commit
           EVENT_TYPE="${{ steps.event_type.outputs.event_type }}"
           ACTOR="${{ github.actor }}"
           
           git add users/
-          git commit -m "🏅 Webhook: Medallas otorgadas por $EVENT_TYPE
+          git commit -m "🏅 Webhook: Badges awarded by $EVENT_TYPE
           
           Actor: @$ACTOR
-          Evento: $EVENT_TYPE
+          Event: $EVENT_TYPE
           Workflow Run: ${{ github.run_id }}
           
-          🤖 Otorgado automáticamente por BOOMFLOW Event Processor"
+          🤖 Automatically awarded by BOOMFLOW Event Processor"
           
           git push
           
-          echo "✅ Medallas pusheadas exitosamente"
+          echo "✅ Badges pushed successfully"
       
-      - name: Resumen
+      - name: Summary
         run: |
           echo "═══════════════════════════════════════════════════════"
-          echo "📊 RESUMEN"
+          echo "📊 SUMMARY"
           echo "═══════════════════════════════════════════════════════"
           if [ "${{ steps.changes.outputs.has_changes }}" == "true" ]; then
-            echo "✅ Medallas otorgadas y sincronizadas"
+            echo "✅ Badges awarded and synced"
           else
-            echo "ℹ️ Sin nuevas medallas para este evento"
+            echo "ℹ️ No new badges for this event"
           fi
           echo "═══════════════════════════════════════════════════════"

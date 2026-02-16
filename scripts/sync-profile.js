@@ -1,31 +1,31 @@
 #!/usr/bin/env node
 /**
- * 🌸 BOOMFLOW - Sincronizador de Perfil con Vistas Adaptativas
+ * 🌸 BOOMFLOW - Profile Synchronizer with Adaptive Views
  * =============================================================
- * Sincroniza medallas de UN solo usuario a su perfil de GitHub.
+ * Syncs badges for a SINGLE user to their GitHub profile.
  * 
- * SISTEMA DE VISTAS ADAPTATIVAS:
- * - Vista Normal (1-12 medallas): Tabla con iconos grandes 48px
- * - Vista Compacta (13-30 medallas): Iconos 32px, más por fila
- * - Vista Mini (31+ medallas): Iconos 24px agrupados por tier
+ * ADAPTIVE VIEWS SYSTEM:
+ * - Normal View (1-12 badges): Table with large 48px icons
+ * - Compact View (13-30 badges): 32px icons, more per row
+ * - Mini View (31+ badges): 24px icons grouped by tier
  * 
- * Uso: node scripts/sync-profile.js <username> <readme-path> [--view=normal|compact|mini]
+ * Usage: node scripts/sync-profile.js <username> <readme-path> [--view=normal|compact|mini]
  */
 
 const fs = require('fs');
 const path = require('path');
 
 // ============================================================================
-// CONFIGURACIÓN
+// CONFIGURATION
 // ============================================================================
 
 const CATALOG_PATH = path.join(__dirname, '../api-mock.json');
 const USERS_DIR = path.join(__dirname, '../users');
 const REPO_BASE_URL = 'https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets';
 
-// Umbrales para cambio de vista automático
-const THRESHOLD_COMPACT = 12;  // Más de 12 → vista compacta
-const THRESHOLD_MINI = 30;     // Más de 30 → vista mini
+// Thresholds for automatic view change
+const THRESHOLD_COMPACT = 12;  // More than 12 → compact view
+const THRESHOLD_MINI = 30;     // More than 30 → mini view
 
 const TIER_ICON = { bronze: '🥉', silver: '🥈', gold: '🥇' };
 const TIER_ORDER = { gold: 1, silver: 2, bronze: 3 };
@@ -34,26 +34,26 @@ const CATEGORIES = {
   onboarding: { emoji: '🟢', label: 'Onboarding' },
   coding: { emoji: '🔵', label: 'Coding' },
   devops: { emoji: '🟣', label: 'DevOps' },
-  collaboration: { emoji: '🩷', label: 'Colaboración' },
-  leadership: { emoji: '🟡', label: 'Liderazgo' },
-  documentation: { emoji: '📚', label: 'Documentación' },
-  growth: { emoji: '🌱', label: 'Crecimiento' },
-  milestones: { emoji: '❤️', label: 'Hitos' },
-  special: { emoji: '⭐', label: 'Especial' },
+  collaboration: { emoji: '🩷', label: 'Collaboration' },
+  leadership: { emoji: '🟡', label: 'Leadership' },
+  documentation: { emoji: '📚', label: 'Documentation' },
+  growth: { emoji: '🌱', label: 'Growth' },
+  milestones: { emoji: '❤️', label: 'Milestones' },
+  special: { emoji: '⭐', label: 'Special' },
 };
 
 // ============================================================================
-// GENERADORES DE VISTAS
+// VIEW GENERATORS
 // ============================================================================
 
 /**
- * Vista Normal: Tabla con iconos grandes, nombre y tier
- * Para 1-12 medallas
+ * Normal View: Table with large icons, name and tier
+ * For 1-12 badges
  */
 function generateNormalView(userBadges, grouped, userData) {
   const role = userData.role ? ` — ${userData.role}` : '';
   let section = `\n### 🏅 ${userData.displayName || userData.username}${role}\n`;
-  section += `> ${userBadges.length} medallas obtenidas\n\n`;
+  section += `> ${userBadges.length} badges earned\n\n`;
   section += `<table>\n`;
   
   for (const [catKey, catInfo] of Object.entries(CATEGORIES)) {
@@ -81,17 +81,17 @@ function generateNormalView(userBadges, grouped, userData) {
 }
 
 /**
- * Vista Compacta: Iconos más pequeños, sin meta, más por fila
- * Para 13-30 medallas
+ * Compact View: Smaller icons, no meta, more per row
+ * For 13-30 badges
  */
 function generateCompactView(userBadges, grouped, userData) {
   const role = userData.role ? ` — ${userData.role}` : '';
   let section = `\n### 🏅 ${userData.displayName || userData.username}${role}\n`;
   
-  // Resumen por tier
+  // Summary by tier
   const tierCounts = { gold: 0, silver: 0, bronze: 0 };
   userBadges.forEach(b => tierCounts[b.tier]++);
-  section += `> **${userBadges.length} medallas:** `;
+  section += `> **${userBadges.length} badges:** `;
   section += `🥇 ${tierCounts.gold} · 🥈 ${tierCounts.silver} · 🥉 ${tierCounts.bronze}\n\n`;
   
   section += `<table>\n`;
@@ -100,12 +100,12 @@ function generateCompactView(userBadges, grouped, userData) {
     const badges = grouped[catKey];
     if (!badges || badges.length === 0) continue;
     
-    // Ordenar por tier (oro primero)
+    // Sort by tier (gold first)
     badges.sort((a, b) => (TIER_ORDER[a.tier] || 4) - (TIER_ORDER[b.tier] || 4));
     
     section += `<tr><td colspan="8"><sub><strong>${catInfo.emoji} ${catInfo.label}</strong> (${badges.length})</sub></td></tr>\n`;
     
-    // Dividir en filas de 8
+    // Split into rows of 8
     for (let i = 0; i < badges.length; i += 8) {
       section += `<tr>\n`;
       const rowBadges = badges.slice(i, i + 8);
@@ -128,30 +128,30 @@ function generateCompactView(userBadges, grouped, userData) {
 }
 
 /**
- * Vista Mini: Solo iconos pequeños agrupados por tier
- * Para 31+ medallas
+ * Mini View: Small icons only grouped by tier
+ * For 31+ badges
  */
 function generateMiniView(userBadges, grouped, userData) {
   const role = userData.role ? ` — ${userData.role}` : '';
   let section = `\n### 🏅 ${userData.displayName || userData.username}${role}\n`;
   
-  // Agrupar por tier
+  // Group by tier
   const byTier = { gold: [], silver: [], bronze: [] };
   userBadges.forEach(b => {
     if (byTier[b.tier]) byTier[b.tier].push(b);
   });
   
-  section += `> **${userBadges.length} medallas obtenidas**\n\n`;
+  section += `> **${userBadges.length} badges earned**\n\n`;
   
-  // Generar cada sección de tier
+  // Generate each tier section
   for (const [tier, tierBadges] of Object.entries(byTier)) {
     if (tierBadges.length === 0) continue;
     
     const tierIcon = TIER_ICON[tier];
-    const tierLabel = tier === 'gold' ? 'Oro' : tier === 'silver' ? 'Plata' : 'Bronce';
+    const tierLabel = tier === 'gold' ? 'Gold' : tier === 'silver' ? 'Silver' : 'Bronze';
     
     section += `<details>\n`;
-    section += `<summary><strong>${tierIcon} ${tierLabel}</strong> (${tierBadges.length} medallas)</summary>\n\n`;
+    section += `<summary><strong>${tierIcon} ${tierLabel}</strong> (${tierBadges.length} badges)</summary>\n\n`;
     section += `<p>\n`;
     
     for (const badge of tierBadges) {
@@ -163,9 +163,9 @@ function generateMiniView(userBadges, grouped, userData) {
     section += `</details>\n\n`;
   }
   
-  // También mostrar resumen por categoría colapsado
+  // Also show collapsed category summary
   section += `<details>\n`;
-  section += `<summary>📊 Ver por categoría</summary>\n\n`;
+  section += `<summary>📊 View by category</summary>\n\n`;
   
   for (const [catKey, catInfo] of Object.entries(CATEGORIES)) {
     const badges = grouped[catKey];
@@ -182,34 +182,34 @@ function generateMiniView(userBadges, grouped, userData) {
 }
 
 // ============================================================================
-// FUNCIÓN PRINCIPAL
+// MAIN FUNCTION
 // ============================================================================
 
 function syncProfile(username, readmePath, forceView = null) {
-  console.log(`🌸 Sincronizando medallas de @${username}...`);
+  console.log(`🌸 Syncing badges for @${username}...`);
   
-  // Cargar catálogo
+  // Load catalog
   const catalog = JSON.parse(fs.readFileSync(CATALOG_PATH, 'utf8'));
   const catalogIndex = {};
   for (const b of catalog) catalogIndex[b.id] = b;
   
-  // Cargar usuario específico
+  // Load specific user
   const userPath = path.join(USERS_DIR, `${username}.json`);
   if (!fs.existsSync(userPath)) {
-    console.error(`❌ Usuario ${username} no encontrado`);
+    console.error(`❌ User ${username} not found`);
     process.exit(1);
   }
   
   const userData = JSON.parse(fs.readFileSync(userPath, 'utf8'));
   
-  // Construir badges
+  // Build badges
   const userBadges = userData.badges.map(ub => {
     const cb = catalogIndex[ub.id];
     if (!cb) return null;
     return { ...cb, ...ub };
   }).filter(Boolean);
   
-  // Agrupar por categoría
+  // Group by category
   const grouped = {};
   for (const badge of userBadges) {
     const cat = badge.category || 'other';
@@ -217,7 +217,7 @@ function syncProfile(username, readmePath, forceView = null) {
     grouped[cat].push(badge);
   }
   
-  // Determinar vista a usar
+  // Determine view to use
   let viewMode;
   if (forceView) {
     viewMode = forceView;
@@ -229,9 +229,9 @@ function syncProfile(username, readmePath, forceView = null) {
     viewMode = 'mini';
   }
   
-  console.log(`📊 ${userBadges.length} medallas → Vista: ${viewMode.toUpperCase()}`);
+  console.log(`📊 ${userBadges.length} badges → View: ${viewMode.toUpperCase()}`);
   
-  // Generar sección HTML según la vista
+  // Generate HTML section based on view
   let section;
   switch (viewMode) {
     case 'compact':
@@ -244,12 +244,12 @@ function syncProfile(username, readmePath, forceView = null) {
       section = generateNormalView(userBadges, grouped, userData);
   }
   
-  // Agregar footer
+  // Add footer
   section += `> 🌸 Verificado por [BOOMFLOW](https://github.com/jeremy-sud/boomflow) @ [SistemasUrsol](https://www.ursol.com)\n`;
   
-  // Actualizar README
+  // Update README
   if (!fs.existsSync(readmePath)) {
-    console.error(`❌ README no encontrado: ${readmePath}`);
+    console.error(`❌ README not found: ${readmePath}`);
     process.exit(1);
   }
   
@@ -260,7 +260,7 @@ function syncProfile(username, readmePath, forceView = null) {
   const regex = new RegExp(`${START_TAG}[\\s\\S]*?${END_TAG}`, 'g');
   
   if (!regex.test(content)) {
-    console.error('❌ Marcadores BOOMFLOW no encontrados en el README');
+    console.error('❌ BOOMFLOW markers not found in README');
     process.exit(1);
   }
   
@@ -269,7 +269,7 @@ function syncProfile(username, readmePath, forceView = null) {
   content = content.replace(regex, newContent);
   
   fs.writeFileSync(readmePath, content);
-  console.log(`✅ README actualizado con ${userBadges.length} medallas de @${username} (vista ${viewMode})`);
+  console.log(`✅ README updated with ${userBadges.length} badges for @${username} (view ${viewMode})`);
 }
 
 // ============================================================================
@@ -280,13 +280,13 @@ const args = process.argv.slice(2);
 const username = args[0] || 'jeremy-sud';
 const readmePath = args[1] || '/home/dawnweaber/Workspace/jeremy-sud/README.md';
 
-// Detectar --view=xxx
+// Detect --view=xxx
 let forceView = null;
 for (const arg of args) {
   if (arg.startsWith('--view=')) {
     forceView = arg.replace('--view=', '');
     if (!['normal', 'compact', 'mini'].includes(forceView)) {
-      console.error(`❌ Vista inválida: ${forceView}. Usa: normal, compact, mini`);
+      console.error(`❌ Invalid view: ${forceView}. Use: normal, compact, mini`);
       process.exit(1);
     }
   }

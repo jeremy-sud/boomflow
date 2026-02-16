@@ -3,8 +3,8 @@
  * Tracks important actions for compliance and debugging
  * 
  * @module services/auditLogService
- * @description Servicio de registro de auditoría para BOOMFLOW.
- *              Registra acciones importantes para cumplimiento normativo y debugging.
+ * @description Audit logging service for BOOMFLOW.
+ *              Logs important actions for compliance and debugging.
  */
 
 import { prisma } from '../lib/prisma.js'

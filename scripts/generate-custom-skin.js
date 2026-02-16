@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 /**
- * BOOMFLOW - Generador de Skins Personalizadas
+ * BOOMFLOW - Custom Skin Generator
  * 
- * Script interactivo para crear SVGs de badges personalizados.
- * Ejecutar: node scripts/generate-custom-skin.js
+ * Interactive script to create custom badge SVGs.
+ * Run: node scripts/generate-custom-skin.js
  * 
  * @author Sistemas Ursol
  * @license MIT
@@ -14,15 +14,15 @@ const path = require('path');
 const readline = require('readline');
 
 // ============================================================
-// CONFIGURACIÓN DE FORMAS BASE
+// BASE SHAPE CONFIGURATION
 // ============================================================
 
 const SHAPES = {
   circle: {
-    name: 'Círculo',
-    description: 'Forma circular clásica',
+    name: 'Circle',
+    description: 'Classic circular shape',
     template: (colors) => `
-  <!-- Forma: Círculo -->
+  <!-- Shape: Circle -->
   <circle cx="60" cy="65" r="50" 
           fill="${colors.background}" 
           stroke="${colors.border}" 
@@ -36,10 +36,10 @@ const SHAPES = {
   },
   
   hexagon: {
-    name: 'Hexágono',
-    description: 'Forma de gema/cristal',
+    name: 'Hexagon',
+    description: 'Gem/crystal shape',
     template: (colors) => `
-  <!-- Forma: Hexágono (Gema) -->
+  <!-- Shape: Hexagon (Gem) -->
   <polygon points="60,5 105,30 105,100 60,125 15,100 15,30" 
            fill="${colors.background}" 
            stroke="${colors.border}" 
@@ -53,10 +53,10 @@ const SHAPES = {
   },
   
   shield: {
-    name: 'Escudo',
-    description: 'Forma heráldica/académica',
+    name: 'Shield',
+    description: 'Heraldic/academic shape',
     template: (colors) => `
-  <!-- Forma: Escudo Heráldico -->
+  <!-- Shape: Heraldic Shield -->
   <path d="M60 8 L105 28 Q108 70 60 130 Q12 70 15 28 Z" 
         fill="${colors.background}" 
         stroke="${colors.border}" 
@@ -70,10 +70,10 @@ const SHAPES = {
   },
   
   octagon: {
-    name: 'Octágono',
-    description: 'Forma moderna de 8 lados',
+    name: 'Octagon',
+    description: 'Modern 8-sided shape',
     template: (colors) => `
-  <!-- Forma: Octágono -->
+  <!-- Shape: Octagon -->
   <polygon points="40,10 80,10 100,35 100,95 80,120 40,120 20,95 20,35" 
            fill="${colors.background}" 
            stroke="${colors.border}" 
@@ -87,10 +87,10 @@ const SHAPES = {
   },
   
   oval: {
-    name: 'Óvalo',
-    description: 'Forma elíptica elegante',
+    name: 'Oval',
+    description: 'Elegant elliptical shape',
     template: (colors) => `
-  <!-- Forma: Óvalo -->
+  <!-- Shape: Oval -->
   <ellipse cx="60" cy="70" rx="50" ry="58" 
            fill="${colors.background}" 
            stroke="${colors.border}" 
@@ -104,10 +104,10 @@ const SHAPES = {
   },
   
   diamond: {
-    name: 'Diamante',
-    description: 'Rombo/diamante rotado',
+    name: 'Diamond',
+    description: 'Rotated rhombus/diamond',
     template: (colors) => `
-  <!-- Forma: Diamante -->
+  <!-- Shape: Diamond -->
   <polygon points="60,5 110,70 60,135 10,70" 
            fill="${colors.background}" 
            stroke="${colors.border}" 
@@ -122,12 +122,12 @@ const SHAPES = {
 };
 
 // ============================================================
-// PALETAS DE COLORES PREDEFINIDAS
+// PREDEFINED COLOR PALETTES
 // ============================================================
 
 const COLOR_PALETTES = {
   ocean: {
-    name: '🌊 Océano',
+    name: '🌊 Ocean',
     background: '#0c4a6e',
     border: '#0ea5e9',
     accent: '#7dd3fc',
@@ -136,7 +136,7 @@ const COLOR_PALETTES = {
   },
   
   forest: {
-    name: '🌲 Bosque',
+    name: '🌲 Forest',
     background: '#14532d',
     border: '#22c55e',
     accent: '#86efac',
@@ -145,7 +145,7 @@ const COLOR_PALETTES = {
   },
   
   sunset: {
-    name: '🌅 Atardecer',
+    name: '🌅 Sunset',
     background: '#7c2d12',
     border: '#f97316',
     accent: '#fdba74',
@@ -154,7 +154,7 @@ const COLOR_PALETTES = {
   },
   
   lavender: {
-    name: '💜 Lavanda',
+    name: '💜 Lavender',
     background: '#581c87',
     border: '#a855f7',
     accent: '#d8b4fe',
@@ -163,7 +163,7 @@ const COLOR_PALETTES = {
   },
   
   midnight: {
-    name: '🌙 Medianoche',
+    name: '🌙 Midnight',
     background: '#0f172a',
     border: '#3b82f6',
     accent: '#93c5fd',
@@ -172,7 +172,7 @@ const COLOR_PALETTES = {
   },
   
   rose: {
-    name: '🌹 Rosa',
+    name: '🌹 Rose',
     background: '#831843',
     border: '#ec4899',
     accent: '#f9a8d4',
@@ -181,7 +181,7 @@ const COLOR_PALETTES = {
   },
   
   gold: {
-    name: '🏆 Dorado',
+    name: '🏆 Gold',
     background: '#451a03',
     border: '#d97706',
     accent: '#fcd34d',
@@ -190,7 +190,7 @@ const COLOR_PALETTES = {
   },
   
   slate: {
-    name: '⬜ Slate (Minimalista)',
+    name: '⬜ Slate (Minimalist)',
     background: '#f8fafc',
     border: '#64748b',
     accent: '#94a3b8',
@@ -199,7 +199,7 @@ const COLOR_PALETTES = {
   },
   
   neon: {
-    name: '⚡ Neón',
+    name: '⚡ Neon',
     background: '#0c0a09',
     border: '#d946ef',
     accent: '#22d3ee',
@@ -208,7 +208,7 @@ const COLOR_PALETTES = {
   },
   
   corporate: {
-    name: '💼 Corporativo',
+    name: '💼 Corporate',
     background: '#1e40af',
     border: '#60a5fa',
     accent: '#93c5fd',
@@ -218,18 +218,18 @@ const COLOR_PALETTES = {
 };
 
 // ============================================================
-// EFECTOS ESPECIALES
+// SPECIAL EFFECTS
 // ============================================================
 
 const EFFECTS = {
   none: {
-    name: 'Ninguno',
+    name: 'None',
     defs: '',
     filter: ''
   },
   
   glow: {
-    name: 'Resplandor (Glow)',
+    name: 'Glow',
     defs: (colors) => `
     <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
       <feGaussianBlur stdDeviation="3" result="blur"/>
@@ -245,7 +245,7 @@ const EFFECTS = {
   },
   
   shadow: {
-    name: 'Sombra',
+    name: 'Shadow',
     defs: (colors) => `
     <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
       <feDropShadow dx="2" dy="3" stdDeviation="3" flood-color="#000000" flood-opacity="0.4"/>
@@ -254,7 +254,7 @@ const EFFECTS = {
   },
   
   gradient: {
-    name: 'Gradiente Animado',
+    name: 'Animated Gradient',
     defs: (colors) => `
     <linearGradient id="animatedGradient" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" style="stop-color:${colors.background}">
@@ -269,7 +269,7 @@ const EFFECTS = {
   },
   
   noise: {
-    name: 'Textura Ruido',
+    name: 'Noise Texture',
     defs: () => `
     <filter id="noise">
       <feTurbulence type="fractalNoise" baseFrequency="0.7" numOctaves="3" result="noise"/>
@@ -282,14 +282,14 @@ const EFFECTS = {
 };
 
 // ============================================================
-// ÍCONOS CENTRALES
+// CENTRAL ICONS
 // ============================================================
 
 const ICONS = {
   gem: {
-    name: '💎 Gema',
+    name: '💎 Gem',
     template: (colors, y) => `
-  <!-- Ícono: Gema facetada -->
+  <!-- Icon: Faceted gem -->
   <g transform="translate(60, ${y})">
     <polygon points="0,-18 14,-6 0,18 -14,-6" fill="${colors.icon}" opacity="0.9"/>
     <polygon points="0,-18 14,-6 0,2 -14,-6" fill="${colors.icon}"/>
@@ -300,9 +300,9 @@ const ICONS = {
   },
   
   star: {
-    name: '⭐ Estrella',
+    name: '⭐ Star',
     template: (colors, y) => `
-  <!-- Ícono: Estrella de 5 puntas -->
+  <!-- Icon: 5-pointed star -->
   <polygon points="60,${y-20} 65,${y-5} 80,${y-5} 68,${y+5} 73,${y+20} 60,${y+10} 47,${y+20} 52,${y+5} 40,${y-5} 55,${y-5}" 
            fill="${colors.icon}" 
            stroke="${colors.accent}" 
@@ -310,18 +310,18 @@ const ICONS = {
   },
   
   badge: {
-    name: '🏅 Medalla',
+    name: '🏅 Badge',
     template: (colors, y) => `
-  <!-- Ícono: Medalla circular -->
+  <!-- Icon: Circular badge -->
   <circle cx="60" cy="${y}" r="18" fill="${colors.icon}" stroke="${colors.accent}" stroke-width="2"/>
   <circle cx="60" cy="${y}" r="12" fill="none" stroke="${colors.accent}" stroke-width="1"/>
   <circle cx="60" cy="${y}" r="4" fill="${colors.accent}"/>`
   },
   
   lightning: {
-    name: '⚡ Rayo',
+    name: '⚡ Lightning',
     template: (colors, y) => `
-  <!-- Ícono: Rayo/Lightning -->
+  <!-- Icon: Lightning -->
   <polygon points="65,${y-20} 50,${y} 58,${y} 55,${y+20} 70,${y} 62,${y}" 
            fill="${colors.icon}" 
            stroke="${colors.accent}" 
@@ -329,17 +329,17 @@ const ICONS = {
   },
   
   code: {
-    name: '💻 Código',
+    name: '💻 Code',
     template: (colors, y) => `
-  <!-- Ícono: Brackets de código -->
+  <!-- Icon: Code brackets -->
   <text x="60" y="${y+8}" font-size="32" fill="${colors.icon}" text-anchor="middle" 
         font-family="monospace" font-weight="bold">&lt;/&gt;</text>`
   },
   
   heart: {
-    name: '❤️ Corazón',
+    name: '❤️ Heart',
     template: (colors, y) => `
-  <!-- Ícono: Corazón -->
+  <!-- Icon: Heart -->
   <path d="M60,${y+15} C40,${y-5} 40,${y-20} 50,${y-20} C58,${y-20} 60,${y-10} 60,${y-10} C60,${y-10} 62,${y-20} 70,${y-20} C80,${y-20} 80,${y-5} 60,${y+15}Z" 
         fill="${colors.icon}" 
         stroke="${colors.accent}" 
@@ -347,9 +347,9 @@ const ICONS = {
   },
   
   trophy: {
-    name: '🏆 Trofeo',
+    name: '🏆 Trophy',
     template: (colors, y) => `
-  <!-- Ícono: Trofeo -->
+  <!-- Icon: Trophy -->
   <path d="M45,${y-15} L75,${y-15} L72,${y} L68,${y} L68,${y+8} L75,${y+12} L45,${y+12} L52,${y+8} L52,${y} L48,${y} Z" 
         fill="${colors.icon}" 
         stroke="${colors.accent}" 
@@ -358,9 +358,9 @@ const ICONS = {
   },
   
   rocket: {
-    name: '🚀 Cohete',
+    name: '🚀 Rocket',
     template: (colors, y) => `
-  <!-- Ícono: Cohete -->
+  <!-- Icon: Rocket -->
   <path d="M60,${y-20} C70,${y-10} 70,${y+5} 60,${y+15} C50,${y+5} 50,${y-10} 60,${y-20}Z" 
         fill="${colors.icon}" 
         stroke="${colors.accent}" 
@@ -371,13 +371,13 @@ const ICONS = {
   },
   
   none: {
-    name: '(Sin ícono)',
-    template: () => '  <!-- Sin ícono central -->'
+    name: '(No icon)',
+    template: () => '  <!-- No central icon -->'
   }
 };
 
 // ============================================================
-// GENERADOR DE SVG
+// SVG GENERATOR
 // ============================================================
 
 function generateSVG(config) {
@@ -395,7 +395,7 @@ function generateSVG(config) {
   const effectConfig = EFFECTS[effect];
   const iconConfig = ICONS[icon];
   
-  // Override background si el efecto lo requiere
+  // Override background if effect requires it
   const effectiveColors = {
     ...colors,
     background: effectConfig.bgOverride || colors.background
@@ -404,15 +404,15 @@ function generateSVG(config) {
   const svg = `<?xml version="1.0" encoding="UTF-8"?>
 <!--
   BOOMFLOW Custom Skin: ${customName || 'Custom'}
-  Generado con: generate-custom-skin.js
-  Forma: ${shapeConfig.name}
-  Paleta: ${colors.name}
-  Efecto: ${effectConfig.name}
-  Ícono: ${iconConfig.name}
+  Generated with: generate-custom-skin.js
+  Shape: ${shapeConfig.name}
+  Palette: ${colors.name}
+  Effect: ${effectConfig.name}
+  Icon: ${iconConfig.name}
 -->
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 140">
   <defs>
-    <!-- Gradiente de fondo -->
+    <!-- Background gradient -->
     <linearGradient id="bg-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" style="stop-color:${colors.background}"/>
       <stop offset="100%" style="stop-color:${adjustColor(colors.background, -20)}"/>
@@ -420,14 +420,14 @@ function generateSVG(config) {
     ${effectConfig.defs ? (typeof effectConfig.defs === 'function' ? effectConfig.defs(colors) : effectConfig.defs) : ''}
   </defs>
   
-  <!-- Grupo principal ${effectConfig.filter} -->
+  <!-- Main group ${effectConfig.filter} -->
   <g ${effectConfig.filter}>
 ${shapeConfig.template(effectiveColors)}
   </g>
   
 ${iconConfig.template(colors, shapeConfig.iconY)}
   
-  <!-- Texto inferior -->
+  <!-- Bottom text -->
   <text x="60" y="130" font-size="8" fill="${colors.text}" text-anchor="middle" 
         font-family="system-ui, -apple-system, sans-serif" font-weight="600">${customText || 'BADGE'}</text>
 </svg>`;
@@ -436,7 +436,7 @@ ${iconConfig.template(colors, shapeConfig.iconY)}
 }
 
 /**
- * Ajusta el brillo de un color hex
+ * Adjusts the brightness of a hex color
  */
 function adjustColor(hex, amount) {
   const num = parseInt(hex.replace('#', ''), 16);
@@ -447,7 +447,7 @@ function adjustColor(hex, amount) {
 }
 
 // ============================================================
-// INTERFAZ DE LÍNEA DE COMANDOS
+// COMMAND LINE INTERFACE
 // ============================================================
 
 const rl = readline.createInterface({
@@ -473,40 +473,40 @@ function getKeyByIndex(options, index) {
 
 async function main() {
   console.log('\n╔════════════════════════════════════════════════════════════╗');
-  console.log('║     🎨 BOOMFLOW - Generador de Skins Personalizadas 🎨     ║');
+  console.log('║     🎨 BOOMFLOW - Custom Skin Generator 🎨               ║');
   console.log('╚════════════════════════════════════════════════════════════╝\n');
 
-  // Paso 1: Nombre de la skin
-  const customName = await ask('📝 Nombre de tu skin (ej: "Mi Skin Épica"): ');
+  // Step 1: Skin name
+  const customName = await ask('📝 Name of your skin (e.g.: "My Epic Skin"): ');
   
-  // Paso 2: Forma base
-  console.log('\n🔷 Selecciona la FORMA BASE:');
+  // Step 2: Base shape
+  console.log('\n🔷 Select BASE SHAPE:');
   printOptions(SHAPES);
-  const shapeIndex = parseInt(await ask('\n   Tu elección (1-6): '));
+  const shapeIndex = parseInt(await ask('\n   Your choice (1-6): '));
   const shape = getKeyByIndex(SHAPES, shapeIndex) || 'circle';
   
-  // Paso 3: Paleta de colores
-  console.log('\n🎨 Selecciona la PALETA DE COLORES:');
+  // Step 3: Color palette
+  console.log('\n🎨 Select COLOR PALETTE:');
   printOptions(COLOR_PALETTES);
-  const paletteIndex = parseInt(await ask('\n   Tu elección (1-10): '));
+  const paletteIndex = parseInt(await ask('\n   Your choice (1-10): '));
   const palette = getKeyByIndex(COLOR_PALETTES, paletteIndex) || 'midnight';
   
-  // Paso 4: Efecto especial
-  console.log('\n✨ Selecciona un EFECTO ESPECIAL:');
+  // Step 4: Special effect
+  console.log('\n✨ Select a SPECIAL EFFECT:');
   printOptions(EFFECTS);
-  const effectIndex = parseInt(await ask('\n   Tu elección (1-5): '));
+  const effectIndex = parseInt(await ask('\n   Your choice (1-5): '));
   const effect = getKeyByIndex(EFFECTS, effectIndex) || 'none';
   
-  // Paso 5: Ícono central
-  console.log('\n🏅 Selecciona el ÍCONO CENTRAL:');
+  // Step 5: Central icon
+  console.log('\n🏅 Select CENTRAL ICON:');
   printOptions(ICONS);
-  const iconIndex = parseInt(await ask('\n   Tu elección (1-9): '));
+  const iconIndex = parseInt(await ask('\n   Your choice (1-9): '));
   const icon = getKeyByIndex(ICONS, iconIndex) || 'gem';
   
-  // Paso 6: Texto personalizado
-  const customText = await ask('\n📜 Texto inferior (máx 10 chars, ej: "CUSTOM"): ') || 'BADGE';
+  // Step 6: Custom text
+  const customText = await ask('\n📜 Bottom text (max 10 chars, e.g.: "CUSTOM"): ') || 'BADGE';
   
-  // Generar configuración
+  // Generate configuration
   const config = {
     shape,
     palette,
@@ -516,17 +516,17 @@ async function main() {
     customName
   };
   
-  console.log('\n⚙️  Generando SVG con configuración:', JSON.stringify(config, null, 2));
+  console.log('\n⚙️  Generating SVG with configuration:', JSON.stringify(config, null, 2));
   
-  // Generar SVG
+  // Generate SVG
   const svg = generateSVG(config);
   
-  // Guardar archivo
+  // Save file
   const fileName = `skin-${customName.toLowerCase().replace(/[^a-z0-9]/g, '-')}-custom.svg`;
   const outputDir = path.join(__dirname, '..', 'assets', 'skins');
   const outputPath = path.join(outputDir, fileName);
   
-  // Crear directorio si no existe
+  // Create directory if it doesn't exist
   if (!fs.existsSync(outputDir)) {
     fs.mkdirSync(outputDir, { recursive: true });
   }
@@ -534,41 +534,41 @@ async function main() {
   fs.writeFileSync(outputPath, svg, 'utf-8');
   
   console.log('\n╔════════════════════════════════════════════════════════════╗');
-  console.log('║                    ✅ SKIN GENERADA                        ║');
+  console.log('║                    ✅ SKIN GENERATED                        ║');
   console.log('╚════════════════════════════════════════════════════════════╝');
-  console.log(`\n   📁 Archivo: ${outputPath}`);
-  console.log(`   📋 Para usar: Copia el archivo a assets/skins/`);
-  console.log(`   🔧 Para registrar: node scripts/badge-admin.js register-skin`);
-  console.log('\n   Vista previa del SVG guardada correctamente.\n');
+  console.log(`\n   📁 File: ${outputPath}`);
+  console.log(`   📋 To use: Copy the file to assets/skins/`);
+  console.log(`   🔧 To register: node scripts/badge-admin.js register-skin`);
+  console.log('\n   SVG preview saved successfully.\n');
   
   rl.close();
 }
 
 // ============================================================
-// MODO NO INTERACTIVO (CLI arguments)
+// NON-INTERACTIVE MODE (CLI arguments)
 // ============================================================
 
 function printUsage() {
   console.log(`
-Uso: node generate-custom-skin.js [opciones]
+Usage: node generate-custom-skin.js [options]
 
-Modo interactivo (sin argumentos):
+Interactive mode (no arguments):
   node generate-custom-skin.js
 
-Modo línea de comandos:
-  node generate-custom-skin.js --shape hexagon --palette ocean --effect glow --icon gem --text "EPIC" --name "Mi Skin"
+Command line mode:
+  node generate-custom-skin.js --shape hexagon --palette ocean --effect glow --icon gem --text "EPIC" --name "My Skin"
 
-Opciones:
-  --shape    Forma: ${Object.keys(SHAPES).join(', ')}
-  --palette  Paleta: ${Object.keys(COLOR_PALETTES).join(', ')}
-  --effect   Efecto: ${Object.keys(EFFECTS).join(', ')}
-  --icon     Ícono: ${Object.keys(ICONS).join(', ')}
-  --text     Texto inferior (máx 10 caracteres)
-  --name     Nombre de la skin
-  --output   Ruta de salida (opcional)
-  --help     Muestra esta ayuda
+Options:
+  --shape    Shape: ${Object.keys(SHAPES).join(', ')}
+  --palette  Palette: ${Object.keys(COLOR_PALETTES).join(', ')}
+  --effect   Effect: ${Object.keys(EFFECTS).join(', ')}
+  --icon     Icon: ${Object.keys(ICONS).join(', ')}
+  --text     Bottom text (max 10 characters)
+  --name     Name of the skin
+  --output   Output path (optional)
+  --help     Shows this help
 
-Ejemplos:
+Examples:
   node generate-custom-skin.js --shape shield --palette gold --icon trophy
   node generate-custom-skin.js --shape octagon --palette neon --effect glow --icon lightning
 `);
@@ -582,7 +582,7 @@ if (args.includes('--help') || args.includes('-h')) {
 }
 
 if (args.length > 0 && args[0].startsWith('--')) {
-  // Modo CLI
+  // CLI mode
   const config = {
     shape: 'circle',
     palette: 'midnight',
@@ -611,8 +611,8 @@ if (args.length > 0 && args[0].startsWith('--')) {
   const outputPath = path.join(__dirname, '..', 'assets', 'skins', fileName);
   
   fs.writeFileSync(outputPath, svg, 'utf-8');
-  console.log(`✅ Skin generada: ${outputPath}`);
+  console.log(`✅ Skin generated: ${outputPath}`);
 } else {
-  // Modo interactivo
+  // Interactive mode
   main().catch(console.error);
 }

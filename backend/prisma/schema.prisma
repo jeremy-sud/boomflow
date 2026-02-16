@@ -46,17 +46,17 @@ enum Tier {
 }
 
 enum TriggerType {
-  KUDO_COUNT      // Acumular X kudos totales
-  KUDO_CATEGORY   // Acumular X kudos en una categoría
-  MANUAL          // Otorgado manualmente por admin
-  SYSTEM          // Auto-otorgado (primer commit, etc.)
+  KUDO_COUNT      // Accumulate X total kudos
+  KUDO_CATEGORY   // Accumulate X kudos in a category
+  MANUAL          // Manually awarded by admin
+  SYSTEM          // Auto-awarded (first commit, etc.)
 }
 
 // ============================================
 // MODELS
 // ============================================
 
-/// Usuario del sistema
+/// System user
 model User {
   id            String    @id @default(cuid())
   email         String    @unique
@@ -99,7 +99,7 @@ model User {
   @@index([githubId])
 }
 
-/// Organización (tenant)
+/// Organization (tenant)
 model Organization {
   id          String   @id @default(cuid())
   name        String
@@ -128,7 +128,7 @@ model Organization {
   @@index([slug])
 }
 
-/// Equipo dentro de una organización
+/// Team within an organization
 model Team {
   id             String       @id @default(cuid())
   name           String
@@ -150,7 +150,7 @@ model Team {
   @@index([organizationId])
 }
 
-/// Kudo (reconocimiento entre pares)
+/// Kudo (peer recognition)
 model Kudo {
   id          String   @id @default(cuid())
   message     String   @db.Text
@@ -177,7 +177,7 @@ model Kudo {
   @@index([createdAt])
 }
 
-/// Badge (medalla)
+/// Badge
 model Badge {
   id          String   @id @default(cuid())
   slug        String   @unique
@@ -235,7 +235,7 @@ model UserBadge {
   @@index([awardedAt])
 }
 
-/// Invitación a una organización
+/// Organization invitation
 model Invite {
   id             String       @id @default(cuid())
   email          String

@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 /**
- * 🎯 BOOMFLOW - Procesador de Eventos de GitHub
+ * 🎯 BOOMFLOW - GitHub Event Processor
  * ==============================================
- * Procesa eventos de GitHub (PRs, Issues, Reviews) y otorga medallas.
+ * Processes GitHub events (PRs, Issues, Reviews) and awards badges.
  * 
- * Eventos soportados:
+ * Supported events:
  * - pull_request: merged, opened, reviewed
  * - issues: opened, closed
  * - pull_request_review: submitted
@@ -20,7 +20,7 @@ const USERS_DIR = path.join(__dirname, '../users');
 const CATALOG_PATH = path.join(__dirname, '../api-mock.json');
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN || process.env.GH_TOKEN;
 
-// Colores para consola
+// Console colors
 const colors = {
   reset: '\x1b[0m',
   red: '\x1b[31m',
@@ -36,7 +36,7 @@ function log(color, ...args) {
 }
 
 // ============================================================================
-// REGLAS DE EVENTOS → MEDALLAS
+// EVENT → BADGE RULES
 // ============================================================================
 
 const EVENT_RULES = {
@@ -44,17 +44,17 @@ const EVENT_RULES = {
   'pull_request.merged': [
     {
       badgeId: 'first-pr',
-      description: 'Primer PR mergeado',
+      description: 'First PR merged',
       condition: (ctx) => ctx.userStats.prs_merged >= 1
     },
     {
       badgeId: 'code-ninja',
-      description: 'Contribución significativa (PR mergeado)',
+      description: 'Significant contribution (merged PR)',
       condition: (ctx) => ctx.userStats.prs_merged >= 10
     },
     {
       badgeId: 'docs-hero',
-      description: 'PR de documentación mergeado',
+      description: 'Documentation PR merged',
       condition: (ctx) => {
         const title = (ctx.event.pull_request?.title || '').toLowerCase();
         const labels = ctx.event.pull_request?.labels || [];
@@ -64,7 +64,7 @@ const EVENT_RULES = {
     },
     {
       badgeId: 'bug-hunter',
-      description: 'PR de bugfix mergeado',
+      description: 'Bugfix PR merged',
       condition: (ctx) => {
         const title = (ctx.event.pull_request?.title || '').toLowerCase();
         const labels = ctx.event.pull_request?.labels || [];
@@ -75,7 +75,7 @@ const EVENT_RULES = {
     },
     {
       badgeId: 'crisis-averted',
-      description: 'PR de hotfix crítico mergeado',
+      description: 'Critical hotfix PR merged',
       condition: (ctx) => {
         const labels = ctx.event.pull_request?.labels || [];
         return labels.some(l => 
@@ -87,7 +87,7 @@ const EVENT_RULES = {
     },
     {
       badgeId: 'refactor-master',
-      description: 'PR de refactoring mergeado',
+      description: 'Refactoring PR merged',
       condition: (ctx) => {
         const title = (ctx.event.pull_request?.title || '').toLowerCase();
         const labels = ctx.event.pull_request?.labels || [];
@@ -101,17 +101,17 @@ const EVENT_RULES = {
   'pull_request_review.submitted': [
     {
       badgeId: 'first-review',
-      description: 'Primera code review realizada',
+      description: 'First code review performed',
       condition: (ctx) => ctx.userStats.reviews >= 1
     },
     {
       badgeId: 'code-reviewer',
-      description: 'Code reviewer activo (5+ reviews)',
+      description: 'Active code reviewer (5+ reviews)',
       condition: (ctx) => ctx.userStats.reviews >= 5
     },
     {
       badgeId: 'mentor',
-      description: 'Mentor activo (20+ reviews con comentarios constructivos)',
+      description: 'Active mentor (20+ reviews with constructive feedback)',
       condition: (ctx) => ctx.userStats.reviews >= 20
     }
   ],
@@ -120,7 +120,7 @@ const EVENT_RULES = {
   'issues.opened': [
     {
       badgeId: 'bug-hunter',
-      description: 'Issue de bug reportado',
+      description: 'Bug issue reported',
       condition: (ctx) => {
         const labels = ctx.event.issue?.labels || [];
         return labels.some(l => l.name?.toLowerCase().includes('bug'));
@@ -131,7 +131,7 @@ const EVENT_RULES = {
   'issues.closed': [
     {
       badgeId: 'bug-hunter',
-      description: 'Issue de bug cerrado',
+      description: 'Bug issue closed',
       condition: (ctx) => {
         const labels = ctx.event.issue?.labels || [];
         return labels.some(l => l.name?.toLowerCase().includes('bug'));
@@ -143,7 +143,7 @@ const EVENT_RULES = {
   'release.published': [
     {
       badgeId: 'cicd-master',
-      description: 'Release publicado',
+      description: 'Release published',
       condition: () => true
     }
   ],
@@ -152,7 +152,7 @@ const EVENT_RULES = {
   'push': [
     {
       badgeId: 'first-commit',
-      description: 'Primer commit',
+      description: 'First commit',
       condition: (ctx) => ctx.userStats.commits >= 1
     },
     {
@@ -164,7 +164,7 @@ const EVENT_RULES = {
 };
 
 // ============================================================================
-// UTILIDADES
+// UTILITIES
 // ============================================================================
 
 function loadUser(username) {
@@ -240,7 +240,7 @@ async function getUserStats(username) {
   };
 
   try {
-    // Buscar PRs mergeados del usuario
+    // Find user's merged PRs
     const prsSearch = await githubRequest(
       `/search/issues?q=author:${username}+type:pr+is:merged&per_page=1`
     );
@@ -248,7 +248,7 @@ async function getUserStats(username) {
       stats.prs_merged = prsSearch.total_count;
     }
 
-    // Buscar PRs abiertos
+    // Find open PRs
     const prsOpenSearch = await githubRequest(
       `/search/issues?q=author:${username}+type:pr&per_page=1`
     );
@@ -256,7 +256,7 @@ async function getUserStats(username) {
       stats.prs_opened = prsOpenSearch.total_count;
     }
 
-    // Buscar issues cerrados
+    // Find closed issues
     const issuesSearch = await githubRequest(
       `/search/issues?q=author:${username}+type:issue+is:closed&per_page=1`
     );
@@ -264,7 +264,7 @@ async function getUserStats(username) {
       stats.issues_closed = issuesSearch.total_count;
     }
 
-    // Buscar commits
+    // Find commits
     const commitsSearch = await githubRequest(
       `/search/commits?q=author:${username}&per_page=1`
     );
@@ -272,31 +272,31 @@ async function getUserStats(username) {
       stats.commits = commitsSearch.total_count;
     }
 
-    // Las reviews son más difíciles de contar via API, usar eventos
+    // Reviews are harder to count via API, use events
     const events = await githubRequest(`/users/${username}/events?per_page=100`);
     if (Array.isArray(events)) {
       stats.reviews = events.filter(e => e.type === 'PullRequestReviewEvent').length;
     }
 
   } catch (e) {
-    log(colors.yellow, `⚠️ Error obteniendo stats: ${e.message}`);
+    log(colors.yellow, `⚠️ Error getting stats: ${e.message}`);
   }
 
   return stats;
 }
 
 // ============================================================================
-// PROCESADOR DE EVENTOS
+// EVENT PROCESSOR
 // ============================================================================
 
 async function processEvent(eventType, eventData) {
   log(colors.cyan, '═══════════════════════════════════════════════════════');
-  log(colors.cyan, '🎯 BOOMFLOW - Procesador de Eventos');
+  log(colors.cyan, '🎯 BOOMFLOW - Event Processor');
   log(colors.cyan, '═══════════════════════════════════════════════════════');
   log(colors.reset, `📅 Timestamp: ${new Date().toISOString()}`);
   log(colors.reset, `📝 Evento: ${eventType}`);
 
-  // Determinar el usuario del evento
+  // Determine the event user
   let username = null;
   
   if (eventType.startsWith('pull_request')) {
@@ -314,37 +314,37 @@ async function processEvent(eventType, eventData) {
   }
 
   if (!username) {
-    log(colors.yellow, '⚠️ No se pudo determinar el usuario del evento');
+    log(colors.yellow, '⚠️ Could not determine the event user');
     return { badgesAwarded: 0 };
   }
 
-  log(colors.blue, `👤 Usuario: @${username}`);
+  log(colors.blue, `👤 User: @${username}`);
 
-  // Verificar si el usuario está registrado en BOOMFLOW
+  // Check if user is registered in BOOMFLOW
   if (!isRegisteredUser(username)) {
-    log(colors.yellow, `⚠️ @${username} no está registrado en BOOMFLOW. Ignorando.`);
+    log(colors.yellow, `⚠️ @${username} is not registered in BOOMFLOW. Ignoring.`);
     return { badgesAwarded: 0, reason: 'user_not_registered' };
   }
 
-  // Cargar datos del usuario
+  // Load user data
   const userData = loadUser(username);
-  log(colors.green, `✅ Usuario encontrado: ${userData.displayName || username}`);
+  log(colors.green, `✅ User found: ${userData.displayName || username}`);
 
-  // Obtener stats actualizadas del usuario
-  log(colors.blue, '📊 Obteniendo estadísticas de GitHub...');
+  // Get updated user stats
+  log(colors.blue, '📊 Getting GitHub statistics...');
   const userStats = await getUserStats(username);
   log(colors.cyan, `   Commits: ${userStats.commits}, PRs: ${userStats.prs_merged}, Reviews: ${userStats.reviews}`);
 
-  // Buscar reglas para este tipo de evento
+  // Find rules for this event type
   const rules = EVENT_RULES[eventType] || [];
   if (rules.length === 0) {
-    log(colors.yellow, `⚠️ No hay reglas definidas para el evento: ${eventType}`);
+    log(colors.yellow, `⚠️ No rules defined for event: ${eventType}`);
     return { badgesAwarded: 0 };
   }
 
-  log(colors.blue, `🔍 Evaluando ${rules.length} regla(s)...`);
+  log(colors.blue, `🔍 Evaluating ${rules.length} rule(s)...`);
 
-  // Contexto para evaluar condiciones
+  // Context for evaluating conditions
   const context = {
     event: eventData,
     userStats,
@@ -355,20 +355,20 @@ async function processEvent(eventType, eventData) {
   const newBadges = [];
 
   for (const rule of rules) {
-    // Saltar si ya tiene la medalla
+    // Skip if already has the badge
     if (hasBadge(userData, rule.badgeId)) {
       continue;
     }
 
-    // Saltar si la medalla no existe en el catálogo
+    // Skip if badge doesn't exist in catalog
     if (!badgeExists(rule.badgeId)) {
       continue;
     }
 
-    // Evaluar condición
+    // Evaluate condition
     try {
       if (rule.condition(context)) {
-        log(colors.green, `   🏅 ¡Nueva medalla! ${rule.badgeId} - ${rule.description}`);
+        log(colors.green, `   🏅 New badge! ${rule.badgeId} - ${rule.description}`);
         
         newBadges.push({
           id: rule.badgeId,
@@ -380,18 +380,18 @@ async function processEvent(eventType, eventData) {
         });
       }
     } catch (e) {
-      log(colors.yellow, `   ⚠️ Error evaluando ${rule.badgeId}: ${e.message}`);
+      log(colors.yellow, `   ⚠️ Error evaluating ${rule.badgeId}: ${e.message}`);
     }
   }
 
-  // Guardar nuevas medallas
+  // Save new badges
   if (newBadges.length > 0) {
     userData.badges = userData.badges || [];
     userData.badges.push(...newBadges);
     saveUser(username, userData);
-    log(colors.magenta, `\n🎉 ${newBadges.length} medalla(s) otorgada(s) a @${username}`);
+    log(colors.magenta, `\n🎉 ${newBadges.length} badge(s) awarded to @${username}`);
   } else {
-    log(colors.blue, `\nℹ️ No hay nuevas medallas para @${username}`);
+    log(colors.blue, `\nℹ️ No new badges for @${username}`);
   }
 
   return {
@@ -410,31 +410,31 @@ async function main() {
   
   if (args.length === 0) {
     console.log(`
-🎯 BOOMFLOW - Procesador de Eventos de GitHub
+🎯 BOOMFLOW - GitHub Event Processor
 ==============================================
 
-USO:
+USAGE:
   node scripts/process-event.js <event-type> [event-file.json]
 
-EVENTOS SOPORTADOS:
-  pull_request.merged        - PR fue mergeado
-  pull_request.opened        - PR fue abierto
-  pull_request_review.submitted  - Review fue enviado
-  issues.opened              - Issue fue abierto
-  issues.closed              - Issue fue cerrado
-  release.published          - Release fue publicado
-  push                       - Commits fueron pusheados
+SUPPORTED EVENTS:
+  pull_request.merged        - PR was merged
+  pull_request.opened        - PR was opened
+  pull_request_review.submitted  - Review was submitted
+  issues.opened              - Issue was opened
+  issues.closed              - Issue was closed
+  release.published          - Release was published
+  push                       - Commits were pushed
 
-EJEMPLOS:
+EXAMPLES:
   node scripts/process-event.js pull_request.merged event.json
   
-  # Con evento desde stdin (usado por GitHub Actions)
+  # With event from stdin (used by GitHub Actions)
   echo '{"pull_request":{"user":{"login":"jeremy-sud"}}}' | \\
     node scripts/process-event.js pull_request.merged
 
-VARIABLES DE ENTORNO:
-  GITHUB_TOKEN / GH_TOKEN    - Token de GitHub para API
-  GITHUB_EVENT_PATH          - Ruta al archivo de evento (GitHub Actions)
+ENVIRONMENT VARIABLES:
+  GITHUB_TOKEN / GH_TOKEN    - GitHub token for API
+  GITHUB_EVENT_PATH          - Path to event file (GitHub Actions)
 `);
     process.exit(0);
   }
@@ -442,15 +442,15 @@ VARIABLES DE ENTORNO:
   const eventType = args[0];
   let eventData = {};
 
-  // Cargar evento desde archivo, variable de entorno, o stdin
+  // Load event from file, environment variable, or stdin
   if (args[1]) {
-    // Archivo especificado
+    // File specified
     eventData = JSON.parse(fs.readFileSync(args[1], 'utf8'));
   } else if (process.env.GITHUB_EVENT_PATH) {
-    // GitHub Actions proporciona el evento en este archivo
+    // GitHub Actions provides the event in this file
     eventData = JSON.parse(fs.readFileSync(process.env.GITHUB_EVENT_PATH, 'utf8'));
   } else {
-    // Intentar leer de stdin (para testing)
+    // Try to read from stdin (for testing)
     const stdin = fs.readFileSync(0, 'utf8').trim();
     if (stdin) {
       eventData = JSON.parse(stdin);

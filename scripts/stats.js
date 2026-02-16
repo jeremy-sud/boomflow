@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 /**
- * 📊 BOOMFLOW - Estadísticas y Resumen
+ * 📊 BOOMFLOW - Statistics and Summary
  * ====================================
- * Muestra un resumen del estado actual de BOOMFLOW
+ * Shows a summary of the current state of BOOMFLOW
  */
 
 const fs = require('fs');
@@ -12,7 +12,7 @@ const USERS_DIR = path.join(__dirname, '../users');
 const CATALOG_PATH = path.join(__dirname, '../api-mock.json');
 const ADMINS_PATH = path.join(__dirname, '../config/admins.json');
 
-// Colores
+// Colors
 const c = {
   reset: '\x1b[0m',
   bold: '\x1b[1m',
@@ -53,7 +53,7 @@ function loadAdmins() {
 function printHeader() {
   console.log('');
   console.log(c.bgMagenta + c.white + c.bold + '                                              ' + c.reset);
-  console.log(c.bgMagenta + c.white + c.bold + '      🌸 BOOMFLOW - Panel de Estadísticas     ' + c.reset);
+  console.log(c.bgMagenta + c.white + c.bold + '      🌸 BOOMFLOW - Statistics Panel               ' + c.reset);
   console.log(c.bgMagenta + c.white + c.bold + '                                              ' + c.reset);
   console.log('');
 }
@@ -71,21 +71,21 @@ function main() {
   const catalog = loadCatalog();
   const admins = loadAdmins();
   
-  // === RESUMEN GENERAL ===
-  printSection('📊 RESUMEN GENERAL');
+  // === GENERAL SUMMARY ===
+  printSection('📊 GENERAL SUMMARY');
   
   const totalBadges = users.reduce((sum, u) => sum + (u.badges?.length || 0), 0);
   const avgBadges = users.length > 0 ? (totalBadges / users.length).toFixed(1) : 0;
   
-  console.log(`${c.white}  👥 Colaboradores registrados:  ${c.green}${users.length}${c.reset}`);
-  console.log(`${c.white}  🏅 Medallas disponibles:        ${c.yellow}${catalog.length}${c.reset}`);
-  console.log(`${c.white}  🎯 Medallas otorgadas (total):  ${c.magenta}${totalBadges}${c.reset}`);
-  console.log(`${c.white}  📈 Promedio por colaborador:    ${c.blue}${avgBadges}${c.reset}`);
-  console.log(`${c.white}  👑 Administradores:             ${c.cyan}${admins.admins?.length || 0}${c.reset}`);
+  console.log(`${c.white}  👥 Registered collaborators:    ${c.green}${users.length}${c.reset}`);
+  console.log(`${c.white}  🏅 Available badges:            ${c.yellow}${catalog.length}${c.reset}`);
+  console.log(`${c.white}  🎯 Badges awarded (total):      ${c.magenta}${totalBadges}${c.reset}`);
+  console.log(`${c.white}  📈 Average per collaborator:    ${c.blue}${avgBadges}${c.reset}`);
+  console.log(`${c.white}  👑 Administrators:             ${c.cyan}${admins.admins?.length || 0}${c.reset}`);
   console.log('');
   
-  // === TOP COLABORADORES ===
-  printSection('🏆 TOP COLABORADORES');
+  // === TOP COLLABORATORS ===
+  printSection('🏆 TOP COLLABORATORS');
   
   const sortedUsers = [...users].sort((a, b) => 
     (b.badges?.length || 0) - (a.badges?.length || 0)
@@ -101,12 +101,12 @@ function main() {
     const role = user.role ? c.dim + ` (${user.role})` + c.reset : '';
     
     console.log(`  ${medal} ${c.white}${displayName.padEnd(20)}${role}`);
-    console.log(`     ${c.green}${bar}${c.reset} ${c.bold}${badgeCount}${c.reset} medallas`);
+    console.log(`     ${c.green}${bar}${c.reset} ${c.bold}${badgeCount}${c.reset} badges`);
   });
   console.log('');
   
-  // === DESGLOSE POR CATEGORÍA ===
-  printSection('📁 MEDALLAS POR CATEGORÍA');
+  // === BREAKDOWN BY CATEGORY ===
+  printSection('📁 BADGES BY CATEGORY');
   
   const categoryCounts = {};
   for (const user of users) {
@@ -140,8 +140,8 @@ function main() {
   }
   console.log('');
   
-  // === MEDALLAS RECIENTES ===
-  printSection('🕐 ACTIVIDAD RECIENTE');
+  // === RECENT BADGES ===
+  printSection('🕐 RECENT ACTIVITY');
   
   const allBadges = [];
   for (const user of users) {
@@ -172,8 +172,8 @@ function main() {
   }
   console.log('');
   
-  // === ADMINISTRADORES ===
-  printSection('👑 ADMINISTRADORES');
+  // === ADMINISTRATORS ===
+  printSection('👑 ADMINISTRATORS');
   
   for (const admin of (admins.admins || [])) {
     console.log(`  👑 ${c.cyan}@${admin.username}${c.reset}`);
@@ -183,7 +183,7 @@ function main() {
   
   // === FOOTER ===
   console.log(c.dim + '─'.repeat(55) + c.reset);
-  console.log(c.dim + `  📅 Generado: ${new Date().toISOString()}` + c.reset);
+  console.log(c.dim + `  📅 Generated: ${new Date().toISOString()}` + c.reset);
   console.log(c.dim + `  🌸 BOOMFLOW - Sistemas Ursol` + c.reset);
   console.log('');
 }

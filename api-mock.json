@@ -5,8 +5,8 @@
     "label": "Hello World",
     "category": "onboarding",
     "tier": "bronze",
-    "meta": "Nivel 1",
-    "description": "Primer día en el equipo. ¡Bienvenido!",
+    "meta": "Level 1",
+    "description": "First day on the team. Welcome!",
     "svg": "badge-hello-world.svg"
   },
   {
@@ -15,8 +15,8 @@
     "label": "First Commit",
     "category": "onboarding",
     "tier": "bronze",
-    "meta": "Nivel 1",
-    "description": "Primer commit al repositorio del equipo.",
+    "meta": "Level 1",
+    "description": "First commit to the team repository.",
     "svg": "badge-first-commit.svg"
   },
   {
@@ -25,8 +25,8 @@
     "label": "First PR",
     "category": "onboarding",
     "tier": "bronze",
-    "meta": "Nivel 1",
-    "description": "Primer Pull Request aprobado y mergeado.",
+    "meta": "Level 1",
+    "description": "First Pull Request approved and merged.",
     "svg": "badge-first-pr.svg"
   },
   {
@@ -35,8 +35,8 @@
     "label": "First Review",
     "category": "onboarding",
     "tier": "bronze",
-    "meta": "Nivel 1",
-    "description": "Primera code review realizada a un compañero.",
+    "meta": "Level 1",
+    "description": "First code review done for a teammate.",
     "svg": "badge-first-review.svg"
   },
   {
@@ -45,8 +45,8 @@
     "label": "Code Ninja",
     "category": "coding",
     "tier": "silver",
-    "meta": "Nivel 2",
-    "description": "Código limpio, rápido y eficiente consistentemente.",
+    "meta": "Level 2",
+    "description": "Consistently clean, fast, and efficient code.",
     "svg": "badge-code-ninja.svg"
   },
   {
@@ -55,8 +55,8 @@
     "label": "Bug Hunter",
     "category": "coding",
     "tier": "silver",
-    "meta": "Nivel 2",
-    "description": "Detecta y corrige bugs antes de que lleguen a producción.",
+    "meta": "Level 2",
+    "description": "Detects and fixes bugs before they reach production.",
     "svg": "badge-bug-hunter.svg"
   },
   {
@@ -65,8 +65,8 @@
     "label": "Refactor Master",
     "category": "coding",
     "tier": "silver",
-    "meta": "Nivel 2",
-    "description": "Mejora código legado sin romper funcionalidad.",
+    "meta": "Level 2",
+    "description": "Improves legacy code without breaking functionality.",
     "svg": "badge-refactor-master.svg"
   },
   {
@@ -75,8 +75,8 @@
     "label": "Algorithm Ace",
     "category": "coding",
     "tier": "gold",
-    "meta": "Nivel 3",
-    "description": "Resuelve problemas complejos con algoritmos óptimos.",
+    "meta": "Level 3",
+    "description": "Solves complex problems with optimal algorithms.",
     "svg": "badge-algorithm-ace.svg"
   },
   {
@@ -85,8 +85,8 @@
     "label": "Clean Code",
     "category": "coding",
     "tier": "silver",
-    "meta": "Nivel 2",
-    "description": "Escribe código legible, bien documentado y mantenible.",
+    "meta": "Level 2",
+    "description": "Writes readable, well-documented, and maintainable code.",
     "svg": "badge-clean-code.svg"
   },
   {
@@ -95,8 +95,8 @@
     "label": "Full Stack",
     "category": "coding",
     "tier": "gold",
-    "meta": "Nivel 3",
-    "description": "Domina frontend y backend con soltura.",
+    "meta": "Level 3",
+    "description": "Masters frontend and backend with ease.",
     "svg": "badge-full-stack.svg"
   },
   {
@@ -105,8 +105,8 @@
     "label": "Pipeline Pro",
     "category": "devops",
     "tier": "silver",
-    "meta": "Nivel 2",
-    "description": "Pipelines de CI/CD rápidos y confiables.",
+    "meta": "Level 2",
+    "description": "Fast and reliable CI/CD pipelines.",
     "svg": "badge-pipeline-pro.svg"
   },
   {
@@ -115,8 +115,8 @@
     "label": "Docker Captain",
     "category": "devops",
     "tier": "silver",
-    "meta": "Nivel 2",
-    "description": "Containerización limpia y eficiente.",
+    "meta": "Level 2",
+    "description": "Clean and efficient containerization.",
     "svg": "badge-docker-captain.svg"
   },
   {
@@ -125,8 +125,8 @@
     "label": "Cloud Deployer",
     "category": "devops",
     "tier": "gold",
-    "meta": "Nivel 3",
-    "description": "Despliegues en la nube sin downtime.",
+    "meta": "Level 3",
+    "description": "Cloud deployments with zero downtime.",
     "svg": "badge-cloud-deployer.svg"
   },
   {
@@ -135,8 +135,8 @@
     "label": "CI/CD Master",
     "category": "devops",
     "tier": "gold",
-    "meta": "Nivel 3",
-    "description": "Automatización total del ciclo de desarrollo.",
+    "meta": "Level 3",
+    "description": "Full automation of the development cycle.",
     "svg": "badge-cicd-master.svg"
   },
   {
@@ -145,8 +145,8 @@
     "label": "Mentor",
     "category": "collaboration",
     "tier": "bronze",
-    "meta": "Nivel 1",
-    "description": "Guía a compañeros nuevos en el equipo.",
+    "meta": "Level 1",
+    "description": "Guides new teammates on the team.",
     "svg": "badge-mentor.svg"
   },
   {
@@ -155,8 +155,8 @@
     "label": "Mentor Master",
     "category": "collaboration",
     "tier": "gold",
-    "meta": "Nivel 3",
-    "description": "Ha guiado a 20+ colegas al éxito.",
+    "meta": "Level 3",
+    "description": "Has guided 20+ colleagues to success.",
     "svg": "badge-mentor-master.svg"
   },
   {
@@ -165,8 +165,8 @@
     "label": "Team Spirit",
     "category": "collaboration",
     "tier": "silver",
-    "meta": "Nivel 2",
-    "description": "Mantiene la moral alta y la cohesión del equipo.",
+    "meta": "Level 2",
+    "description": "Keeps morale high and team cohesion strong.",
     "svg": "badge-team-spirit.svg"
   },
   {
@@ -175,8 +175,8 @@
     "label": "Code Reviewer",
     "category": "collaboration",
     "tier": "silver",
-    "meta": "Nivel 2",
-    "description": "Reviews detallados y constructivos.",
+    "meta": "Level 2",
+    "description": "Detailed and constructive reviews.",
     "svg": "badge-code-reviewer.svg"
   },
   {
@@ -185,8 +185,8 @@
     "label": "Pair Programmer",
     "category": "collaboration",
     "tier": "silver",
-    "meta": "Nivel 2",
-    "description": "Programación en pareja efectiva y productiva.",
+    "meta": "Level 2",
+    "description": "Effective and productive pair programming.",
     "svg": "badge-pair-programmer.svg"
   },
   {
@@ -195,8 +195,8 @@
     "label": "Crisis Averted",
     "category": "leadership",
     "tier": "gold",
-    "meta": "Nivel 3",
-    "description": "Salvó el deploy en un momento crítico.",
+    "meta": "Level 3",
+    "description": "Saved the deploy at a critical moment.",
     "svg": "badge-crisis-averted.svg"
   },
   {
@@ -205,8 +205,8 @@
     "label": "Sprint Hero",
     "category": "leadership",
     "tier": "silver",
-    "meta": "Nivel 2",
-    "description": "Entrega excepcional en el sprint.",
+    "meta": "Level 2",
+    "description": "Exceptional delivery in the sprint.",
     "svg": "badge-sprint-hero.svg"
   },
   {
@@ -215,8 +215,8 @@
     "label": "Architect",
     "category": "leadership",
     "tier": "gold",
-    "meta": "Nivel 3",
-    "description": "Arquitectura sólida, escalable y mantenible.",
+    "meta": "Level 3",
+    "description": "Solid, scalable, and maintainable architecture.",
     "svg": "badge-architect.svg"
   },
   {
@@ -225,8 +225,8 @@
     "label": "Tech Lead",
     "category": "leadership",
     "tier": "gold",
-    "meta": "Nivel 3",
-    "description": "Lidera decisiones técnicas con visión estratégica.",
+    "meta": "Level 3",
+    "description": "Leads technical decisions with strategic vision.",
     "svg": "badge-tech-lead.svg"
   },
   {
@@ -235,8 +235,8 @@
     "label": "Docs Hero",
     "category": "documentation",
     "tier": "bronze",
-    "meta": "Nivel 1",
-    "description": "Documentación clara y útil para todo el equipo.",
+    "meta": "Level 1",
+    "description": "Clear and useful documentation for the whole team.",
     "svg": "badge-docs-hero.svg"
   },
   {
@@ -245,8 +245,8 @@
     "label": "API Designer",
     "category": "documentation",
     "tier": "silver",
-    "meta": "Nivel 2",
-    "description": "APIs bien diseñadas, documentadas y versionadas.",
+    "meta": "Level 2",
+    "description": "Well-designed, documented, and versioned APIs.",
     "svg": "badge-api-designer.svg"
   },
   {
@@ -255,8 +255,8 @@
     "label": "Open Source",
     "category": "documentation",
     "tier": "silver",
-    "meta": "Nivel 2",
-    "description": "Contribuciones activas a proyectos open source.",
+    "meta": "Level 2",
+    "description": "Active contributions to open source projects.",
     "svg": "badge-open-source.svg"
   }
 ]

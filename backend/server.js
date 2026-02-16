@@ -22,8 +22,8 @@ async function verifyOrgMembership(req, res, next) {
   const authHeader = req.headers.authorization;
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
     return res.status(401).json({
-      error: "No autorizado",
-      message: "Se requiere un token de GitHub.",
+      error: "Unauthorized",
+      message: "A GitHub token is required.",
     });
   }
 
@@ -50,8 +50,8 @@ async function verifyOrgMembership(req, res, next) {
         (orgError.response.status === 404 || orgError.response.status === 302)
       ) {
         return res.status(403).json({
-          error: "Acceso denegado",
-          message: `Lo sentimos, Bloomflow actualmente solo está disponible para miembros de ${REQUIRED_ORG}.`,
+          error: "Access denied",
+          message: `Sorry, Bloomflow is currently only available for members of ${REQUIRED_ORG}.`,
         });
       }
       throw orgError;
@@ -68,8 +68,8 @@ async function verifyOrgMembership(req, res, next) {
   } catch (error) {
     console.error("Auth error:", error.message);
     return res.status(401).json({
-      error: "Token inválido",
-      message: "No se pudo verificar tu identidad con GitHub.",
+      error: "Invalid token",
+      message: "Could not verify your identity with GitHub.",
     });
   }
 }
@@ -103,7 +103,7 @@ app.get("/auth/github/callback", async (req, res) => {
   if (!code) {
     return res
       .status(400)
-      .json({ error: "Código de autorización no proporcionado." });
+      .json({ error: "Authorization code not provided." });
   }
 
   try {
@@ -122,20 +122,20 @@ app.get("/auth/github/callback", async (req, res) => {
     const accessToken = tokenRes.data.access_token;
     if (!accessToken) {
       return res.status(400).json({
-        error: "No se recibió token de acceso.",
+        error: "Access token not received.",
         details: tokenRes.data,
       });
     }
 
     res.json({
-      message: "✅ Autenticación exitosa con GitHub",
+      message: "✅ Authentication successful with GitHub",
       access_token: accessToken,
       token_type: tokenRes.data.token_type,
       scope: tokenRes.data.scope,
     });
   } catch (error) {
     console.error("OAuth error:", error.message);
-    res.status(500).json({ error: "Error en el proceso de autenticación." });
+    res.status(500).json({ error: "Error in authentication process." });
   }
 });
 
