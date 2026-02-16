@@ -28,7 +28,7 @@ if (!GITHUB_TOKEN) {
   console.error('❌ GITHUB_TOKEN or GH_TOKEN environment variable is required');
   process.exit(1);
 }
-const ORG_REPOS = ['jeremy-sud/boomflow']; // Repositories to monitor
+const ORG_REPOS = (process.env.BOOMFLOW_REPOS || 'jeremy-sud/boomflow').split(',').map(r => r.trim()); // Repositories to monitor (env: BOOMFLOW_REPOS=owner/repo1,owner/repo2)
 
 // Console colors
 const colors = {

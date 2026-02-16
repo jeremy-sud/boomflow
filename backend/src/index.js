@@ -43,7 +43,7 @@ app.use(express.json({ limit: '10kb' }))
 app.get('/health', (req, res) => {
   res.json({
     status: 'healthy',
-    version: '2.0.0',
+    version: '0.1.0',
     timestamp: new Date().toISOString()
   })
 })

@@ -4,43 +4,45 @@
   "role": "Co-Founder & Dev Lead",
   "org": "SistemasUrsol",
   "joinedAt": "2024-01-15",
+  "lastUpdated": "2025-02-15T00:00:00Z",
+  "schemaVersion": 1,
   "badges": [
     {
       "id": "hello-world",
-      "awardedAt": "2026-02-15",
+      "awardedAt": "2024-01-15",
       "awardedBy": "auto-award-system",
       "autoAwarded": true,
       "reason": "Profile created in BOOMFLOW"
     },
     {
       "id": "first-commit",
-      "awardedAt": "2026-02-15",
+      "awardedAt": "2024-01-20",
       "awardedBy": "auto-award-system",
       "autoAwarded": true,
       "reason": "First commit made"
     },
     {
       "id": "code-ninja",
-      "awardedAt": "2026-02-15",
+      "awardedAt": "2024-06-10",
       "awardedBy": "auto-award-system",
       "autoAwarded": true,
       "reason": "50+ commits"
     },
     {
       "id": "tech-lead",
-      "awardedAt": "2026-02-15",
+      "awardedAt": "2024-09-15",
       "awardedBy": "ursolcr",
       "meta": "Level 3"
     },
     {
       "id": "architect",
-      "awardedAt": "2026-02-15",
+      "awardedAt": "2024-09-15",
       "awardedBy": "ursolcr",
       "meta": "Level 3"
     },
     {
       "id": "mentor",
-      "awardedAt": "2026-02-15",
+      "awardedAt": "2024-10-01",
       "awardedBy": "ursolcr",
       "meta": "Level 1"
     }

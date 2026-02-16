@@ -6,6 +6,13 @@ on:
   workflow_dispatch:
 
 # IMPORTANT: These permissions are required for git-auto-commit to push
+#
+# Token usage:
+#   GITHUB_TOKEN  — Built-in Actions token (read-only for this repo). Used internally.
+#   BOOMFLOW_TOKEN — A Personal Access Token (PAT) with `contents: write` scope.
+#                    Required to push badge changes to your profile README repo.
+#                    Create at: https://github.com/settings/tokens
+#                    Add as a secret in your profile repo Settings > Secrets > BOOMFLOW_TOKEN
 permissions:
   contents: write
 

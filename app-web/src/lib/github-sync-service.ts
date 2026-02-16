@@ -63,18 +63,21 @@ export class GitHubSyncService {
       })
       issues = issuesData.total_count
 
-      // Estimate commits (based on recent contributions to own repos)
-      for (const repo of repos.slice(0, 10)) {
-        try {
-          const { data: repoCommits } = await this.octokit.repos.listCommits({
+      // Estimate commits (based on recent contributions to own repos — parallel)
+      const repoSlice = repos.slice(0, 10)
+      const commitResults = await Promise.allSettled(
+        repoSlice.map(repo =>
+          this.octokit.repos.listCommits({
             owner: repo.owner.login,
             repo: repo.name,
             author: this.username,
             per_page: 100,
           })
-          commits += repoCommits.length
-        } catch {
-          // Repo without commits or no access
+        )
+      )
+      for (const result of commitResults) {
+        if (result.status === 'fulfilled') {
+          commits += result.value.data.length
         }
       }
 

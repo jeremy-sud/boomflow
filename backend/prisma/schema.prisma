@@ -175,8 +175,7 @@ model Kudo {
   receiver    User     @relation("KudosReceived", fields: [receiverId], references: [id], onDelete: Cascade)
   
   // Optional: reaction emoji
-  reactions   Json     @default("[]") // [{userId, emoji}]
-  
+    reactions   Json     @default("[]") // [{userId, emoji}] — Note: @default("[]") works as JSON in PostgreSQL via Prisma
   // Timestamps
   createdAt   DateTime @default(now())
   
@@ -276,7 +275,7 @@ model Notification {
   type      String   // 'kudo_received', 'badge_earned', 'invite'
   title     String
   body      String
-  data      Json     @default("{}")
+  data      Json?    // Optional JSON payload (no default — avoids String-vs-JSON ambiguity)
   
   isRead    Boolean  @default(false)
   readAt    DateTime?

@@ -12,6 +12,8 @@ export default function FeedPage() {
   const [filter, setFilter] = useState<FilterType>('all');
   const [kudoMessage, setKudoMessage] = useState('');
   const [selectedUser, setSelectedUser] = useState('');
+  const [isSending, setIsSending] = useState(false);
+  const [kudoStatus, setKudoStatus] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
   const filteredActivity = ACTIVITY_FEED.filter(activity => {
     if (filter === 'all') return true;
@@ -21,12 +23,38 @@ export default function FeedPage() {
     return true;
   });
 
-  const handleSendKudo = () => {
+  const handleSendKudo = async () => {
     if (!selectedUser || !kudoMessage.trim()) return;
-    // In production, this would call an API
-    alert(`Kudo sent to ${selectedUser}!\n\n"${kudoMessage}"`);
-    setKudoMessage('');
-    setSelectedUser('');
+    setIsSending(true);
+    setKudoStatus(null);
+
+    try {
+      const res = await fetch('/api/kudos', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          toUsername: selectedUser,
+          message: kudoMessage.trim(),
+          category: 'COLLABORATION',
+          isPublic: true,
+        }),
+      });
+
+      if (res.ok) {
+        setKudoStatus({ type: 'success', text: `Kudo sent to ${selectedUser}!` });
+        setKudoMessage('');
+        setSelectedUser('');
+      } else {
+        const data = await res.json().catch(() => ({ error: 'Unknown error' }));
+        setKudoStatus({ type: 'error', text: data.error || 'Failed to send kudo' });
+      }
+    } catch {
+      setKudoStatus({ type: 'error', text: 'Network error — please try again' });
+    } finally {
+      setIsSending(false);
+      // Clear status after 4 seconds
+      setTimeout(() => setKudoStatus(null), 4000);
+    }
   };
 
   return (
@@ -71,11 +99,16 @@ export default function FeedPage() {
           </div>
           <button
             onClick={handleSendKudo}
-            disabled={!selectedUser || !kudoMessage.trim()}
+            disabled={!selectedUser || !kudoMessage.trim() || isSending}
             className="px-6 py-3 rounded-lg bg-linear-to-r from-purple-600 to-pink-600 font-medium hover:from-purple-500 hover:to-pink-500 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            💜 Send Kudo
+            {isSending ? '⏳ Sending...' : '💜 Send Kudo'}
           </button>
+          {kudoStatus && (
+            <p className={`text-sm mt-2 ${kudoStatus.type === 'success' ? 'text-green-400' : 'text-red-400'}`}>
+              {kudoStatus.type === 'success' ? '✅' : '❌'} {kudoStatus.text}
+            </p>
+          )}
         </div>
       </div>
 

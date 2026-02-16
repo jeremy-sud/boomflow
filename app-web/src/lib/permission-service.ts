@@ -4,8 +4,10 @@
  */
 
 import prisma from '@/lib/prisma'
-import * as fs from 'node:fs'
-import * as path from 'node:path'
+
+// Static import of admin config — avoids fs.readFileSync in Next.js Edge runtime
+// If the file changes, the app must restart (or use DB-based admin storage in production)
+import adminsConfigData from '../../../../config/admins.json'
 
 export type Permission = 'grant_badges' | 'revoke_badges' | 'manage_users' | 'manage_admins'
 
@@ -27,26 +29,14 @@ interface AdminsConfig {
   }
 }
 
-// Load admins config
-function loadAdminsConfig(): AdminsConfig {
-  try {
-    const configPath = path.join(process.cwd(), '..', 'config', 'admins.json')
-    const configData = fs.readFileSync(configPath, 'utf-8')
-    return JSON.parse(configData)
-  } catch {
-    // Fallback to empty config if file doesn't exist
-    return {
-      admins: [],
-      settings: {
-        requireApproval: true,
-        allowSelfAssignment: false,
-        auditLog: true,
-      }
-    }
-  }
+const adminsConfig: AdminsConfig = {
+  admins: (adminsConfigData.admins ?? []) as AdminInfo[],
+  settings: adminsConfigData.settings ?? {
+    requireApproval: true,
+    allowSelfAssignment: false,
+    auditLog: true,
+  },
 }
-
-const adminsConfig = loadAdminsConfig()
 
 /**
  * Permission Service - Role-based access control

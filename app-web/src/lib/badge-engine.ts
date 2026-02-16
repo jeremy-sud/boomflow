@@ -316,31 +316,65 @@ export class BadgeEngine {
 
   /**
    * Calculates consecutive activity days (streak)
+   * Uses GitHub stats lastSyncAt + kudo dates + badge dates for activity signal
    */
   private static async calculateStreakDays(userId: string): Promise<number> {
-    const recentBadges = await prisma.userBadge.findMany({
-      where: { userId },
-      orderBy: { awardedAt: 'desc' },
-      take: 30,
-      select: { awardedAt: true }
-    })
+    // Gather multiple activity sources for a more accurate streak
+    const [recentKudosSent, recentKudosReceived, recentBadges, githubStats] = await Promise.all([
+      prisma.kudo.findMany({
+        where: { fromId: userId },
+        orderBy: { createdAt: 'desc' },
+        take: 30,
+        select: { createdAt: true },
+      }),
+      prisma.kudo.findMany({
+        where: { toId: userId },
+        orderBy: { createdAt: 'desc' },
+        take: 30,
+        select: { createdAt: true },
+      }),
+      prisma.userBadge.findMany({
+        where: { userId },
+        orderBy: { awardedAt: 'desc' },
+        take: 30,
+        select: { awardedAt: true },
+      }),
+      prisma.gitHubStats.findUnique({
+        where: { userId },
+        select: { lastSyncAt: true },
+      }),
+    ])
 
-    if (recentBadges.length === 0) return 0
+    // Merge all activity dates into a single set of day timestamps
+    const activityDates = new Set<number>()
 
-    // Simple streak calculation based on recent activity
-    // In production, this would integrate with GitHub activity data
-    let streak = 0
+    for (const k of recentKudosSent) {
+      const d = new Date(k.createdAt)
+      d.setHours(0, 0, 0, 0)
+      activityDates.add(d.getTime())
+    }
+    for (const k of recentKudosReceived) {
+      const d = new Date(k.createdAt)
+      d.setHours(0, 0, 0, 0)
+      activityDates.add(d.getTime())
+    }
+    for (const b of recentBadges) {
+      const d = new Date(b.awardedAt)
+      d.setHours(0, 0, 0, 0)
+      activityDates.add(d.getTime())
+    }
+    if (githubStats?.lastSyncAt) {
+      const d = new Date(githubStats.lastSyncAt)
+      d.setHours(0, 0, 0, 0)
+      activityDates.add(d.getTime())
+    }
+
+    if (activityDates.size === 0) return 0
+
     const today = new Date()
     today.setHours(0, 0, 0, 0)
 
-    const activityDates = new Set(
-      recentBadges.map(b => {
-        const d = new Date(b.awardedAt)
-        d.setHours(0, 0, 0, 0)
-        return d.getTime()
-      })
-    )
-
+    let streak = 0
     for (let i = 0; i < 30; i++) {
       const checkDate = new Date(today)
       checkDate.setDate(checkDate.getDate() - i)

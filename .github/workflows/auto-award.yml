@@ -50,6 +50,10 @@ jobs:
       - name: Run Auto-Award
         id: auto_award
         env:
+          # GITHUB_TOKEN: Built-in Actions token, scoped to this repository.
+          # Used by auto-award.js to read commit/PR/review stats from the GitHub API.
+          # No need for a Personal Access Token (PAT) — the default token has sufficient read access.
+          # For cross-repo monitoring, set BOOMFLOW_REPOS env var and use a PAT with repo scope.
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DRY_RUN: ${{ inputs.dry_run || 'false' }}

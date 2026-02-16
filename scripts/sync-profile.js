@@ -278,7 +278,7 @@ function syncProfile(username, readmePath, forceView = null) {
 
 const args = process.argv.slice(2);
 const username = args[0] || 'jeremy-sud';
-const readmePath = args[1] || '/home/dawnweaber/Workspace/jeremy-sud/README.md';
+const readmePath = args[1] || path.join(__dirname, '..', '..', username, 'README.md');
 
 // Detect --view=xxx
 let forceView = null;

@@ -47,11 +47,38 @@ export function NotificationBell() {
     }
   }
 
-  // Load on mount and every 30 seconds
+  // Load on mount; poll with backoff and visibility awareness
   useEffect(() => {
     loadNotifications()
-    const interval = setInterval(loadNotifications, 30000)
-    return () => clearInterval(interval)
+
+    // Base interval: 30s when visible, pause when hidden
+    const POLL_INTERVAL_VISIBLE = 30_000
+    const POLL_INTERVAL_BACKGROUND = 120_000 // 2 min when tab is not visible
+    let timerId: ReturnType<typeof setTimeout>
+
+    function schedulePoll() {
+      const interval = document.hidden ? POLL_INTERVAL_BACKGROUND : POLL_INTERVAL_VISIBLE
+      timerId = setTimeout(() => {
+        loadNotifications()
+        schedulePoll()
+      }, interval)
+    }
+
+    function handleVisibilityChange() {
+      clearTimeout(timerId)
+      if (!document.hidden) {
+        loadNotifications() // Refresh immediately when tab becomes visible
+      }
+      schedulePoll()
+    }
+
+    schedulePoll()
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+
+    return () => {
+      clearTimeout(timerId)
+      document.removeEventListener('visibilitychange', handleVisibilityChange)
+    }
   }, [])
 
   // Mark as read
