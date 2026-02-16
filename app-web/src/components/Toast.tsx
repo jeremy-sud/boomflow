@@ -161,7 +161,7 @@ function ToastItem({ toast, onClose }: ToastItemProps) {
   )
 }
 
-// Hook para mostrar notificación de badge ganado (con confetti!)
+// Hook to show badge earned notification (with confetti!)
 export function useBadgeToast() {
   const { addToast } = useToast()
 

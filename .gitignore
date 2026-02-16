@@ -1,20 +1,20 @@
 # ==========================
 # BOOMFLOW - .gitignore
-# Uso exclusivo de Sistemas Ursol
+# Exclusive use of Ursol Systems
 # ==========================
 
-# Directorios de testing local
+# Local testing directories
 .profile-test/
 test-profiles/
 *.test-output
 
-# Dependencias
+# Dependencies
 node_modules/
 package-lock.json
 yarn.lock
 pnpm-lock.yaml
 
-# Variables de entorno y secretos
+# Environment variables and secrets
 .env
 .env.local
 .env.*.local
@@ -23,13 +23,13 @@ secrets/
 *.key
 *.pem
 
-# Configuración local
+# Local configuration
 config/local.json
 config/*.local.*
 .vscode/
 .idea/
 
-# Logs y temporales
+# Logs and temporary files
 logs/
 *.log
 npm-debug.log*
@@ -54,5 +54,5 @@ out/
 *.backup
 *~
 
-# Datos sensibles de usuarios (solo mantener estructura)
-# users/*.json ya está versionado intencionalmente
+# Sensitive user data (only keep structure)
+# users/*.json is intentionally versioned

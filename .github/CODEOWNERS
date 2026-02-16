@@ -1,43 +1,43 @@
 # =============================================================================
 # BOOMFLOW CODEOWNERS - Sistemas Ursol
 # =============================================================================
-# Este archivo define quién debe aprobar cambios en diferentes partes del código.
-# Solo los propietarios listados pueden aprobar Pull Requests que modifiquen
-# estos archivos.
+# This file defines who must approve changes in different parts of the code.
+# Only the listed owners can approve Pull Requests that modify
+# these files.
 #
-# 🛡️ SISTEMA DE PROTECCIÓN DE MEDALLAS
-# Solo los administradores autorizados de Sistemas Ursol pueden otorgar medallas.
+# 🛡️ BADGE PROTECTION SYSTEM
+# Only authorized Sistemas Ursol administrators can award badges.
 # =============================================================================
 
 # -----------------------------------------------------------------------------
-# 🏅 DATOS DE USUARIOS Y MEDALLAS
-# Solo administradores pueden modificar archivos de usuarios/medallas
+# 🏅 USER AND BADGE DATA
+# Only administrators can modify user/badge files
 # -----------------------------------------------------------------------------
 /users/                         @jeremy-sud @ursolcr
 
 # -----------------------------------------------------------------------------
-# ⚙️ CONFIGURACIÓN DE ADMINISTRADORES
-# Máxima protección - requiere ambos propietarios principales
+# ⚙️ ADMINISTRATOR CONFIGURATION
+# Maximum protection - requires both main owners
 # -----------------------------------------------------------------------------
 /config/admins.json             @jeremy-sud @ursolcr
 
 # -----------------------------------------------------------------------------
-# 🔐 ARCHIVOS DE SEGURIDAD Y WORKFLOWS
-# Protección de infraestructura de CI/CD
+# 🔐 SECURITY FILES AND WORKFLOWS
+# CI/CD infrastructure protection
 # -----------------------------------------------------------------------------
 /.github/                       @jeremy-sud @ursolcr
 /github-action/                 @jeremy-sud @ursolcr
 
 # -----------------------------------------------------------------------------
-# 📦 CATÁLOGO DE MEDALLAS
-# Control sobre definiciones de medallas disponibles
+# 📦 BADGE CATALOG
+# Control over available badge definitions
 # -----------------------------------------------------------------------------
 /api-mock.json                  @jeremy-sud @ursolcr
 /assets/                        @jeremy-sud @ursolcr
 
 # -----------------------------------------------------------------------------
-# 📋 DOCUMENTACIÓN CRÍTICA
-# Branding y documentación oficial de Sistemas Ursol
+# 📋 CRITICAL DOCUMENTATION
+# Branding and official Sistemas Ursol documentation
 # -----------------------------------------------------------------------------
 /README.md                      @jeremy-sud @ursolcr
 /LICENSE                        @jeremy-sud @ursolcr

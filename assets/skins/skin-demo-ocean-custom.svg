@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   BOOMFLOW Custom Skin: Demo Ocean
-  Generado con: generate-custom-skin.js
-  Forma: Hexágono
-  Paleta: 🌊 Océano
-  Efecto: Resplandor (Glow)
-  Ícono: 💎 Gema
+  Generated with: generate-custom-skin.js
+  Shape: Hexagon
+  Palette: 🌊 Ocean
+  Effect: Glow
+  Icon: 💎 Gem
 -->
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 140">
   <defs>
-    <!-- Gradiente de fondo -->
+    <!-- Background gradient -->
     <linearGradient id="bg-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" style="stop-color:#0c4a6e"/>
       <stop offset="100%" style="stop-color:#00365a"/>
@@ -27,10 +27,10 @@
     </filter>
   </defs>
   
-  <!-- Grupo principal filter="url(#glow)" -->
+  <!-- Main group filter="url(#glow)" -->
   <g filter="url(#glow)">
 
-  <!-- Forma: Hexágono (Gema) -->
+  <!-- Shape: Hexagon (Gem) -->
   <polygon points="60,5 105,30 105,100 60,125 15,100 15,30" 
            fill="#0c4a6e" 
            stroke="#0ea5e9" 
@@ -43,7 +43,7 @@
   </g>
   
 
-  <!-- Ícono: Gema facetada -->
+  <!-- Icon: Faceted gem -->
   <g transform="translate(60, 65)">
     <polygon points="0,-18 14,-6 0,18 -14,-6" fill="#e0f2fe" opacity="0.9"/>
     <polygon points="0,-18 14,-6 0,2 -14,-6" fill="#e0f2fe"/>
@@ -52,7 +52,7 @@
     <line x1="0" y1="-18" x2="0" y2="18" stroke="#7dd3fc" stroke-width="0.5" opacity="0.5"/>
   </g>
   
-  <!-- Texto inferior -->
+  <!-- Bottom text -->
   <text x="60" y="130" font-size="8" fill="#bae6fd" text-anchor="middle" 
         font-family="system-ui, -apple-system, sans-serif" font-weight="600">DEMO</text>
 </svg>

@@ -461,7 +461,7 @@ Syncs GitHub statistics and evaluates badges.
 | `GITHUB_REVIEW` | Synced reviews | First Review (1), Code Reviewer (10) |
 | `MANUAL_PEER_AWARD` | Awarded by a peer | Resonancia |
 | `INVESTMENT` | By investment/donation | Patron Seed, Patron Growth, Patron Bloom |
-| `PEER_AWARDS_COUNT` | X peer awards received | Vínculo Fuerte (3), Alma del Equipo (10) |
+| `PEER_AWARDS_COUNT` | X peer awards received | Strong Bond (3), Team Soul (10) |
 
 ### Programmatic Usage
 

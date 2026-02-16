@@ -31,7 +31,7 @@
     <polygon points="-12,-8 0,0 0,18 -14,4" fill="white" opacity="0.6"/>
     <!-- Faceta derecha -->
     <polygon points="12,-8 14,4 0,18 0,0" fill="white" opacity="0.8"/>
-    <!-- Líneas de facetado para efecto de gema -->
+    <!-- Facet lines for gem effect -->
     <line x1="0" y1="-18" x2="0" y2="18" stroke="white" stroke-width="0.5" opacity="0.4"/>
     <line x1="-12" y1="-8" x2="14" y2="4" stroke="white" stroke-width="0.5" opacity="0.3"/>
     <line x1="12" y1="-8" x2="-14" y2="4" stroke="white" stroke-width="0.5" opacity="0.3"/>

@@ -95,8 +95,8 @@ jobs:
           # Specific info per event type
           if [ "${{ github.event_name }}" == "pull_request" ]; then
             echo "📝 PR: #${{ github.event.pull_request.number }}"
-            echo "📌 Título: ${{ github.event.pull_request.title }}"
-            echo "👤 Autor: ${{ github.event.pull_request.user.login }}"
+            echo "📌 Title: ${{ github.event.pull_request.title }}"
+            echo "👤 Author: ${{ github.event.pull_request.user.login }}"
             echo "🔀 Merged: ${{ github.event.pull_request.merged }}"
           elif [ "${{ github.event_name }}" == "pull_request_review" ]; then
             echo "📝 PR: #${{ github.event.pull_request.number }}"
@@ -104,7 +104,7 @@ jobs:
             echo "📊 Status: ${{ github.event.review.state }}"
           elif [ "${{ github.event_name }}" == "issues" ]; then
             echo "📝 Issue: #${{ github.event.issue.number }}"
-            echo "📌 Título: ${{ github.event.issue.title }}"
+            echo "📌 Title: ${{ github.event.issue.title }}"
           fi
           echo "═══════════════════════════════════════════════════════"
       
