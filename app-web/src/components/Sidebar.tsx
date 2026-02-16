@@ -21,8 +21,8 @@ interface SidebarProps {
 
 const NAV_ITEMS = [
   { href: '/', label: 'Dashboard', icon: '🏠' },
-  { href: '/profile', label: 'Mi Perfil', icon: '👤' },
-  { href: '/catalog', label: 'Catálogo', icon: '🏅' },
+  { href: '/profile', label: 'My Profile', icon: '👤' },
+  { href: '/catalog', label: 'Catalog', icon: '🏅' },
   { href: '/feed', label: 'Actividad', icon: '📣' },
   { href: '/leaderboard', label: 'Ranking', icon: '🏆' },
 ];
@@ -98,7 +98,7 @@ export default function Sidebar({ user, badgeCount = 0 }: SidebarProps) {
                 type="submit"
                 className="w-full px-4 py-2 text-sm text-zinc-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors flex items-center gap-2 justify-center"
               >
-                <span>🚪</span> Cerrar sesión
+                <span>🚪</span> Sign Out
               </button>
             </form>
           </div>
@@ -107,7 +107,7 @@ export default function Sidebar({ user, badgeCount = 0 }: SidebarProps) {
             href="/login"
             className="flex items-center justify-center gap-2 px-4 py-3 rounded-lg bg-linear-to-r from-blue-600 to-purple-600 text-white font-medium hover:from-blue-500 hover:to-purple-500 transition-all"
           >
-            <span>🔐</span> Iniciar sesión
+            <span>🔐</span> Sign In
           </Link>
         )}
       </div>

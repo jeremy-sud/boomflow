@@ -86,10 +86,10 @@ function ToastItem({ toast, onClose }: ToastItemProps) {
   const [isLeaving, setIsLeaving] = useState(false)
 
   useEffect(() => {
-    // Entrada animada
+    // Animated entrance
     requestAnimationFrame(() => setIsVisible(true))
 
-    // Auto-cerrar
+    // Auto-close
     const duration = toast.duration || (toast.type === 'badge' ? 5000 : 3000)
     const timer = setTimeout(() => {
       setIsLeaving(true)
@@ -141,7 +141,7 @@ function ToastItem({ toast, onClose }: ToastItemProps) {
         </button>
       </div>
       
-      {/* Barra de progreso */}
+      {/* Progress bar */}
       <div className="mt-2 h-1 bg-white/20 rounded-full overflow-hidden">
         <div 
           className="h-full bg-white/50 rounded-full"
@@ -170,8 +170,8 @@ export function useBadgeToast() {
     
     addToast({
       type: 'badge',
-      title: `${tierEmoji} ¡Nuevo Badge!`,
-      message: `Has desbloqueado "${badgeName}"`,
+      title: `${tierEmoji} New Badge!`,
+      message: `You unlocked "${badgeName}"`,
       duration: 5000,
     })
 
@@ -184,7 +184,7 @@ export function useBadgeToast() {
   return { showBadgeEarned }
 }
 
-// Confetti simple con CSS
+// Simple CSS confetti
 function triggerConfetti() {
   const container = document.createElement('div')
   container.style.cssText = `
@@ -221,7 +221,7 @@ function triggerConfetti() {
     container.appendChild(confetti)
   }
 
-  // Agregar keyframes
+  // Add keyframes
   const style = document.createElement('style')
   style.textContent = `
     @keyframes confetti-fall {
@@ -237,7 +237,7 @@ function triggerConfetti() {
   `
   document.head.appendChild(style)
 
-  // Limpiar después de la animación
+  // Clean up after animation
   setTimeout(() => {
     container.remove()
     style.remove()

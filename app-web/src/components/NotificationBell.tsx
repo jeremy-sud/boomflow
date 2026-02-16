@@ -19,7 +19,7 @@ export function NotificationBell() {
   const [isLoading, setIsLoading] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
 
-  // Cerrar al hacer clic fuera
+  // Close on outside click
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
@@ -30,7 +30,7 @@ export function NotificationBell() {
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
 
-  // Cargar notificaciones
+  // Load notifications
   const loadNotifications = async () => {
     setIsLoading(true)
     try {
@@ -47,14 +47,14 @@ export function NotificationBell() {
     }
   }
 
-  // Cargar al montar y cada 30 segundos
+  // Load on mount and every 30 seconds
   useEffect(() => {
     loadNotifications()
     const interval = setInterval(loadNotifications, 30000)
     return () => clearInterval(interval)
   }, [])
 
-  // Marcar como leída
+  // Mark as read
   const markAsRead = async (id: string) => {
     try {
       await fetch('/api/notifications', {
@@ -71,7 +71,7 @@ export function NotificationBell() {
     }
   }
 
-  // Marcar todas como leídas
+  // Mark all as read
   const markAllAsRead = async () => {
     try {
       await fetch('/api/notifications', {
@@ -109,14 +109,14 @@ export function NotificationBell() {
 
   return (
     <div className="relative" ref={dropdownRef}>
-      {/* Botón de campana */}
+      {/* Bell button */}
       <button
         onClick={() => {
           setIsOpen(!isOpen)
           if (!isOpen) loadNotifications()
         }}
         className="relative p-2 rounded-lg hover:bg-white/10 transition-colors"
-        aria-label="Notificaciones"
+        aria-label="Notifications"
       >
         <svg 
           className="w-6 h-6 text-zinc-300"
@@ -132,7 +132,7 @@ export function NotificationBell() {
           />
         </svg>
         
-        {/* Badge de contador */}
+        {/* Counter badge */}
         {unreadCount > 0 && (
           <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full min-w-5 h-5 flex items-center justify-center px-1 animate-pulse">
             {unreadCount > 9 ? '9+' : unreadCount}
@@ -140,23 +140,23 @@ export function NotificationBell() {
         )}
       </button>
 
-      {/* Dropdown de notificaciones */}
+      {/* Notifications dropdown */}
       {isOpen && (
         <div className="absolute right-0 mt-2 w-80 bg-zinc-900/95 backdrop-blur-xl border border-white/10 rounded-xl shadow-2xl overflow-hidden z-50">
           {/* Header */}
           <div className="flex items-center justify-between p-4 border-b border-white/10">
-            <h3 className="font-semibold text-white">Notificaciones</h3>
+            <h3 className="font-semibold text-white">Notifications</h3>
             {unreadCount > 0 && (
               <button
                 onClick={markAllAsRead}
                 className="text-xs text-purple-400 hover:text-purple-300 transition-colors"
               >
-                Marcar todas como leídas
+                Mark all as read
               </button>
             )}
           </div>
 
-          {/* Lista de notificaciones */}
+          {/* Notification list */}
           <div className="max-h-96 overflow-y-auto">
             {isLoading ? (
               <div className="p-8 text-center text-zinc-500">
@@ -165,7 +165,7 @@ export function NotificationBell() {
             ) : notifications.length === 0 ? (
               <div className="p-8 text-center text-zinc-500">
                 <span className="text-3xl mb-2 block">🔔</span>
-                No tienes notificaciones
+                You have no notifications
               </div>
             ) : (
               <div className="divide-y divide-white/5">
@@ -212,7 +212,7 @@ export function NotificationBell() {
                 href="/notifications"
                 className="text-sm text-purple-400 hover:text-purple-300 transition-colors"
               >
-                Ver todas las notificaciones
+                View all notifications
               </a>
             </div>
           )}

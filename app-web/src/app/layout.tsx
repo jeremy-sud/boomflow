@@ -17,8 +17,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "BOOMFLOW | Sistemas Ursol — Medallas de Desarrollo",
-  description: "Plataforma de reconocimiento profesional. Medallas verificadas para desarrolladores de Sistemas Ursol.",
+  title: "BOOMFLOW | Sistemas Ursol — Development Badges",
+  description: "Professional recognition platform. Verified badges for Sistemas Ursol developers.",
 };
 
 export default async function RootLayout({
@@ -29,12 +29,12 @@ export default async function RootLayout({
   const session = await auth();
   const user = session?.user;
   
-  // Obtener cantidad de badges del usuario (de los datos mock por ahora)
+  // Get user badge count (from mock data for now)
   const userData = user?.username ? getUserByUsername(user.username) : null;
   const badgeCount = userData?.badges.length || 0;
 
   return (
-    <html lang="es">
+    <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
