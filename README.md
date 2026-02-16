@@ -380,6 +380,10 @@ MIT — Public code for transparency and educational reference.
 Boomflow offers commercial plans for companies that want to use the platform with their teams — from Pro to Enterprise.
 The open-source core is used by Sistemas Ursol and the community, but is not a commercial plan.
 
+<p align="center">
+  <img src="assets/promoboomflow.png" alt="Boomflow Plans — Pro $149/mes, Scale $499/mes, Enterprise $1499/mes" width="520" />
+</p>
+
 👉 [View available plans](BUSINESS_MODEL.md)
 
 ---
