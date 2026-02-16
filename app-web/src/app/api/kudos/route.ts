@@ -5,12 +5,12 @@ import { BadgeEngine } from '@/lib/badge-engine'
 import { NotificationService } from '@/lib/notification-service'
 import { TriggerType } from '@/generated/prisma'
 
-// GET /api/kudos - Obtener feed de kudos
+// GET /api/kudos - Get kudos feed
 export async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams
     const limit = Number.parseInt(searchParams.get('limit') || '20', 10)
-    const cursor = searchParams.get('cursor') // Para paginación
+    const cursor = searchParams.get('cursor') // For pagination
 
     const kudos = await prisma.kudo.findMany({
       take: limit,
@@ -34,20 +34,20 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     console.error('Error fetching kudos:', error)
     return NextResponse.json(
-      { error: 'Error al obtener kudos' },
+      { error: 'Error fetching kudos' },
       { status: 500 }
     )
   }
 }
 
-// POST /api/kudos - Crear un nuevo kudo
+// POST /api/kudos - Create a new kudo
 export async function POST(request: NextRequest) {
   try {
     const session = await auth()
     
     if (!session?.user?.id) {
       return NextResponse.json(
-        { error: 'No autenticado' },
+        { error: 'Not authenticated' },
         { status: 401 }
       )
     }
@@ -55,42 +55,42 @@ export async function POST(request: NextRequest) {
     const body = await request.json()
     const { toUsername, message, categoryId, isPublic = true } = body
 
-    // Validaciones
+    // Validations
     if (!toUsername || !message) {
       return NextResponse.json(
-        { error: 'Faltan campos requeridos (toUsername, message)' },
+        { error: 'Missing required fields (toUsername, message)' },
         { status: 400 }
       )
     }
 
     if (message.length < 3 || message.length > 500) {
       return NextResponse.json(
-        { error: 'El mensaje debe tener entre 3 y 500 caracteres' },
+        { error: 'Message must be between 3 and 500 characters' },
         { status: 400 }
       )
     }
 
-    // Buscar usuario destino
+    // Find target user
     const toUser = await prisma.user.findUnique({
       where: { username: toUsername },
     })
 
     if (!toUser) {
       return NextResponse.json(
-        { error: 'Usuario destino no encontrado' },
+        { error: 'Target user not found' },
         { status: 404 }
       )
     }
 
-    // No puedes enviarte kudos a ti mismo
+    // You cannot send kudos to yourself
     if (toUser.id === session.user.id) {
       return NextResponse.json(
-        { error: 'No puedes enviarte kudos a ti mismo' },
+        { error: 'You cannot send kudos to yourself' },
         { status: 400 }
       )
     }
 
-    // Crear kudo
+    // Create kudo
     const kudo = await prisma.kudo.create({
       data: {
         message,
@@ -110,22 +110,22 @@ export async function POST(request: NextRequest) {
       },
     })
 
-    // Badge Engine: Evaluar triggers automáticos
-    // Para quien recibe el kudo
+    // Badge Engine: Evaluate automatic triggers
+    // For the kudo receiver
     const receiverBadges = await BadgeEngine.evaluateTrigger(
       toUser.id, 
       TriggerType.KUDOS_RECEIVED
     )
-    // Para quien envía el kudo
+    // For the kudo sender
     const senderBadges = await BadgeEngine.evaluateTrigger(
       session.user.id, 
       TriggerType.KUDOS_SENT
     )
 
-    // Enviar notificaciones
-    const senderUsername = session.user.username || session.user.name || 'Alguien'
+    // Send notifications
+    const senderUsername = session.user.username || session.user.name || 'Someone'
     
-    // Notificar kudo recibido
+    // Notify kudo received
     await NotificationService.notifyKudoReceived(
       toUser.id,
       senderUsername,
@@ -133,12 +133,12 @@ export async function POST(request: NextRequest) {
       message
     )
 
-    // Notificar badges ganados al receptor
+    // Notify badges earned by the receiver
     for (const result of receiverBadges.filter(b => b.awarded && b.badge)) {
       await NotificationService.notifyBadgeEarned(toUser.id, result.badge!)
     }
 
-    // Notificar badges ganados al emisor
+    // Notify badges earned by the sender
     for (const result of senderBadges.filter(b => b.awarded && b.badge)) {
       await NotificationService.notifyBadgeEarned(session.user.id, result.badge!)
     }
@@ -153,7 +153,7 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('Error creating kudo:', error)
     return NextResponse.json(
-      { error: 'Error al crear kudo' },
+      { error: 'Error creating kudo' },
       { status: 500 }
     )
   }

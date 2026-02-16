@@ -89,7 +89,7 @@ export default function Sidebar({ user, badgeCount = 0 }: SidebarProps) {
                 <p className="text-sm font-medium text-white truncate">
                   {user.username || user.name}
                 </p>
-                <p className="text-xs text-zinc-500">{badgeCount} medallas</p>
+                <p className="text-xs text-zinc-500">{badgeCount} badges</p>
               </div>
               <NotificationBell />
             </div>

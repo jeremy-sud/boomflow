@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import prisma from '@/lib/prisma'
 
-// GET /api/kudos/categories - Obtener categorías de kudos
+// GET /api/kudos/categories - Get kudo categories
 export async function GET() {
   try {
     const categories = await prisma.kudoCategory.findMany({
@@ -12,7 +12,7 @@ export async function GET() {
   } catch (error) {
     console.error('Error fetching kudo categories:', error)
     return NextResponse.json(
-      { error: 'Error al obtener categorías' },
+      { error: 'Error fetching categories' },
       { status: 500 }
     )
   }

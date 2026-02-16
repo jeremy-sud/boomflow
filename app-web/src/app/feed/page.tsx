@@ -24,7 +24,7 @@ export default function FeedPage() {
   const handleSendKudo = () => {
     if (!selectedUser || !kudoMessage.trim()) return;
     // In production, this would call an API
-    alert(`¡Kudo enviado a ${selectedUser}!\n\n"${kudoMessage}"`);
+    alert(`Kudo sent to ${selectedUser}!\n\n"${kudoMessage}"`);
     setKudoMessage('');
     setSelectedUser('');
   };
@@ -34,24 +34,24 @@ export default function FeedPage() {
       {/* Header */}
       <div>
         <h1 className="text-3xl font-bold text-gradient">Actividad</h1>
-        <p className="text-zinc-500 mt-1">Feed de reconocimientos y logros del equipo</p>
+        <p className="text-zinc-500 mt-1">Team recognition and achievement feed</p>
       </div>
 
       {/* Send Kudo Card */}
       <div className="glass-panel rounded-2xl p-6">
         <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
-          💜 Enviar un Kudo
+          💜 Send a Kudo
         </h2>
         <div className="space-y-4">
           <div>
-            <label htmlFor="kudo-recipient" className="text-sm text-zinc-500 mb-1 block">¿A quién quieres reconocer?</label>
+            <label htmlFor="kudo-recipient" className="text-sm text-zinc-500 mb-1 block">Who do you want to recognize?</label>
             <select
               id="kudo-recipient"
               value={selectedUser}
               onChange={(e) => setSelectedUser(e.target.value)}
               className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 focus:border-blue-500 focus:outline-none"
             >
-              <option value="">Selecciona un compañero</option>
+              <option value="">Select a teammate</option>
               {USERS.filter(u => u.id !== CURRENT_USER.id).map(user => (
                 <option key={user.id} value={user.username}>
                   {user.displayName} (@{user.username})
@@ -60,12 +60,12 @@ export default function FeedPage() {
             </select>
           </div>
           <div>
-            <label htmlFor="kudo-message" className="text-sm text-zinc-500 mb-1 block">Mensaje de reconocimiento</label>
+            <label htmlFor="kudo-message" className="text-sm text-zinc-500 mb-1 block">Recognition message</label>
             <textarea
               id="kudo-message"
               value={kudoMessage}
               onChange={(e) => setKudoMessage(e.target.value)}
-              placeholder="Escribe por qué quieres reconocer a esta persona..."
+              placeholder="Write why you want to recognize this person..."
               className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 focus:border-blue-500 focus:outline-none resize-none h-24"
             />
           </div>
@@ -74,7 +74,7 @@ export default function FeedPage() {
             disabled={!selectedUser || !kudoMessage.trim()}
             className="px-6 py-3 rounded-lg bg-linear-to-r from-purple-600 to-pink-600 font-medium hover:from-purple-500 hover:to-pink-500 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            💜 Enviar Kudo
+            💜 Send Kudo
           </button>
         </div>
       </div>
@@ -82,10 +82,10 @@ export default function FeedPage() {
       {/* Filter Tabs */}
       <div className="flex gap-2">
         {[
-          { id: 'all', label: 'Todo', icon: '📋' },
-          { id: 'badges', label: 'Medallas', icon: '🏅' },
+          { id: 'all', label: 'All', icon: '📋' },
+          { id: 'badges', label: 'Badges', icon: '🏅' },
           { id: 'kudos', label: 'Kudos', icon: '💜' },
-          { id: 'milestones', label: 'Hitos', icon: '🎉' },
+          { id: 'milestones', label: 'Milestones', icon: '🎉' },
         ].map(tab => (
           <button
             key={tab.id}
@@ -107,7 +107,7 @@ export default function FeedPage() {
         {filteredActivity.length === 0 ? (
           <div className="text-center py-12 text-zinc-500">
             <span className="text-4xl">📭</span>
-            <p className="mt-4">No hay actividad con este filtro</p>
+            <p className="mt-4">No activity with this filter</p>
           </div>
         ) : (
           filteredActivity.map(activity => (
@@ -123,21 +123,21 @@ export default function FeedPage() {
           <p className="text-2xl font-bold mt-2">
             {ACTIVITY_FEED.filter(a => a.type === 'badge_earned').length}
           </p>
-          <p className="text-xs text-zinc-500">Medallas otorgadas</p>
+          <p className="text-xs text-zinc-500">Badges awarded</p>
         </div>
         <div className="glass-panel rounded-xl p-4 text-center">
           <span className="text-3xl">💜</span>
           <p className="text-2xl font-bold mt-2">
             {ACTIVITY_FEED.filter(a => a.type === 'kudo_sent').length}
           </p>
-          <p className="text-xs text-zinc-500">Kudos enviados</p>
+          <p className="text-xs text-zinc-500">Kudos sent</p>
         </div>
         <div className="glass-panel rounded-xl p-4 text-center">
           <span className="text-3xl">🎉</span>
           <p className="text-2xl font-bold mt-2">
             {ACTIVITY_FEED.filter(a => a.type === 'milestone').length}
           </p>
-          <p className="text-xs text-zinc-500">Hitos alcanzados</p>
+          <p className="text-xs text-zinc-500">Milestones reached</p>
         </div>
       </div>
     </div>
@@ -193,7 +193,7 @@ function ActivityCard({ activity }: ActivityCardProps) {
             <>
               <p className="text-sm">
                 <span className="font-bold">{user?.displayName}</span>
-                <span className="text-zinc-500"> obtuvo la medalla </span>
+                <span className="text-zinc-500"> earned the badge </span>
                 <span className="font-bold text-yellow-400">{badge.name}</span>
               </p>
               <div className="mt-3 flex items-center gap-3">
@@ -214,7 +214,7 @@ function ActivityCard({ activity }: ActivityCardProps) {
             <>
               <p className="text-sm">
                 <span className="font-bold">{user?.displayName}</span>
-                <span className="text-zinc-500"> reconoció a </span>
+                <span className="text-zinc-500"> recognized </span>
                 <span className="font-bold">{targetUser?.displayName}</span>
               </p>
               {activity.message && (

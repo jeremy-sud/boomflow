@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import prisma from '@/lib/prisma'
 
-// GET /api/badges - Catálogo completo de badges
+// GET /api/badges - Full badge catalog
 export async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams
@@ -25,7 +25,7 @@ export async function GET(request: NextRequest) {
       ],
     })
 
-    // Agrupar por categoría
+    // Group by category
     const grouped = badges.reduce((acc, badge) => {
       const cat = badge.category
       if (!acc[cat]) acc[cat] = []
@@ -41,7 +41,7 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     console.error('Error fetching badges:', error)
     return NextResponse.json(
-      { error: 'Error al obtener badges' },
+      { error: 'Error fetching badges' },
       { status: 500 }
     )
   }

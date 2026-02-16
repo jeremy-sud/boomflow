@@ -11,11 +11,11 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       clientSecret: process.env.GITHUB_CLIENT_SECRET!,
       authorization: {
         params: {
-          // Permisos para leer perfil, repos y actividad
+          // Permissions to read profile, repos and activity
           scope: "read:user user:email repo",
         },
       },
-      // Mapear datos de GitHub al modelo de User
+      // Map GitHub data to User model
       profile(profile) {
         return {
           id: profile.id.toString(),
@@ -30,14 +30,14 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   ],
   callbacks: {
     async jwt({ token, account }) {
-      // Guardar el access token de GitHub en el JWT
+      // Save GitHub access token in JWT
       if (account?.access_token) {
         token.accessToken = account.access_token
       }
       return token
     },
     async session({ session, user, token }) {
-      // Cargar datos completos del usuario desde Prisma
+      // Load full user data from Prisma
       if (user) {
         const dbUser = await prisma.user.findUnique({
           where: { id: user.id },
@@ -61,7 +61,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         }
       }
       
-      // Agregar access token a la session
+      // Add access token to session
       if (token?.accessToken) {
         session.accessToken = token.accessToken as string
       }
@@ -73,11 +73,11 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     signIn: "/login",
     error: "/login",
   },
-  // Para desarrollo, permitir HTTP
+  // For development, allow HTTP
   trustHost: true,
 });
 
-// Extender tipos de NextAuth
+// Extend NextAuth types
 declare module "next-auth" {
   interface Session {
     user: {

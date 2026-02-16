@@ -79,9 +79,9 @@ function CatalogContent() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gradient">Catálogo de Medallas</h1>
+          <h1 className="text-3xl font-bold text-gradient">Badge Catalog</h1>
           <p className="text-zinc-500 mt-1">
-            {stats.filtered} de {stats.total} medallas • {stats.owned} obtenidas
+            {stats.filtered} of {stats.total} badges • {stats.owned} earned
           </p>
         </div>
       </div>
@@ -93,7 +93,7 @@ function CatalogContent() {
           <div className="flex-1 min-w-[200px]">
             <input
               type="text"
-              placeholder="🔍 Buscar medallas..."
+              placeholder="🔍 Search badges..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full px-4 py-2 rounded-lg bg-white/5 border border-white/10 focus:border-blue-500 focus:outline-none text-sm"
@@ -110,7 +110,7 @@ function CatalogContent() {
                   : 'bg-white/5 text-zinc-400 hover:bg-white/10'
               }`}
             >
-              Todas
+              All
             </button>
             {CATEGORIES.map(cat => (
               <button
@@ -154,7 +154,7 @@ function CatalogContent() {
                 : 'bg-white/5 text-zinc-400 hover:bg-white/10'
             }`}
           >
-            ✓ Mis medallas
+            ✓ My badges
           </button>
         </div>
       </div>
@@ -202,8 +202,8 @@ function CatalogContent() {
       {filteredBadges.length === 0 && (
         <div className="text-center py-16 text-zinc-500">
           <span className="text-5xl">🔍</span>
-          <p className="mt-4 text-lg">No se encontraron medallas</p>
-          <p className="text-sm">Intenta con otros filtros</p>
+          <p className="mt-4 text-lg">No badges found</p>
+          <p className="text-sm">Try different filters</p>
         </div>
       )}
 
@@ -290,19 +290,19 @@ function BadgeDetailModal({ badge, owned, onClose }: {
           <p className="mt-4 text-zinc-300">{badge.description}</p>
           
           <div className="mt-4 p-4 rounded-lg bg-white/5 w-full">
-            <p className="text-xs text-zinc-500 uppercase tracking-wider mb-1">Cómo obtener</p>
+            <p className="text-xs text-zinc-500 uppercase tracking-wider mb-1">How to earn</p>
             <p className="text-sm text-zinc-300">{badge.howToGet}</p>
           </div>
 
           {owned ? (
             <div className="mt-4 flex items-center gap-2 text-green-400">
               <span className="text-xl">✓</span>
-              <span>¡Ya tienes esta medalla!</span>
+              <span>You already have this badge!</span>
             </div>
           ) : (
             <div className="mt-4 flex items-center gap-2 text-zinc-500">
               <span className="text-xl">🔒</span>
-              <span>Aún no obtenida</span>
+              <span>Not yet earned</span>
             </div>
           )}
 
@@ -310,7 +310,7 @@ function BadgeDetailModal({ badge, owned, onClose }: {
             onClick={onClose}
             className="mt-6 px-6 py-2 rounded-lg bg-white/10 hover:bg-white/20 transition-colors"
           >
-            Cerrar
+            Close
           </button>
         </div>
       </div>

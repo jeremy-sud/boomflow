@@ -23,7 +23,7 @@ export class GitHubSyncService {
   }
 
   /**
-   * Sincroniza estadísticas de GitHub y evalúa badges
+   * Syncs GitHub stats and evaluates badges
    */
   async sync(): Promise<GitHubContributions> {
     const stats = await this.fetchStats()
@@ -33,37 +33,37 @@ export class GitHubSyncService {
   }
 
   /**
-   * Obtiene estadísticas de GitHub del usuario
+   * Gets GitHub stats for user
    */
   private async fetchStats(): Promise<GitHubContributions> {
     try {
-      // Obtener repositorios del usuario
+      // Get user repositories
       const { data: repos } = await this.octokit.repos.listForAuthenticatedUser({
         per_page: 100,
         sort: 'pushed',
       })
 
-      // Contadores
+      // Counters
       let commits = 0
       let pullRequests = 0
       let reviews = 0
       let issues = 0
 
-      // Obtener PRs del usuario
+      // Get user PRs
       const { data: prs } = await this.octokit.search.issuesAndPullRequests({
         q: `author:${this.username} type:pr`,
         per_page: 100,
       })
       pullRequests = prs.total_count
 
-      // Obtener issues del usuario
+      // Get user issues
       const { data: issuesData } = await this.octokit.search.issuesAndPullRequests({
         q: `author:${this.username} type:issue`,
         per_page: 100,
       })
       issues = issuesData.total_count
 
-      // Estimar commits (basado en contribuciones recientes a repos propios)
+      // Estimate commits (based on recent contributions to own repos)
       for (const repo of repos.slice(0, 10)) {
         try {
           const { data: repoCommits } = await this.octokit.repos.listCommits({
@@ -74,11 +74,11 @@ export class GitHubSyncService {
           })
           commits += repoCommits.length
         } catch {
-          // Repo sin commits o sin acceso
+          // Repo without commits or no access
         }
       }
 
-      // Obtener reviews realizados
+      // Get completed reviews
       try {
         const { data: reviewsData } = await this.octokit.search.issuesAndPullRequests({
           q: `reviewed-by:${this.username} type:pr`,
@@ -103,7 +103,7 @@ export class GitHubSyncService {
   }
 
   /**
-   * Guarda las estadísticas en la base de datos
+   * Saves stats to database
    */
   private async saveStats(stats: GitHubContributions): Promise<void> {
     await prisma.gitHubStats.upsert({
@@ -129,12 +129,12 @@ export class GitHubSyncService {
   }
 
   /**
-   * Evalúa badges basados en las estadísticas de GitHub
+   * Evaluates badges based on GitHub stats
    */
   private async evaluateBadges(stats: GitHubContributions): Promise<void> {
     const badgeResults = []
 
-    // Evaluar commits
+    // Evaluate commits
     if (stats.commits > 0) {
       const commitBadges = await BadgeEngine.evaluateTrigger(
         this.userId,
@@ -143,7 +143,7 @@ export class GitHubSyncService {
       badgeResults.push(...commitBadges)
     }
 
-    // Evaluar PRs
+    // Evaluate PRs
     if (stats.pullRequests > 0) {
       const prBadges = await BadgeEngine.evaluateTrigger(
         this.userId,
@@ -152,7 +152,7 @@ export class GitHubSyncService {
       badgeResults.push(...prBadges)
     }
 
-    // Evaluar reviews
+    // Evaluate reviews
     if (stats.reviews > 0) {
       const reviewBadges = await BadgeEngine.evaluateTrigger(
         this.userId,
@@ -161,14 +161,14 @@ export class GitHubSyncService {
       badgeResults.push(...reviewBadges)
     }
 
-    // Notificar badges ganados
+    // Notify earned badges
     for (const result of badgeResults.filter(b => b.awarded && b.badge)) {
       await NotificationService.notifyBadgeEarned(this.userId, result.badge!)
     }
   }
 
   /**
-   * Obtiene las estadísticas guardadas de un usuario
+   * Gets saved stats for a user
    */
   static async getStats(userId: string) {
     return prisma.gitHubStats.findUnique({
@@ -177,7 +177,7 @@ export class GitHubSyncService {
   }
 
   /**
-   * Verifica si necesita sincronización (más de 1 hora desde la última)
+   * Checks if sync is needed (more than 1 hour since last)
    */
   static async needsSync(userId: string): Promise<boolean> {
     const stats = await prisma.gitHubStats.findUnique({
@@ -192,36 +192,36 @@ export class GitHubSyncService {
   }
 }
 
-// Configuración de triggers de GitHub para el Badge Engine
+// GitHub trigger configuration for the Badge Engine
 export const GITHUB_BADGE_RULES = [
   {
     badgeId: 'first-commit',
     trigger: TriggerType.GITHUB_COMMIT,
     threshold: 1,
-    description: 'Primer commit detectado',
+    description: 'First commit detected',
   },
   {
     badgeId: 'code-ninja',
     trigger: TriggerType.GITHUB_COMMIT,
     threshold: 50,
-    description: '50 commits realizados',
+    description: '50 commits completed',
   },
   {
     badgeId: 'first-pr',
     trigger: TriggerType.GITHUB_PR,
     threshold: 1,
-    description: 'Primer PR mergeado',
+    description: 'First PR merged',
   },
   {
     badgeId: 'first-review',
     trigger: TriggerType.GITHUB_REVIEW,
     threshold: 1,
-    description: 'Primera code review',
+    description: 'First code review',
   },
   {
     badgeId: 'code-reviewer',
     trigger: TriggerType.GITHUB_REVIEW,
     threshold: 10,
-    description: '10 code reviews realizadas',
+    description: '10 code reviews completed',
   },
 ]

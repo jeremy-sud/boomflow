@@ -35,7 +35,7 @@ export default function LeaderboardPage() {
       {/* Header */}
       <div>
         <h1 className="text-3xl font-bold text-gradient">Ranking</h1>
-        <p className="text-zinc-500 mt-1">Top colaboradores de Sistemas Ursol</p>
+        <p className="text-zinc-500 mt-1">Top collaborators at Sistemas Ursol</p>
       </div>
 
       {/* Stats Overview */}
@@ -43,27 +43,27 @@ export default function LeaderboardPage() {
         <div className="glass-panel rounded-xl p-6 text-center">
           <span className="text-4xl">💜</span>
           <p className="text-3xl font-bold mt-2 text-purple-400">{totals.kudos}</p>
-          <p className="text-sm text-zinc-500">Kudos totales</p>
+          <p className="text-sm text-zinc-500">Total Kudos</p>
         </div>
         <div className="glass-panel rounded-xl p-6 text-center">
           <span className="text-4xl">🏅</span>
           <p className="text-3xl font-bold mt-2 text-yellow-400">{totals.badges}</p>
-          <p className="text-sm text-zinc-500">Medallas otorgadas</p>
+          <p className="text-sm text-zinc-500">Badges awarded</p>
         </div>
         <div className="glass-panel rounded-xl p-6 text-center">
           <span className="text-4xl">👥</span>
           <p className="text-3xl font-bold mt-2 text-blue-400">{USERS.length}</p>
-          <p className="text-sm text-zinc-500">Miembros activos</p>
+          <p className="text-sm text-zinc-500">Active members</p>
         </div>
       </div>
 
       {/* Sort Options */}
       <div className="flex gap-2">
         {[
-          { id: 'kudos' as SortBy, label: 'Kudos recibidos', icon: '💜' },
-          { id: 'badges' as SortBy, label: 'Medallas', icon: '🏅' },
-          { id: 'streak' as SortBy, label: 'Racha', icon: '🔥' },
-          { id: 'given' as SortBy, label: 'Kudos dados', icon: '💚' },
+          { id: 'kudos' as SortBy, label: 'Kudos received', icon: '💜' },
+          { id: 'badges' as SortBy, label: 'Badges', icon: '🏅' },
+          { id: 'streak' as SortBy, label: 'Streak', icon: '🔥' },
+          { id: 'given' as SortBy, label: 'Kudos given', icon: '💚' },
         ].map(option => (
           <button
             key={option.id}
@@ -114,14 +114,14 @@ export default function LeaderboardPage() {
 
         {sortedUsers.length <= 3 && (
           <div className="p-8 text-center text-zinc-500">
-            <p>¡Invita más colaboradores para ver más rankings!</p>
+            <p>Invite more collaborators to see more rankings!</p>
           </div>
         )}
       </div>
 
       {/* Category Leaders */}
       <div className="glass-panel rounded-2xl p-6">
-        <h2 className="text-xl font-bold mb-6">🏆 Líderes por Categoría</h2>
+        <h2 className="text-xl font-bold mb-6">🏆 Leaders by Category</h2>
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
           {CATEGORIES.slice(0, 6).map(category => {
             // Find user with most badges in this category
@@ -146,11 +146,11 @@ export default function LeaderboardPage() {
                     </div>
                     <div>
                       <p className="text-sm font-medium">{leader.displayName}</p>
-                      <p className="text-xs text-zinc-500">{leaderBadgeCount} medallas</p>
+                      <p className="text-xs text-zinc-500">{leaderBadgeCount} badges</p>
                     </div>
                   </div>
                 ) : (
-                  <p className="text-xs text-zinc-500">Sin líder aún</p>
+                  <p className="text-xs text-zinc-500">No leader yet</p>
                 )}
               </div>
             );
@@ -182,9 +182,9 @@ function PodiumCard({ user, position, sortBy }: {
   const getLabel = () => {
     switch (sortBy) {
       case 'kudos': return 'kudos';
-      case 'badges': return 'medallas';
-      case 'streak': return 'días';
-      case 'given': return 'dados';
+      case 'badges': return 'badges';
+      case 'streak': return 'days';
+      case 'given': return 'given';
     }
   };
 
@@ -232,7 +232,7 @@ function RankingRow({ user, position, sortBy }: {
       </div>
       <div className="text-right">
         <p className="font-bold">{getValue()}</p>
-        <p className="text-xs text-zinc-500">{user.badges.length} medallas</p>
+        <p className="text-xs text-zinc-500">{user.badges.length} badges</p>
       </div>
     </div>
   );

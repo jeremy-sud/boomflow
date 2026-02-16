@@ -1,6 +1,6 @@
 export { auth as middleware } from "@/auth";
 
-// Proteger todas las rutas excepto login, api/auth y assets estáticos
+// Protect all routes except login, api/auth and static assets
 export const config = {
   matcher: [
     /*

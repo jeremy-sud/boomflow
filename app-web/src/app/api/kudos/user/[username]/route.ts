@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import prisma from '@/lib/prisma'
 
-// GET /api/kudos/user/[username] - Kudos de un usuario específico
+// GET /api/kudos/user/[username] - Kudos for a specific user
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ username: string }> }
@@ -17,7 +17,7 @@ export async function GET(
 
     if (!user) {
       return NextResponse.json(
-        { error: 'Usuario no encontrado' },
+        { error: 'User not found' },
         { status: 404 }
       )
     }
@@ -48,7 +48,7 @@ export async function GET(
       },
     })
 
-    // Estadísticas
+    // Statistics
     const stats = await prisma.kudo.groupBy({
       by: ['toId'],
       where: { toId: user.id },
@@ -77,7 +77,7 @@ export async function GET(
   } catch (error) {
     console.error('Error fetching user kudos:', error)
     return NextResponse.json(
-      { error: 'Error al obtener kudos del usuario' },
+      { error: 'Error fetching user kudos' },
       { status: 500 }
     )
   }

@@ -1,5 +1,5 @@
-// BOOMFLOW - Schema de Base de Datos
-// Sistema de gamificación corporativa con kudos y badges
+// BOOMFLOW - Database Schema
+// Corporate gamification system with kudos and badges
 
 generator client {
   provider = "prisma-client-js"
@@ -10,7 +10,7 @@ datasource db {
   provider = "postgresql"
 }
 
-// ==================== USUARIOS Y ORGANIZACIONES ====================
+// ==================== USERS AND ORGANIZATIONS ====================
 
 model User {
   id            String    @id @default(cuid())
@@ -22,18 +22,18 @@ model User {
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
-  // Relaciones
+  // Relations
   organizationId String?
   organization   Organization? @relation(fields: [organizationId], references: [id])
   teamId         String?
   team           Team?         @relation(fields: [teamId], references: [id])
 
-  // Kudos y Badges
+  // Kudos and Badges
   kudosSent     Kudo[]      @relation("KudosSent")
   kudosReceived Kudo[]      @relation("KudosReceived")
   badges        UserBadge[]
 
-  // Notificaciones y GitHub
+  // Notifications and GitHub
   notifications Notification[]
   githubStats   GitHubStats?
 
@@ -53,7 +53,7 @@ model Organization {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  // Relaciones
+  // Relations
   users       User[]
   teams       Team[]
   badges      Badge[]
@@ -71,14 +71,14 @@ model Team {
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
 
-  // Relaciones
+  // Relations
   members        User[]
 
   @@unique([organizationId, slug])
   @@map("teams")
 }
 
-// ==================== SISTEMA DE KUDOS ====================
+// ==================== KUDOS SYSTEM ====================
 
 model Kudo {
   id         String   @id @default(cuid())
@@ -86,7 +86,7 @@ model Kudo {
   isPublic   Boolean  @default(true)
   createdAt  DateTime @default(now())
 
-  // Relaciones
+  // Relations
   fromId     String
   from       User     @relation("KudosSent", fields: [fromId], references: [id], onDelete: Cascade)
   toId       String
@@ -107,7 +107,7 @@ model KudoCategory {
   @@map("kudo_categories")
 }
 
-// ==================== SISTEMA DE BADGES ====================
+// ==================== BADGE SYSTEM ====================
 
 model Badge {
   id             String        @id @default(cuid())
@@ -235,18 +235,18 @@ enum NotificationType {
   PEER_AWARD        // Received peer recognition
 }
 
-// ==================== NOTIFICACIONES ====================
+// ==================== NOTIFICATIONS ====================
 
 model Notification {
   id        String           @id @default(cuid())
   type      NotificationType
   title     String
   message   String
-  data      Json?            // Datos adicionales (badgeId, kudoId, etc)
+  data      Json?            // Additional data (badgeId, kudoId, etc)
   read      Boolean          @default(false)
   createdAt DateTime         @default(now())
 
-  // Relaciones
+  // Relations
   userId    String
   user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -261,14 +261,14 @@ model GitHubStats {
   userId        String   @unique
   user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   
-  // Stats de GitHub
+  // GitHub Stats
   commits       Int      @default(0)
   pullRequests  Int      @default(0)
   reviews       Int      @default(0)
   issuesClosed  Int      @default(0)
   contributions Int      @default(0)
   
-  // Metadatos
+  // Metadata
   lastSyncAt    DateTime @default(now())
   syncError     String?
   

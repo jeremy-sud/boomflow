@@ -2,14 +2,14 @@ import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/auth'
 import { NotificationService } from '@/lib/notification-service'
 
-// GET /api/notifications - Obtener notificaciones del usuario
+// GET /api/notifications - Get user notifications
 export async function GET(request: NextRequest) {
   try {
     const session = await auth()
     
     if (!session?.user?.id) {
       return NextResponse.json(
-        { error: 'No autenticado' },
+        { error: 'Not authenticated' },
         { status: 401 }
       )
     }
@@ -30,20 +30,20 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     console.error('Error fetching notifications:', error)
     return NextResponse.json(
-      { error: 'Error al obtener notificaciones' },
+      { error: 'Error fetching notifications' },
       { status: 500 }
     )
   }
 }
 
-// PATCH /api/notifications - Marcar como leída
+// PATCH /api/notifications - Mark as read
 export async function PATCH(request: NextRequest) {
   try {
     const session = await auth()
     
     if (!session?.user?.id) {
       return NextResponse.json(
-        { error: 'No autenticado' },
+        { error: 'Not authenticated' },
         { status: 401 }
       )
     }
@@ -53,12 +53,12 @@ export async function PATCH(request: NextRequest) {
 
     if (markAll) {
       await NotificationService.markAllAsRead(session.user.id)
-      return NextResponse.json({ success: true, message: 'Todas las notificaciones marcadas como leídas' })
+      return NextResponse.json({ success: true, message: 'All notifications marked as read' })
     }
 
     if (!notificationId) {
       return NextResponse.json(
-        { error: 'Se requiere notificationId o markAll' },
+        { error: 'notificationId or markAll required' },
         { status: 400 }
       )
     }
@@ -69,7 +69,7 @@ export async function PATCH(request: NextRequest) {
   } catch (error) {
     console.error('Error marking notification as read:', error)
     return NextResponse.json(
-      { error: 'Error al marcar notificación' },
+      { error: 'Error marking notification' },
       { status: 500 }
     )
   }

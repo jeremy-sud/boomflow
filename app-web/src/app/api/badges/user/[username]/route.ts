@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import prisma from '@/lib/prisma'
 
-// GET /api/badges/user/[username] - Badges de un usuario
+// GET /api/badges/user/[username] - User badges
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ username: string }> }
@@ -25,12 +25,12 @@ export async function GET(
 
     if (!user) {
       return NextResponse.json(
-        { error: 'Usuario no encontrado' },
+        { error: 'User not found' },
         { status: 404 }
       )
     }
 
-    // Agrupar badges por categoría
+    // Group badges by category
     const badgesByCategory = user.badges.reduce((acc, ub) => {
       const cat = ub.badge.category
       if (!acc[cat]) acc[cat] = []
@@ -43,7 +43,7 @@ export async function GET(
       return acc
     }, {} as Record<string, unknown[]>)
 
-    // Estadísticas
+    // Statistics
     const stats = {
       total: user.badges.length,
       gold: user.badges.filter(b => b.badge.tier === 'GOLD').length,
@@ -73,7 +73,7 @@ export async function GET(
   } catch (error) {
     console.error('Error fetching user badges:', error)
     return NextResponse.json(
-      { error: 'Error al obtener badges del usuario' },
+      { error: 'Error fetching user badges' },
       { status: 500 }
     )
   }

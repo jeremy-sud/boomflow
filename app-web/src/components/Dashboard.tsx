@@ -9,62 +9,62 @@ const BADGE_CATALOG = {
     emoji: "🟢",
     label: "Onboarding",
     badges: [
-      { id: "hello-world", name: "Hello World", level: 1, tier: "bronze", category: "onboarding", imageUrl: "https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-hello-world.svg", description: "Primer día en el equipo. ¡Bienvenido!" },
-      { id: "first-commit", name: "First Commit", level: 1, tier: "bronze", category: "onboarding", imageUrl: "https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-first-commit.svg", description: "Primer commit al repositorio del equipo." },
-      { id: "first-pr", name: "First PR", level: 1, tier: "bronze", category: "onboarding", imageUrl: "https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-first-pr.svg", description: "Primer Pull Request aprobado y mergeado." },
-      { id: "first-review", name: "First Review", level: 1, tier: "bronze", category: "onboarding", imageUrl: "https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-first-review.svg", description: "Primera code review realizada a un compañero." },
+      { id: "hello-world", name: "Hello World", level: 1, tier: "bronze", category: "onboarding", imageUrl: "https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-hello-world.svg", description: "First day on the team. Welcome!" },
+      { id: "first-commit", name: "First Commit", level: 1, tier: "bronze", category: "onboarding", imageUrl: "https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-first-commit.svg", description: "First commit to the team repository." },
+      { id: "first-pr", name: "First PR", level: 1, tier: "bronze", category: "onboarding", imageUrl: "https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-first-pr.svg", description: "First Pull Request approved and merged." },
+      { id: "first-review", name: "First Review", level: 1, tier: "bronze", category: "onboarding", imageUrl: "https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-first-review.svg", description: "First code review done for a teammate." },
     ]
   },
   coding: {
     emoji: "🔵",
     label: "Coding",
     badges: [
-      { id: "code-ninja", name: "Code Ninja", level: 2, tier: "silver", category: "coding", imageUrl: "https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-code-ninja.svg", description: "Código limpio, rápido y eficiente." },
-      { id: "bug-hunter", name: "Bug Hunter", level: 2, tier: "silver", category: "coding", imageUrl: "https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-bug-hunter.svg", description: "Detecta y corrige bugs antes de producción." },
-      { id: "refactor-master", name: "Refactor Master", level: 2, tier: "silver", category: "coding", imageUrl: "https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-refactor-master.svg", description: "Mejora código legado sin romper funcionalidad." },
-      { id: "algorithm-ace", name: "Algorithm Ace", level: 3, tier: "gold", category: "coding", imageUrl: "https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-algorithm-ace.svg", description: "Resuelve problemas complejos con algoritmos óptimos." },
-      { id: "clean-code", name: "Clean Code", level: 2, tier: "silver", category: "coding", imageUrl: "https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-clean-code.svg", description: "Código legible, documentado y mantenible." },
-      { id: "full-stack", name: "Full Stack", level: 3, tier: "gold", category: "coding", imageUrl: "https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-full-stack.svg", description: "Domina frontend y backend con soltura." },
+      { id: "code-ninja", name: "Code Ninja", level: 2, tier: "silver", category: "coding", imageUrl: "https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-code-ninja.svg", description: "Clean, fast, and efficient code." },
+      { id: "bug-hunter", name: "Bug Hunter", level: 2, tier: "silver", category: "coding", imageUrl: "https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-bug-hunter.svg", description: "Detects and fixes bugs before production." },
+      { id: "refactor-master", name: "Refactor Master", level: 2, tier: "silver", category: "coding", imageUrl: "https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-refactor-master.svg", description: "Improves legacy code without breaking functionality." },
+      { id: "algorithm-ace", name: "Algorithm Ace", level: 3, tier: "gold", category: "coding", imageUrl: "https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-algorithm-ace.svg", description: "Solves complex problems with optimal algorithms." },
+      { id: "clean-code", name: "Clean Code", level: 2, tier: "silver", category: "coding", imageUrl: "https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-clean-code.svg", description: "Readable, documented, and maintainable code." },
+      { id: "full-stack", name: "Full Stack", level: 3, tier: "gold", category: "coding", imageUrl: "https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-full-stack.svg", description: "Masters both frontend and backend with ease." },
     ]
   },
   devops: {
     emoji: "🟣",
     label: "DevOps",
     badges: [
-      { id: "pipeline-pro", name: "Pipeline Pro", level: 2, tier: "silver", category: "devops", imageUrl: "https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-pipeline-pro.svg", description: "Pipelines de CI/CD rápidos y confiables." },
-      { id: "docker-captain", name: "Docker Captain", level: 2, tier: "silver", category: "devops", imageUrl: "https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-docker-captain.svg", description: "Containerización limpia y eficiente." },
-      { id: "cloud-deployer", name: "Cloud Deployer", level: 3, tier: "gold", category: "devops", imageUrl: "https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-cloud-deployer.svg", description: "Despliegues en la nube sin downtime." },
-      { id: "cicd-master", name: "CI/CD Master", level: 3, tier: "gold", category: "devops", imageUrl: "https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-cicd-master.svg", description: "Automatización total del ciclo de desarrollo." },
+      { id: "pipeline-pro", name: "Pipeline Pro", level: 2, tier: "silver", category: "devops", imageUrl: "https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-pipeline-pro.svg", description: "Fast and reliable CI/CD pipelines." },
+      { id: "docker-captain", name: "Docker Captain", level: 2, tier: "silver", category: "devops", imageUrl: "https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-docker-captain.svg", description: "Clean and efficient containerization." },
+      { id: "cloud-deployer", name: "Cloud Deployer", level: 3, tier: "gold", category: "devops", imageUrl: "https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-cloud-deployer.svg", description: "Cloud deployments with zero downtime." },
+      { id: "cicd-master", name: "CI/CD Master", level: 3, tier: "gold", category: "devops", imageUrl: "https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-cicd-master.svg", description: "Full automation of the development lifecycle." },
     ]
   },
   collaboration: {
     emoji: "🟡",
-    label: "Colaboración",
+    label: "Collaboration",
     badges: [
-      { id: "mentor", name: "Mentor", level: 1, tier: "bronze", category: "collaboration", imageUrl: "https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-mentor.svg", description: "Guía a compañeros nuevos en el equipo." },
-      { id: "mentor-master", name: "Mentor Master", level: 3, tier: "gold", category: "collaboration", imageUrl: "https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-mentor-master.svg", description: "Ha guiado a 20+ colegas al éxito." },
-      { id: "team-spirit", name: "Team Spirit", level: 2, tier: "silver", category: "collaboration", imageUrl: "https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-team-spirit.svg", description: "Mantiene la moral alta del equipo." },
-      { id: "code-reviewer", name: "Code Reviewer", level: 2, tier: "silver", category: "collaboration", imageUrl: "https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-code-reviewer.svg", description: "Reviews detallados y constructivos." },
-      { id: "pair-programmer", name: "Pair Programmer", level: 2, tier: "silver", category: "collaboration", imageUrl: "https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-pair-programmer.svg", description: "Programación en pareja efectiva." },
+      { id: "mentor", name: "Mentor", level: 1, tier: "bronze", category: "collaboration", imageUrl: "https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-mentor.svg", description: "Guides new teammates on the team." },
+      { id: "mentor-master", name: "Mentor Master", level: 3, tier: "gold", category: "collaboration", imageUrl: "https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-mentor-master.svg", description: "Has guided 20+ colleagues to success." },
+      { id: "team-spirit", name: "Team Spirit", level: 2, tier: "silver", category: "collaboration", imageUrl: "https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-team-spirit.svg", description: "Keeps team morale high." },
+      { id: "code-reviewer", name: "Code Reviewer", level: 2, tier: "silver", category: "collaboration", imageUrl: "https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-code-reviewer.svg", description: "Detailed and constructive reviews." },
+      { id: "pair-programmer", name: "Pair Programmer", level: 2, tier: "silver", category: "collaboration", imageUrl: "https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-pair-programmer.svg", description: "Effective pair programming." },
     ]
   },
   leadership: {
     emoji: "🔴",
-    label: "Liderazgo",
+    label: "Leadership",
     badges: [
-      { id: "crisis-averted", name: "Crisis Averted", level: 3, tier: "gold", category: "leadership", imageUrl: "https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-crisis-averted.svg", description: "Salvó el deploy en un momento crítico." },
-      { id: "sprint-hero", name: "Sprint Hero", level: 2, tier: "silver", category: "leadership", imageUrl: "https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-sprint-hero.svg", description: "Entrega excepcional en el sprint." },
-      { id: "architect", name: "Architect", level: 3, tier: "gold", category: "leadership", imageUrl: "https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-architect.svg", description: "Arquitectura sólida y escalable." },
-      { id: "tech-lead", name: "Tech Lead", level: 3, tier: "gold", category: "leadership", imageUrl: "https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-tech-lead.svg", description: "Lidera decisiones técnicas con visión estratégica." },
+      { id: "crisis-averted", name: "Crisis Averted", level: 3, tier: "gold", category: "leadership", imageUrl: "https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-crisis-averted.svg", description: "Saved the deploy at a critical moment." },
+      { id: "sprint-hero", name: "Sprint Hero", level: 2, tier: "silver", category: "leadership", imageUrl: "https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-sprint-hero.svg", description: "Exceptional sprint delivery." },
+      { id: "architect", name: "Architect", level: 3, tier: "gold", category: "leadership", imageUrl: "https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-architect.svg", description: "Solid and scalable architecture." },
+      { id: "tech-lead", name: "Tech Lead", level: 3, tier: "gold", category: "leadership", imageUrl: "https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-tech-lead.svg", description: "Leads technical decisions with strategic vision." },
     ]
   },
   documentation: {
     emoji: "⚪",
-    label: "Documentación",
+    label: "Documentation",
     badges: [
-      { id: "docs-hero", name: "Docs Hero", level: 1, tier: "bronze", category: "documentation", imageUrl: "https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-docs-hero.svg", description: "Documentación clara para todo el equipo." },
-      { id: "api-designer", name: "API Designer", level: 2, tier: "silver", category: "documentation", imageUrl: "https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-api-designer.svg", description: "APIs bien diseñadas y documentadas." },
-      { id: "open-source", name: "Open Source", level: 2, tier: "silver", category: "documentation", imageUrl: "https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-open-source.svg", description: "Contribuciones activas a proyectos open source." },
+      { id: "docs-hero", name: "Docs Hero", level: 1, tier: "bronze", category: "documentation", imageUrl: "https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-docs-hero.svg", description: "Clear documentation for the whole team." },
+      { id: "api-designer", name: "API Designer", level: 2, tier: "silver", category: "documentation", imageUrl: "https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-api-designer.svg", description: "Well-designed and documented APIs." },
+      { id: "open-source", name: "Open Source", level: 2, tier: "silver", category: "documentation", imageUrl: "https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-open-source.svg", description: "Active contributions to open source projects." },
     ]
   },
 };
@@ -86,9 +86,9 @@ const USER_DATA = {
 };
 
 const TIER_LABEL: Record<string, string> = {
-  bronze: "🥉 Bronce",
-  silver: "🥈 Plata",
-  gold: "🥇 Oro",
+  bronze: "🥉 Bronze",
+  silver: "🥈 Silver",
+  gold: "🥇 Gold",
 };
 
 export default function Dashboard() {
@@ -120,7 +120,7 @@ export default function Dashboard() {
                 Online • {USER_DATA.stats.streak} Day Streak
               </p>
               <p className="text-xs text-gray-500 mt-1">
-                Verificado por <span className="text-purple-400">Bloomflow</span> @ <a href="https://www.ursol.com" className="text-blue-400 hover:underline" target="_blank" rel="noreferrer">Sistemas Ursol</a>
+                Verified by <span className="text-purple-400">Bloomflow</span> @ <a href="https://www.ursol.com" className="text-blue-400 hover:underline" target="_blank" rel="noreferrer">Sistemas Ursol</a>
               </p>
             </div>
           </div>
@@ -136,7 +136,7 @@ export default function Dashboard() {
               <span className="block text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-500">
                 {USER_DATA.stats.totalBadges}
               </span>
-              <span className="text-sm text-gray-400 uppercase tracking-widest">Medallas</span>
+              <span className="text-sm text-gray-400 uppercase tracking-widest">Badges</span>
             </div>
           </div>
         </header>
@@ -166,14 +166,14 @@ export default function Dashboard() {
                 return (
                   <div key={tier} className="flex items-center justify-between p-3 hover:bg-white/5 rounded-lg transition-colors">
                     <span className="text-white font-medium">{label}</span>
-                    <span className="px-3 py-1 rounded-full bg-white/10 text-sm text-gray-300">{count} medallas</span>
+                    <span className="px-3 py-1 rounded-full bg-white/10 text-sm text-gray-300">{count} badges</span>
                   </div>
                 );
               })}
             </div>
 
             <div className="mt-6 pt-6 border-t border-white/10">
-              <h3 className="text-sm font-bold text-gray-400 uppercase tracking-widest mb-3">Categorías</h3>
+              <h3 className="text-sm font-bold text-gray-400 uppercase tracking-widest mb-3">Categories</h3>
               <div className="flex flex-wrap gap-2">
                 {CATEGORY_KEYS.map(key => {
                   const cat = BADGE_CATALOG[key as keyof typeof BADGE_CATALOG];
@@ -201,7 +201,7 @@ export default function Dashboard() {
                     : "bg-white/5 text-gray-400 border-white/10 hover:bg-white/10"
                 }`}
               >
-                Todas ({allBadges.length})
+                All ({allBadges.length})
               </button>
               {CATEGORY_KEYS.map(key => {
                 const cat = BADGE_CATALOG[key as keyof typeof BADGE_CATALOG];

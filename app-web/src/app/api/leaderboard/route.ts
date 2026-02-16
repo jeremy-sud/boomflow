@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import prisma from '@/lib/prisma'
 
-// GET /api/leaderboard - Ranking de usuarios
+// GET /api/leaderboard - User rankings
 export async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams
@@ -20,7 +20,7 @@ export async function GET(request: NextRequest) {
     }> = []
 
     if (type === 'badges') {
-      // Ranking por cantidad de badges
+      // Ranking by badge count
       const users = await prisma.user.findMany({
         include: {
           badges: true,
@@ -43,7 +43,7 @@ export async function GET(request: NextRequest) {
         count: user._count.badges,
       }))
     } else if (type === 'kudos_received') {
-      // Ranking por kudos recibidos
+      // Ranking by kudos received
       const users = await prisma.user.findMany({
         include: {
           _count: { select: { kudosReceived: true } },
@@ -65,7 +65,7 @@ export async function GET(request: NextRequest) {
         count: user._count.kudosReceived,
       }))
     } else if (type === 'kudos_sent') {
-      // Ranking por kudos enviados
+      // Ranking by kudos sent
       const users = await prisma.user.findMany({
         include: {
           _count: { select: { kudosSent: true } },
@@ -95,7 +95,7 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     console.error('Error fetching leaderboard:', error)
     return NextResponse.json(
-      { error: 'Error al obtener leaderboard' },
+      { error: 'Error fetching leaderboard' },
       { status: 500 }
     )
   }

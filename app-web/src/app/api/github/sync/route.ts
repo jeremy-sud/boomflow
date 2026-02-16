@@ -5,7 +5,7 @@ import { GitHubSyncService } from '@/lib/github-sync-service'
 export async function GET() {
   const session = await auth()
   if (!session?.user?.id) {
-    return NextResponse.json({ error: 'No autenticado' }, { status: 401 })
+    return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
   }
 
   const stats = await GitHubSyncService.getStats(session.user.id)
@@ -21,7 +21,7 @@ export async function GET() {
 export async function POST() {
   const session = await auth()
   if (!session?.user?.id || !session.accessToken) {
-    return NextResponse.json({ error: 'No autenticado' }, { status: 401 })
+    return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
   }
 
   const username = session.user.username || session.user.name || ''
@@ -43,7 +43,7 @@ export async function POST() {
   } catch (error) {
     console.error('GitHub sync error:', error)
     return NextResponse.json(
-      { error: 'Error sincronizando GitHub', details: String(error) },
+      { error: 'Error syncing GitHub', details: String(error) },
       { status: 500 }
     )
   }

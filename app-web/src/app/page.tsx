@@ -27,11 +27,11 @@ export default function Home() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-gradient">Dashboard</h1>
-          <p className="text-zinc-500 mt-1">Bienvenido de vuelta, {CURRENT_USER.displayName}</p>
+          <p className="text-zinc-500 mt-1">Welcome back, {CURRENT_USER.displayName}</p>
         </div>
         <div className="text-right">
-          <p className="text-sm text-zinc-500">Racha actual</p>
-          <p className="text-2xl font-bold text-orange-500">🔥 {CURRENT_USER.streak} días</p>
+          <p className="text-sm text-zinc-500">Current streak</p>
+          <p className="text-2xl font-bold text-orange-500">🔥 {CURRENT_USER.streak} days</p>
         </div>
       </div>
 
@@ -39,30 +39,30 @@ export default function Home() {
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         <StatCard
           icon="🏅"
-          label="Mis Medallas"
+          label="My Badges"
           value={CURRENT_USER.badges.length}
-          subtext={`de ${stats.total} disponibles`}
+          subtext={`of ${stats.total} available`}
           color="blue"
         />
         <StatCard
           icon="💜"
-          label="Kudos Recibidos"
+          label="Kudos Received"
           value={CURRENT_USER.kudosReceived}
-          subtext="reconocimientos"
+          subtext="recognitions"
           color="purple"
         />
         <StatCard
           icon="💚"
-          label="Kudos Enviados"
+          label="Kudos Sent"
           value={CURRENT_USER.kudosGiven}
-          subtext="reconocimientos"
+          subtext="recognitions"
           color="green"
         />
         <StatCard
           icon="📊"
-          label="Total Sistema"
+          label="System Total"
           value={stats.total}
-          subtext="medallas disponibles"
+          subtext="available badges"
           color="zinc"
         />
       </div>
@@ -72,9 +72,9 @@ export default function Home() {
         {/* Recent Activity */}
         <div className="lg:col-span-2 glass-panel rounded-2xl p-6">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-xl font-bold">Actividad Reciente</h2>
+            <h2 className="text-xl font-bold">Recent Activity</h2>
             <Link href="/feed" className="text-sm text-blue-400 hover:text-blue-300">
-              Ver todo →
+              View all →
             </Link>
           </div>
           <div className="space-y-4">
@@ -89,7 +89,7 @@ export default function Home() {
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-xl font-bold">🏆 Top Kudos</h2>
             <Link href="/leaderboard" className="text-sm text-blue-400 hover:text-blue-300">
-              Ver ranking →
+              View ranking →
             </Link>
           </div>
           <div className="space-y-4">
@@ -103,7 +103,7 @@ export default function Home() {
                 </div>
                 <div className="flex-1">
                   <p className="font-medium">{user.displayName}</p>
-                  <p className="text-sm text-zinc-500">{user.badges.length} medallas</p>
+                  <p className="text-sm text-zinc-500">{user.badges.length} badges</p>
                 </div>
                 <div className="text-right">
                   <p className="font-bold text-purple-400">{user.kudosReceived}</p>
@@ -118,9 +118,9 @@ export default function Home() {
       {/* My Badges Preview */}
       <div className="glass-panel rounded-2xl p-6">
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl font-bold">Mis Medallas</h2>
+          <h2 className="text-xl font-bold">My Badges</h2>
           <Link href="/profile" className="text-sm text-blue-400 hover:text-blue-300">
-            Ver perfil →
+            View profile →
           </Link>
         </div>
         <div className="flex flex-wrap gap-4">
@@ -148,7 +148,7 @@ export default function Home() {
               className="flex flex-col items-center justify-center p-3 rounded-xl bg-white/5 hover:bg-white/10 transition-colors w-20 h-20"
             >
               <span className="text-2xl">+{CURRENT_USER.badges.length - 8}</span>
-              <span className="text-xs text-zinc-500">más</span>
+              <span className="text-xs text-zinc-500">more</span>
             </Link>
           )}
         </div>
@@ -157,9 +157,9 @@ export default function Home() {
       {/* Categories Overview */}
       <div className="glass-panel rounded-2xl p-6">
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl font-bold">Categorías de Medallas</h2>
+          <h2 className="text-xl font-bold">Badge Categories</h2>
           <Link href="/catalog" className="text-sm text-blue-400 hover:text-blue-300">
-            Ver catálogo →
+            View catalog →
           </Link>
         </div>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
@@ -171,7 +171,7 @@ export default function Home() {
             >
               <span className="text-3xl mb-2">{cat.emoji}</span>
               <span className="font-medium text-sm">{cat.name}</span>
-              <span className="text-xs text-zinc-500">{cat.count} medallas</span>
+              <span className="text-xs text-zinc-500">{cat.count} badges</span>
             </Link>
           ))}
         </div>
@@ -234,7 +234,7 @@ function ActivityItem({ activity }: ActivityItemProps) {
       content = (
         <>
           <span className="font-medium">{user?.displayName}</span>
-          <span className="text-zinc-500"> obtuvo la medalla </span>
+          <span className="text-zinc-500"> earned the badge </span>
           <span className="font-medium text-yellow-400">{badge?.name}</span>
         </>
       );
@@ -244,7 +244,7 @@ function ActivityItem({ activity }: ActivityItemProps) {
       content = (
         <>
           <span className="font-medium">{user?.displayName}</span>
-          <span className="text-zinc-500"> envió un kudo a </span>
+          <span className="text-zinc-500"> sent a kudo to </span>
           <span className="font-medium">{targetUser?.displayName}</span>
           {activity.message && (
             <p className="text-sm text-zinc-400 mt-1 italic">"{activity.message}"</p>
@@ -258,7 +258,7 @@ function ActivityItem({ activity }: ActivityItemProps) {
       break;
     default:
       icon = '📌';
-      content = <span className="text-zinc-500">Actividad</span>;
+      content = <span className="text-zinc-500">Activity</span>;
   }
 
   return (

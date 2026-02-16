@@ -1,6 +1,6 @@
 /**
  * BOOMFLOW Notification Service
- * Sistema de notificaciones en tiempo real
+ * Real-time notification system
  */
 
 import prisma from '@/lib/prisma'
@@ -16,7 +16,7 @@ export interface CreateNotificationInput {
 
 export class NotificationService {
   /**
-   * Crear una notificación
+   * Create a notification
    */
   static async create(input: CreateNotificationInput) {
     return prisma.notification.create({
@@ -31,7 +31,7 @@ export class NotificationService {
   }
 
   /**
-   * Notificar que recibió un kudo
+   * Notify that a kudo was received
    */
   static async notifyKudoReceived(
     toUserId: string,
@@ -42,20 +42,20 @@ export class NotificationService {
     return this.create({
       userId: toUserId,
       type: NotificationType.KUDO_RECEIVED,
-      title: '🎉 ¡Recibiste un Kudo!',
-      message: `${fromUsername} te envió un kudo: "${message.substring(0, 50)}${message.length > 50 ? '...' : ''}"`,
+      title: '🎉 You received a Kudo!',
+      message: `${fromUsername} sent you a kudo: "${message.substring(0, 50)}${message.length > 50 ? '...' : ''}"`,
       data: { kudoId, fromUsername },
     })
   }
 
   /**
-   * Notificar que ganó un badge
+   * Notify that a badge was earned
    */
   static async notifyBadgeEarned(
     userId: string,
     badge: { id: string; name: string; slug: string; tier: string }
   ) {
-    // Determinar emoji según tier del badge
+    // Determine emoji based on badge tier
     const tierEmojiMap: Record<string, string> = {
       GOLD: '🥇',
       SILVER: '🥈',
@@ -66,14 +66,14 @@ export class NotificationService {
     return this.create({
       userId,
       type: NotificationType.BADGE_EARNED,
-      title: `${tierEmoji} ¡Nuevo Badge Desbloqueado!`,
-      message: `Has obtenido el badge "${badge.name}"`,
+      title: `${tierEmoji} New Badge Unlocked!`,
+      message: `You earned the badge "${badge.name}"`,
       data: { badgeId: badge.id, badgeSlug: badge.slug, tier: badge.tier },
     })
   }
 
   /**
-   * Notificar progreso hacia un badge
+   * Notify progress towards a badge
    */
   static async notifyBadgeProgress(
     userId: string,
@@ -83,7 +83,7 @@ export class NotificationService {
   ) {
     const percentage = Math.round((progress / target) * 100)
     
-    // Solo notificar en hitos: 50%, 75%, 90%
+    // Only notify at milestones: 50%, 75%, 90%
     if (percentage !== 50 && percentage !== 75 && percentage !== 90) {
       return null
     }
@@ -91,14 +91,14 @@ export class NotificationService {
     return this.create({
       userId,
       type: NotificationType.BADGE_PROGRESS,
-      title: `🎯 ¡Estás cerca de "${badge.name}"!`,
-      message: `Progreso: ${progress}/${target} (${percentage}%)`,
+      title: `🎯 You're close to "${badge.name}"!`,
+      message: `Progress: ${progress}/${target} (${percentage}%)`,
       data: { badgeSlug: badge.slug, progress, target, percentage },
     })
   }
 
   /**
-   * Obtener notificaciones de un usuario
+   * Get notifications for a user
    */
   static async getByUser(userId: string, options?: { limit?: number; unreadOnly?: boolean }) {
     const { limit = 20, unreadOnly = false } = options || {}
@@ -114,7 +114,7 @@ export class NotificationService {
   }
 
   /**
-   * Contar notificaciones no leídas
+   * Count unread notifications
    */
   static async countUnread(userId: string) {
     return prisma.notification.count({
@@ -123,7 +123,7 @@ export class NotificationService {
   }
 
   /**
-   * Marcar notificación como leída
+   * Mark notification as read
    */
   static async markAsRead(notificationId: string, userId: string) {
     return prisma.notification.updateMany({
@@ -133,7 +133,7 @@ export class NotificationService {
   }
 
   /**
-   * Marcar todas como leídas
+   * Mark all as read
    */
   static async markAllAsRead(userId: string) {
     return prisma.notification.updateMany({
@@ -143,7 +143,7 @@ export class NotificationService {
   }
 
   /**
-   * Eliminar notificaciones antiguas (más de 30 días)
+   * Delete old notifications (older than 30 days)
    */
   static async cleanOld() {
     const thirtyDaysAgo = new Date()

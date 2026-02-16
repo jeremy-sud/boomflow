@@ -20,15 +20,15 @@ function getTierEmoji(tier: string): string {
 /**
  * Maps badge tier to display label with emoji
  * @param tier - Badge tier (gold, silver, bronze)
- * @returns Label with emoji (e.g., "🥇 Oro")
+ * @returns Label with emoji (e.g., "🥇 Gold")
  */
 function getTierLabel(tier: string): string {
   const tierLabels: Record<string, string> = {
-    gold: '🥇 Oro',
-    silver: '🥈 Plata',
-    bronze: '🥉 Bronce'
+    gold: '🥇 Gold',
+    silver: '🥈 Silver',
+    bronze: '🥉 Bronze'
   };
-  return tierLabels[tier] ?? '🥉 Bronce';
+  return tierLabels[tier] ?? '🥉 Bronze';
 }
 
 // Current user (mock - in production this would come from auth)
@@ -80,7 +80,7 @@ export default function ProfilePage() {
             <h1 className="text-3xl font-bold">{CURRENT_USER.displayName}</h1>
             <p className="text-zinc-500">@{CURRENT_USER.username}</p>
             <p className="text-sm text-zinc-600 mt-2">
-              Miembro desde {new Date(CURRENT_USER.joinedAt).toLocaleDateString('es-ES', { 
+              Member since {new Date(CURRENT_USER.joinedAt).toLocaleDateString('en-US', { 
                 month: 'long', 
                 year: 'numeric' 
               })}
@@ -91,15 +91,15 @@ export default function ProfilePage() {
           <div className="flex gap-6 text-center">
             <div>
               <p className="text-3xl font-bold text-purple-400">{CURRENT_USER.kudosReceived}</p>
-              <p className="text-xs text-zinc-500">Kudos recibidos</p>
+              <p className="text-xs text-zinc-500">Kudos received</p>
             </div>
             <div>
               <p className="text-3xl font-bold text-green-400">{CURRENT_USER.kudosGiven}</p>
-              <p className="text-xs text-zinc-500">Kudos enviados</p>
+              <p className="text-xs text-zinc-500">Kudos sent</p>
             </div>
             <div>
               <p className="text-3xl font-bold text-yellow-400">{userBadges.length}</p>
-              <p className="text-xs text-zinc-500">Medallas</p>
+              <p className="text-xs text-zinc-500">Badges</p>
             </div>
           </div>
         </div>
@@ -127,7 +127,7 @@ export default function ProfilePage() {
       {/* Badges Section */}
       <div className="glass-panel rounded-2xl p-6">
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl font-bold">🏅 Mis Medallas ({userBadges.length})</h2>
+          <h2 className="text-xl font-bold">🏅 My Badges ({userBadges.length})</h2>
           
           {/* Category Filter */}
           <div className="flex gap-2">
@@ -139,7 +139,7 @@ export default function ProfilePage() {
                   : 'bg-white/5 text-zinc-400 hover:bg-white/10'
               }`}
             >
-              Todas
+              All
             </button>
             {badgesByCategory.map(cat => (
               <button
@@ -161,7 +161,7 @@ export default function ProfilePage() {
         {filteredBadges.length === 0 ? (
           <div className="text-center py-12 text-zinc-500">
             <span className="text-4xl">🔍</span>
-            <p className="mt-4">No hay medallas con estos filtros</p>
+            <p className="mt-4">No badges match these filters</p>
           </div>
         ) : (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
@@ -181,7 +181,7 @@ export default function ProfilePage() {
                 <span>{category.emoji}</span>
                 {category.name}
                 <span className="text-sm font-normal text-zinc-500">
-                  ({category.badges.length} medallas)
+                  ({category.badges.length} badges)
                 </span>
               </h3>
               <div className="flex flex-wrap gap-3">

@@ -7,7 +7,7 @@ const globalForPrisma = globalThis as unknown as {
 }
 
 function createPrismaClient() {
-  // Solo crear el pool si hay DATABASE_URL
+  // Only create pool if DATABASE_URL exists
   if (!process.env.DATABASE_URL) {
     console.warn('DATABASE_URL not set, using mock client')
     // Retornar un cliente mock que no conecta
