@@ -41,7 +41,7 @@ function buildUserBadgeSection(username) {
     grouped[b.category].push(b);
   }
 
-  let section = `\n### 🏅 Bloomflow Achievements (${userBadges.length})\n\n<table>\n`;
+  let section = `\n### 🏅 Boomflow Achievements (${userBadges.length})\n\n<table>\n`;
   for (const [catKey, catInfo] of Object.entries(CATEGORIES)) {
     const badges = grouped[catKey];
     if (!badges || badges.length === 0) continue;
@@ -57,14 +57,14 @@ function buildUserBadgeSection(username) {
     }
     section += `</tr>\n`;
   }
-  section += `</table>\n\n> 🌸 Verified by [Bloomflow](https://github.com/jeremy-sud/boomflow) @ [SistemasUrsol](https://www.ursol.com)\n`;
+  section += `</table>\n\n> 🌸 Verified by [Boomflow](https://github.com/jeremy-sud/boomflow) @ [SistemasUrsol](https://www.ursol.com)\n`;
   return section;
 }
 
 const content = buildUserBadgeSection("jeremy-sud");
 const readme = fs.readFileSync(TARGET_README, "utf8");
-const START = "<!-- BLOOMFLOW-BADGES-START -->";
-const END = "<!-- BLOOMFLOW-BADGES-END -->";
+const START = "<!-- BOOMFLOW-BADGES-START -->";
+const END = "<!-- BOOMFLOW-BADGES-END -->";
 const regex = new RegExp(`${START}[\\s\\S]*?${END}`, "g");
 const updated = readme.replace(regex, `${START}${content}${END}`);
 fs.writeFileSync(TARGET_README, updated);

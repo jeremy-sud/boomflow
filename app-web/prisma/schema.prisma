@@ -95,6 +95,9 @@ model Kudo {
   category   KudoCategory? @relation(fields: [categoryId], references: [id])
 
   @@map("kudos")
+  @@index([fromId])
+  @@index([toId])
+  @@index([createdAt])
 }
 
 model KudoCategory {
@@ -168,6 +171,8 @@ model UserBadge {
   skin      BadgeSkin? @relation(fields: [skinId], references: [id], onDelete: SetNull)
 
   @@unique([userId, badgeId])
+  @@index([userId])
+  @@index([badgeId])
   @@map("user_badges")
 }
 

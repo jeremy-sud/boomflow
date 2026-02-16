@@ -83,28 +83,42 @@ jobs:
           echo "✅ Event type: $EVENT_TYPE"
       
       - name: Show event information
+        env:
+          EVENT_TYPE: ${{ steps.event_type.outputs.event_type }}
+          ACTOR: ${{ github.actor }}
+          REPO: ${{ github.repository }}
+          REF: ${{ github.ref }}
+          EVENT_NAME: ${{ github.event_name }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_AUTHOR: ${{ github.event.pull_request.user.login }}
+          PR_MERGED: ${{ github.event.pull_request.merged }}
+          REVIEW_USER: ${{ github.event.review.user.login }}
+          REVIEW_STATE: ${{ github.event.review.state }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          ISSUE_TITLE: ${{ github.event.issue.title }}
         run: |
           echo "═══════════════════════════════════════════════════════"
           echo "📋 EVENT INFORMATION"
           echo "═══════════════════════════════════════════════════════"
-          echo "🎯 Event: ${{ steps.event_type.outputs.event_type }}"
-          echo "👤 Actor: ${{ github.actor }}"
-          echo "📦 Repo: ${{ github.repository }}"
-          echo "🔀 Ref: ${{ github.ref }}"
+          echo "🎯 Event: $EVENT_TYPE"
+          echo "👤 Actor: $ACTOR"
+          echo "📦 Repo: $REPO"
+          echo "🔀 Ref: $REF"
           
           # Specific info per event type
-          if [ "${{ github.event_name }}" == "pull_request" ]; then
-            echo "📝 PR: #${{ github.event.pull_request.number }}"
-            echo "📌 Title: ${{ github.event.pull_request.title }}"
-            echo "👤 Author: ${{ github.event.pull_request.user.login }}"
-            echo "🔀 Merged: ${{ github.event.pull_request.merged }}"
-          elif [ "${{ github.event_name }}" == "pull_request_review" ]; then
-            echo "📝 PR: #${{ github.event.pull_request.number }}"
-            echo "👤 Reviewer: ${{ github.event.review.user.login }}"
-            echo "📊 Status: ${{ github.event.review.state }}"
-          elif [ "${{ github.event_name }}" == "issues" ]; then
-            echo "📝 Issue: #${{ github.event.issue.number }}"
-            echo "📌 Title: ${{ github.event.issue.title }}"
+          if [ "$EVENT_NAME" == "pull_request" ]; then
+            echo "📝 PR: #$PR_NUMBER"
+            echo "📌 Title: $PR_TITLE"
+            echo "👤 Author: $PR_AUTHOR"
+            echo "🔀 Merged: $PR_MERGED"
+          elif [ "$EVENT_NAME" == "pull_request_review" ]; then
+            echo "📝 PR: #$PR_NUMBER"
+            echo "👤 Reviewer: $REVIEW_USER"
+            echo "📊 Status: $REVIEW_STATE"
+          elif [ "$EVENT_NAME" == "issues" ]; then
+            echo "📝 Issue: #$ISSUE_NUMBER"
+            echo "📌 Title: $ISSUE_TITLE"
           fi
           echo "═══════════════════════════════════════════════════════"
       

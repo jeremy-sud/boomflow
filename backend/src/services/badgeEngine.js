@@ -45,6 +45,9 @@ export async function checkAndAwardBadges(userId, kudoCategory) {
     categoryKudos.map(c => [c.category, c._count])
   )
 
+  // Collect all awarded badges
+  const awardedBadges = []
+
   // Check each eligible badge
   for (const badge of eligibleBadges) {
     let qualifies = false
@@ -91,13 +94,13 @@ export async function checkAndAwardBadges(userId, kudoCategory) {
       await prisma.notification.create({
         data: {
           userId,
-          type: 'badge_unlocked',
+          type: 'badge_earned',
           title: '🏆 New Badge Unlocked!',
           body: `You earned the ${badge.name} badge!`,
-          data: JSON.stringify({
+          data: {
             badgeId: badge.id,
             badgeSlug: badge.slug
-          })
+          }
         }
       })
 
@@ -108,25 +111,25 @@ export async function checkAndAwardBadges(userId, kudoCategory) {
           action: 'badge_awarded',
           resource: 'Badge',
           resourceId: badge.id,
-          metadata: JSON.stringify({
+          metadata: {
             badgeSlug: badge.slug,
             trigger: badge.triggerType,
             triggerCount: badge.triggerCount
-          })
+          }
         }
       })
 
-      // Return the first badge unlocked (could be multiple in theory)
-      return {
+      awardedBadges.push({
         slug: userBadge.badge.slug,
         name: userBadge.badge.name,
         description: userBadge.badge.description,
         message: `🏆 ${userBadge.badge.name} badge unlocked!`
-      }
+      })
     }
   }
 
-  return null
+  // Return all awarded badges, or null if none
+  return awardedBadges.length > 0 ? awardedBadges : null
 }
 
 /**
@@ -177,14 +180,14 @@ export async function awardBadgeManually(userId, badgeSlug, awardedBy, reason = 
   await prisma.notification.create({
     data: {
       userId,
-      type: 'badge_unlocked',
+      type: 'badge_earned',
       title: '🏆 New Badge Awarded!',
       body: reason || `You were awarded the ${badge.name} badge!`,
-      data: JSON.stringify({
+      data: {
         badgeId: badge.id,
         badgeSlug: badge.slug,
         awardedBy
-      })
+      }
     }
   })
 

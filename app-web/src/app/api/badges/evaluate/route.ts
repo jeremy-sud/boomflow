@@ -20,8 +20,16 @@ export async function POST(request: NextRequest) {
     
     let userId = session.user.id
     
-    // If another user is specified (admin-only in the future)
-    if (username) {
+    // If another user is specified, require admin permission
+    if (username && username !== session.user.username) {
+      const { PermissionService } = await import('@/lib/permission-service')
+      const currentUsername = session.user.username || session.user.name || ''
+      if (!PermissionService.canGrantBadges(currentUsername)) {
+        return NextResponse.json(
+          { error: 'Permission denied: only admins can evaluate badges for other users' },
+          { status: 403 }
+        )
+      }
       const user = await prisma.user.findUnique({
         where: { username }
       })

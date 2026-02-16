@@ -9,10 +9,11 @@ import { TriggerType } from '@/generated/prisma'
 export async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams
-    const limit = Number.parseInt(searchParams.get('limit') || '20', 10)
+    const limit = Math.min(Math.max(Number.parseInt(searchParams.get('limit') || '20', 10), 1), 100)
     const cursor = searchParams.get('cursor') // For pagination
 
     const kudos = await prisma.kudo.findMany({
+      where: { isPublic: true },
       take: limit,
       ...(cursor && { cursor: { id: cursor }, skip: 1 }),
       orderBy: { createdAt: 'desc' },

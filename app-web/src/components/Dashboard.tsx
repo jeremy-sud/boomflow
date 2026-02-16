@@ -120,7 +120,7 @@ export default function Dashboard() {
                 Online • {USER_DATA.stats.streak} Day Streak
               </p>
               <p className="text-xs text-gray-500 mt-1">
-                Verified by <span className="text-purple-400">Bloomflow</span> @ <a href="https://www.ursol.com" className="text-blue-400 hover:underline" target="_blank" rel="noreferrer">Sistemas Ursol</a>
+                Verified by <span className="text-purple-400">Boomflow</span> @ <a href="https://www.ursol.com" className="text-blue-400 hover:underline" target="_blank" rel="noreferrer">Sistemas Ursol</a>
               </p>
             </div>
           </div>

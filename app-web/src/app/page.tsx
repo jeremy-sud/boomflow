@@ -14,7 +14,7 @@ function getPositionEmoji(index: number): string {
 }
 
 // Current user (mock - in production this would come from auth)
-const CURRENT_USER = USERS.find(u => u.username === 'jeremy-sud')!;
+const CURRENT_USER = USERS.find(u => u.username === 'jeremy-sud') ?? USERS[0];
 
 export default function Home() {
   const stats = getBadgeStats();

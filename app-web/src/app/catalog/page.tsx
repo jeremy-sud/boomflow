@@ -5,7 +5,7 @@ import { useSearchParams } from 'next/navigation';
 import { BADGE_CATALOG, CATEGORIES, TIERS, USERS, Badge } from '@/lib/data';
 
 // Current user (mock)
-const CURRENT_USER = USERS.find(u => u.username === 'jeremy-sud')!;
+const CURRENT_USER = USERS.find(u => u.username === 'jeremy-sud') ?? USERS[0];
 
 export default function CatalogPage() {
   return (

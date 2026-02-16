@@ -1,7 +1,7 @@
 {
-  "name": "bloomflow-badge-sync",
+  "name": "boomflow-badge-sync",
   "version": "1.0.0",
-  "description": "GitHub Action to sync Bloomflow badges to profile README",
+  "description": "GitHub Action to sync Boomflow badges to profile README",
   "main": "index.js",
   "scripts": {
     "build": "ncc build index.js -o dist",
@@ -9,10 +9,10 @@
   },
   "keywords": [
     "github-action",
-    "bloomflow",
+    "boomflow",
     "badges"
   ],
-  "author": "Bloomflow",
+  "author": "Boomflow",
   "license": "MIT",
   "dependencies": {
     "@actions/core": "^1.10.1",

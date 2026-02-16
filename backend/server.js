@@ -2,7 +2,6 @@ require("dotenv").config();
 const express = require("express");
 const axios = require("axios");
 const cors = require("cors");
-const fs = require("fs");
 const path = require("path");
 
 const app = express();
@@ -51,7 +50,7 @@ async function verifyOrgMembership(req, res, next) {
       ) {
         return res.status(403).json({
           error: "Access denied",
-          message: `Sorry, Bloomflow is currently only available for members of ${REQUIRED_ORG}.`,
+          message: `Sorry, Boomflow is currently only available for members of ${REQUIRED_ORG}.`,
         });
       }
       throw orgError;
@@ -127,11 +126,16 @@ app.get("/auth/github/callback", async (req, res) => {
       });
     }
 
+    // SECURITY: In production, redirect to frontend with a short-lived auth code
+    // instead of exposing the raw access token in the response body.
+    // For development/demo purposes only:
     res.json({
-      message: "✅ Authentication successful with GitHub",
-      access_token: accessToken,
+      message: "Authentication successful",
       token_type: tokenRes.data.token_type,
       scope: tokenRes.data.scope,
+      // WARNING: Do NOT expose access_token in production.
+      // Use server-side session or encrypted cookie instead.
+      ...(process.env.NODE_ENV !== 'production' && { access_token: accessToken }),
     });
   } catch (error) {
     console.error("OAuth error:", error.message);
@@ -140,44 +144,58 @@ app.get("/auth/github/callback", async (req, res) => {
 });
 
 // Public: Get full badge catalog (no auth required)
-app.get("/api/badges/catalog", (req, res) => {
-  const mockPath = path.join(__dirname, "../api-mock.json");
-  const badges = JSON.parse(fs.readFileSync(mockPath, "utf8"));
+app.get("/api/badges/catalog", async (req, res) => {
+  try {
+    const mockPath = path.join(__dirname, "../api-mock.json");
+    const { readFile } = await import('fs/promises');
+    const data = await readFile(mockPath, "utf8");
+    const badges = JSON.parse(data);
 
-  // Group by category
-  const categories = {};
-  for (const badge of badges) {
-    const cat = badge.category || "other";
-    if (!categories[cat]) categories[cat] = [];
-    categories[cat].push(badge);
+    // Group by category
+    const categories = {};
+    for (const badge of badges) {
+      const cat = badge.category || "other";
+      if (!categories[cat]) categories[cat] = [];
+      categories[cat].push(badge);
+    }
+
+    res.json({
+      org: REQUIRED_ORG,
+      totalBadges: badges.length,
+      categories: categories,
+      badges: badges,
+    });
+  } catch (error) {
+    console.error('Error reading badge catalog:', error.message);
+    res.status(500).json({ error: 'Failed to load badge catalog' });
   }
-
-  res.json({
-    org: REQUIRED_ORG,
-    totalBadges: badges.length,
-    categories: categories,
-    badges: badges,
-  });
 });
 
 // Protected: Get user badges (requires org membership)
-app.get("/api/user/badges", verifyOrgMembership, (req, res) => {
-  const mockPath = path.join(__dirname, "../api-mock.json");
-  const badges = JSON.parse(fs.readFileSync(mockPath, "utf8"));
+app.get("/api/user/badges", verifyOrgMembership, async (req, res) => {
+  try {
+    const mockPath = path.join(__dirname, "../api-mock.json");
+    const { readFile } = await import('fs/promises');
+    const data = await readFile(mockPath, "utf8");
+    const badges = JSON.parse(data);
 
-  res.json({
-    user: req.githubUser,
-    org: REQUIRED_ORG,
-    verified: true,
-    badges: badges,
-  });
+    res.json({
+      user: req.githubUser,
+      org: REQUIRED_ORG,
+      verified: true,
+      badges: badges,
+    });
+  } catch (error) {
+    console.error('Error reading user badges:', error.message);
+    res.status(500).json({ error: 'Failed to load badges' });
+  }
 });
 
 // ============================================================
 // START
 // ============================================================
 app.listen(PORT, () => {
-  console.log(`\n🌸 Bloomflow API Server v2.0`);
+  console.log(`\n🌸 Boomflow API Server v2.0`);
   console.log(`   Org:     ${REQUIRED_ORG}`);
   console.log(`   Port:    ${PORT}`);
   console.log(`   Auth:    http://localhost:${PORT}/auth/github`);

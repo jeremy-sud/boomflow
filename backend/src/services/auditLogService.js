@@ -227,12 +227,12 @@ export async function getAuditLogs({
       ...(userId && { userId }),
       ...(action && { action }),
       ...(resource && { resource }),
-      ...(startDate || endDate) && {
+      ...((startDate || endDate) ? {
         createdAt: {
           ...(startDate && { gte: startDate }),
           ...(endDate && { lte: endDate }),
         },
-      },
+      } : {}),
     },
     orderBy: { createdAt: 'desc' },
     take: limit,

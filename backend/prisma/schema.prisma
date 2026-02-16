@@ -22,8 +22,9 @@ enum Role {
 }
 
 enum Plan {
-  FREE
+  INTERNAL    // Open / community (non-commercial)
   PRO
+  SCALE
   ENTERPRISE
 }
 
@@ -37,6 +38,11 @@ enum Category {
   GROWTH
   QUALITY
   MILESTONE
+  SPECIAL
+  COMMUNITY
+  PREMIUM
+  INNOVATION
+  CULTURE
 }
 
 enum Tier {
@@ -109,7 +115,7 @@ model Organization {
   website     String?
   
   // Billing
-  plan        Plan     @default(FREE)
+  plan        Plan     @default(INTERNAL)
   stripeCustomerId String?
   
   // Settings

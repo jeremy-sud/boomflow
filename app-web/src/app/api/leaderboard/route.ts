@@ -6,7 +6,7 @@ export async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams
     const type = searchParams.get('type') || 'badges' // badges | kudos_received | kudos_sent
-    const limit = Number.parseInt(searchParams.get('limit') || '10', 10)
+    const limit = Math.min(Math.max(Number.parseInt(searchParams.get('limit') || '10', 10), 1), 100)
 
     let leaderboard: Array<{
       rank: number

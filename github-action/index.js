@@ -13,8 +13,16 @@ const WORKSPACE_DIR = process.env.GITHUB_WORKSPACE || process.cwd();
 
 const REPO_BASE_URL =
   "https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets";
-const ORG_NAME = "SistemasUrsol";
-const ORG_URL = "https://www.ursol.com";
+
+// Read org name from action input, fallback to default
+let ORG_NAME = "SistemasUrsol";
+let ORG_URL = "https://www.ursol.com";
+try {
+  const inputOrg = core.getInput("org_name");
+  if (inputOrg) ORG_NAME = inputOrg;
+} catch {
+  // Running locally without action context
+}
 
 // Tier icons
 const TIER_ICON = {

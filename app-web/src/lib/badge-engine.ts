@@ -68,26 +68,34 @@ export class BadgeEngine {
       const shouldAward = this.checkTrigger(badge.triggerType, badge.triggerValue, stats)
       
       if (shouldAward) {
-        // Award badge
-        await prisma.userBadge.create({
-          data: {
-            userId,
-            badgeId: badge.id,
-            awardedBy: 'system',
-            reason: `Automatic achievement: ${badge.name}`,
-          }
-        })
+        // Award badge (handle race condition: another request may have awarded it already)
+        try {
+          await prisma.userBadge.create({
+            data: {
+              userId,
+              badgeId: badge.id,
+              awardedBy: 'system',
+              reason: `Automatic achievement: ${badge.name}`,
+            }
+          })
 
-        results.push({
-          awarded: true,
-          badge: {
-            id: badge.id,
-            name: badge.name,
-            slug: badge.slug,
-            tier: badge.tier,
-          },
-          reason: `You completed the requirement for ${badge.name}`,
-        })
+          results.push({
+            awarded: true,
+            badge: {
+              id: badge.id,
+              name: badge.name,
+              slug: badge.slug,
+              tier: badge.tier,
+            },
+            reason: `You completed the requirement for ${badge.name}`,
+          })
+        } catch (error: unknown) {
+          // P2002 = unique constraint violation (badge already awarded by concurrent request)
+          if (error instanceof Error && 'code' in error && (error as { code: string }).code === 'P2002') {
+            continue
+          }
+          throw error
+        }
       }
     }
 
@@ -122,25 +130,33 @@ export class BadgeEngine {
       const shouldAward = this.checkTrigger(badge.triggerType, badge.triggerValue, stats)
       
       if (shouldAward) {
-        await prisma.userBadge.create({
-          data: {
-            userId,
-            badgeId: badge.id,
-            awardedBy: 'system',
-            reason: `Automatic achievement: ${badge.name}`,
-          }
-        })
+        try {
+          await prisma.userBadge.create({
+            data: {
+              userId,
+              badgeId: badge.id,
+              awardedBy: 'system',
+              reason: `Automatic achievement: ${badge.name}`,
+            }
+          })
 
-        results.push({
-          awarded: true,
-          badge: {
-            id: badge.id,
-            name: badge.name,
-            slug: badge.slug,
-            tier: badge.tier,
-          },
-          reason: 'New badge unlocked!',
-        })
+          results.push({
+            awarded: true,
+            badge: {
+              id: badge.id,
+              name: badge.name,
+              slug: badge.slug,
+              tier: badge.tier,
+            },
+            reason: 'New badge unlocked!',
+          })
+        } catch (error: unknown) {
+          // P2002 = unique constraint violation (badge already awarded by concurrent request)
+          if (error instanceof Error && 'code' in error && (error as { code: string }).code === 'P2002') {
+            continue
+          }
+          throw error
+        }
       }
     }
 
@@ -501,24 +517,6 @@ export class BadgeEngine {
     const startOfYear = new Date(currentYear, 0, 1)
     const endOfYear = new Date(currentYear, 11, 31, 23, 59, 59)
 
-    const peerAwardsThisYear = await prisma.userBadge.count({
-      where: {
-        awardedBy: fromUserId,
-        badge: { triggerType: TriggerType.MANUAL_PEER_AWARD },
-        awardedAt: {
-          gte: startOfYear,
-          lte: endOfYear,
-        }
-      }
-    })
-
-    if (peerAwardsThisYear >= 2) {
-      return {
-        awarded: false,
-        reason: `You have used all 2 Resonance badges for ${currentYear}`,
-      }
-    }
-
     // Find the Resonance badge
     const resonanceBadge = await prisma.badge.findFirst({
       where: {
@@ -534,15 +532,42 @@ export class BadgeEngine {
       }
     }
 
-    // Award the badge
-    await prisma.userBadge.create({
-      data: {
-        userId: toUserId,
-        badgeId: resonanceBadge.id,
-        awardedBy: fromUserId,
-        reason: message,
+    // Use a transaction to atomically check limit + create award (prevents race condition)
+    try {
+      await prisma.$transaction(async (tx) => {
+        const peerAwardsThisYear = await tx.userBadge.count({
+          where: {
+            awardedBy: fromUserId,
+            badge: { triggerType: TriggerType.MANUAL_PEER_AWARD },
+            awardedAt: {
+              gte: startOfYear,
+              lte: endOfYear,
+            }
+          }
+        })
+
+        if (peerAwardsThisYear >= 2) {
+          throw new Error(`LIMIT_EXCEEDED:${currentYear}`)
+        }
+
+        await tx.userBadge.create({
+          data: {
+            userId: toUserId,
+            badgeId: resonanceBadge.id,
+            awardedBy: fromUserId,
+            reason: message,
+          }
+        })
+      })
+    } catch (error: unknown) {
+      if (error instanceof Error && error.message.startsWith('LIMIT_EXCEEDED:')) {
+        return {
+          awarded: false,
+          reason: `You have used all 2 Resonance badges for ${currentYear}`,
+        }
       }
-    })
+      throw error
+    }
 
     // Evaluate if the user now qualifies for cumulative peer award badges
     await this.evaluateTrigger(toUserId, TriggerType.PEER_AWARDS_COUNT)

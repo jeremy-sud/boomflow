@@ -72,56 +72,13 @@ router.patch('/me', authenticate, asyncHandler(async (req, res) => {
 }))
 
 /**
- * GET /api/users/:username
- * Get public profile
- */
-router.get('/:username', asyncHandler(async (req, res) => {
-  const user = await prisma.user.findUnique({
-    where: { username: req.params.username },
-    select: {
-      id: true,
-      username: true,
-      displayName: true,
-      avatarUrl: true,
-      bio: true,
-      createdAt: true,
-      organization: {
-        select: { name: true, slug: true }
-      },
-      team: {
-        select: { name: true }
-      },
-      _count: {
-        select: {
-          kudosReceived: true,
-          kudosGiven: true,
-          badges: true
-        }
-      }
-    }
-  })
-
-  if (!user) {
-    return res.status(404).json({ error: 'User not found' })
-  }
-
-  res.json({
-    ...user,
-    stats: {
-      kudosReceived: user._count.kudosReceived,
-      kudosGiven: user._count.kudosGiven,
-      badges: user._count.badges
-    },
-    _count: undefined
-  })
-}))
-
-/**
  * GET /api/users/leaderboard
  * Get top users by kudos received
+ * NOTE: Must be defined BEFORE /:username to avoid being shadowed
  */
 router.get('/leaderboard', optionalAuth, asyncHandler(async (req, res) => {
   const { period = 'all', limit = 10, category } = req.query
+  const sanitizedLimit = Math.min(Math.max(Number.parseInt(limit, 10) || 10, 1), 100)
 
   // Calculate date filter
   let dateFilter = {}
@@ -157,7 +114,7 @@ router.get('/leaderboard', optionalAuth, asyncHandler(async (req, res) => {
     where,
     _count: true,
     orderBy: { _count: { receiverId: 'desc' } },
-    take: Number.parseInt(limit, 10)
+    take: sanitizedLimit
   })
 
   // Get user details
@@ -198,6 +155,8 @@ router.get('/search', asyncHandler(async (req, res) => {
     return res.json([])
   }
 
+  const sanitizedLimit = Math.min(Math.max(Number.parseInt(limit, 10) || 10, 1), 50)
+
   const users = await prisma.user.findMany({
     where: {
       OR: [
@@ -211,10 +170,56 @@ router.get('/search', asyncHandler(async (req, res) => {
       displayName: true,
       avatarUrl: true
     },
-    take: Number.parseInt(limit, 10)
+    take: sanitizedLimit
   })
 
   res.json(users)
+}))
+
+/**
+ * GET /api/users/:username
+ * Get public profile
+ * NOTE: Must be defined AFTER /leaderboard and /search to avoid shadowing them
+ */
+router.get('/:username', asyncHandler(async (req, res) => {
+  const user = await prisma.user.findUnique({
+    where: { username: req.params.username },
+    select: {
+      id: true,
+      username: true,
+      displayName: true,
+      avatarUrl: true,
+      bio: true,
+      createdAt: true,
+      organization: {
+        select: { name: true, slug: true }
+      },
+      team: {
+        select: { name: true }
+      },
+      _count: {
+        select: {
+          kudosReceived: true,
+          kudosGiven: true,
+          badges: true
+        }
+      }
+    }
+  })
+
+  if (!user) {
+    return res.status(404).json({ error: 'User not found' })
+  }
+
+  res.json({
+    ...user,
+    stats: {
+      kudosReceived: user._count.kudosReceived,
+      kudosGiven: user._count.kudosGiven,
+      badges: user._count.badges
+    },
+    _count: undefined
+  })
 }))
 
 export default router

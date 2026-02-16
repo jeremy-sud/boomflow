@@ -37,14 +37,26 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       return token
     },
     async session({ session, user, token }) {
-      // Load full user data from Prisma
+      // Load full user data from Prisma (single optimized query)
       if (user) {
         const dbUser = await prisma.user.findUnique({
           where: { id: user.id },
-          include: {
-            badges: { include: { badge: true } },
-            organization: true,
-            team: true,
+          select: {
+            id: true,
+            username: true,
+            badges: {
+              select: {
+                badge: {
+                  select: { id: true, name: true, slug: true }
+                }
+              }
+            },
+            organization: {
+              select: { name: true }
+            },
+            team: {
+              select: { name: true }
+            },
           },
         });
         

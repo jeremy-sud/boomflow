@@ -8,14 +8,22 @@ export async function GET() {
     return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
   }
 
-  const stats = await GitHubSyncService.getStats(session.user.id)
-  const needsSync = await GitHubSyncService.needsSync(session.user.id)
+  try {
+    const stats = await GitHubSyncService.getStats(session.user.id)
+    const needsSync = await GitHubSyncService.needsSync(session.user.id)
 
-  return NextResponse.json({
-    stats,
-    needsSync,
-    lastSync: stats?.lastSyncAt,
-  })
+    return NextResponse.json({
+      stats,
+      needsSync,
+      lastSync: stats?.lastSyncAt,
+    })
+  } catch (error) {
+    console.error('GitHub stats fetch error:', error)
+    return NextResponse.json(
+      { error: 'Error fetching GitHub stats' },
+      { status: 500 }
+    )
+  }
 }
 
 export async function POST() {
@@ -43,7 +51,7 @@ export async function POST() {
   } catch (error) {
     console.error('GitHub sync error:', error)
     return NextResponse.json(
-      { error: 'Error syncing GitHub', details: String(error) },
+      { error: 'Error syncing GitHub' },
       { status: 500 }
     )
   }

@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { ACTIVITY_FEED, USERS, getBadgeById, getUserById, formatTimeAgo, Activity } from '@/lib/data';
 
 // Current user (mock)
-const CURRENT_USER = USERS.find(u => u.username === 'jeremy-sud')!;
+const CURRENT_USER = USERS.find(u => u.username === 'jeremy-sud') ?? USERS[0];
 
 type FilterType = 'all' | 'badges' | 'kudos' | 'milestones';
 
@@ -236,7 +236,7 @@ function ActivityCard({ activity }: ActivityCardProps) {
 
         {/* User Avatar */}
         <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold shrink-0">
-          {user?.displayName[0].toUpperCase()}
+          {user?.displayName?.[0]?.toUpperCase() ?? '?'}
         </div>
       </div>
     </div>

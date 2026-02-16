@@ -15,7 +15,7 @@ export async function GET(request: NextRequest) {
     }
 
     const searchParams = request.nextUrl.searchParams
-    const limit = Number.parseInt(searchParams.get('limit') || '20', 10)
+    const limit = Math.min(Math.max(Number.parseInt(searchParams.get('limit') || '20', 10), 1), 100)
     const unreadOnly = searchParams.get('unreadOnly') === 'true'
 
     const [notifications, unreadCount] = await Promise.all([

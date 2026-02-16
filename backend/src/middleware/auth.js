@@ -5,7 +5,10 @@
 import jwt from 'jsonwebtoken'
 import { prisma } from '../lib/prisma.js'
 
-const JWT_SECRET = process.env.JWT_SECRET || 'boomflow-secret-key-change-in-production'
+const JWT_SECRET = process.env.JWT_SECRET
+if (!JWT_SECRET) {
+  throw new Error('FATAL: JWT_SECRET environment variable is not set. Refusing to start with an insecure default.')
+}
 
 /**
  * Verify JWT token and attach user to request
