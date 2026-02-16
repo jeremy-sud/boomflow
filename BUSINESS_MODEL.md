@@ -17,7 +17,7 @@
 1. [Category Definition](#1-category-definition)
 2. [Open vs Pro Architecture](#2-open-vs-pro-architecture)
 3. [Active User Technical Control](#3-active-user-technical-control)
-4. [Pricing Structure](#4-pricing-structure)
+4. [Pricing Structure/ PLANS](#4-pricing-structure)
 5. [Value Ladder](#5-value-ladder)
 6. [90-Day ROI Demonstration](#6-90-day-roi-demonstration)
 7. [Strategic Implementation Model](#7-strategic-implementation-model)
