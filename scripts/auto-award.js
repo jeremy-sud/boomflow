@@ -24,6 +24,10 @@ const https = require('https');
 const USERS_DIR = path.join(__dirname, '../users');
 const CATALOG_PATH = path.join(__dirname, '../api-mock.json');
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN || process.env.GH_TOKEN;
+if (!GITHUB_TOKEN) {
+  console.error('❌ GITHUB_TOKEN or GH_TOKEN environment variable is required');
+  process.exit(1);
+}
 const ORG_REPOS = ['jeremy-sud/boomflow']; // Repositories to monitor
 
 // Console colors

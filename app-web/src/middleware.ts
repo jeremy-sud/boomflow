@@ -1,4 +1,14 @@
-export { auth as middleware } from "@/auth";
+import { auth } from "@/auth";
+import { NextResponse } from "next/server";
+
+export default auth((req) => {
+  // If user is not authenticated and not on login page, redirect to login
+  if (!req.auth && !req.nextUrl.pathname.startsWith('/login')) {
+    const loginUrl = new URL('/login', req.nextUrl.origin);
+    loginUrl.searchParams.set('callbackUrl', req.nextUrl.pathname);
+    return NextResponse.redirect(loginUrl);
+  }
+});
 
 // Protect all routes except login, api/auth and static assets
 export const config = {

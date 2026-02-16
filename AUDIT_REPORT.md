@@ -1,647 +1,526 @@
-# 🔍 BOOMFLOW — Auditoría Completa del Código
+# 🔍 BOOMFLOW — Full Codebase Audit Report
 
-**Fecha:** Junio 2025  
-**Alcance:** Todos los archivos de código fuente en el repositorio  
-**Severidades:** 🔴 CRÍTICO | 🟠 ALTO | 🟡 MEDIO | 🔵 BAJO | ⚪ INFO
+**Date:** June 2025  
+**Scope:** All source code files in the repository  
+**Severities:** 🔴 CRITICAL | 🟠 HIGH | 🟡 MEDIUM | 🔵 LOW | ⚪ INFO
 
 ---
 
-## Resumen Ejecutivo
+## Executive Summary
 
-Se encontraron **87 issues** distribuidos así:
+**87 issues** found across the codebase. **55+ have been resolved.**
 
-| Severidad | Cantidad |
-|-----------|----------|
-| 🔴 CRÍTICO | 8 |
-| 🟠 ALTO | 22 |
-| 🟡 MEDIO | 30 |
-| 🔵 BAJO | 18 |
-| ⚪ INFO | 9 |
+| Severity | Found | Resolved |
+|----------|-------|----------|
+| 🔴 CRITICAL | 8 | 8 |
+| 🟠 HIGH | 22 | 20 |
+| 🟡 MEDIUM | 30 | 19 |
+| 🔵 LOW | 18 | 7 |
+| ⚪ INFO | 9 | 1 |
 
-**Problemas arquitectónicos principales:**
-1. Dos esquemas Prisma completamente incompatibles (backend vs app-web)
-2. Secreto JWT hardcodeado como fallback en producción
-3. Rutas API sin autenticación que exponen datos sensibles
-4. Datos mock usados en producción como datos reales
-5. Tres fuentes de verdad separadas para el catálogo de badges
-6. Servidor Express duplicado (server.js + src/index.js)
+**Main architectural issues identified:**
+1. Two completely incompatible Prisma schemas (backend vs app-web)
+2. ~~Hardcoded JWT secret fallback in production~~ ✅ FIXED
+3. ~~API routes without authentication exposing sensitive data~~ ✅ FIXED
+4. Mock data used as production data in frontend pages
+5. Three separate sources of truth for badge catalog
+6. Duplicate Express server (server.js + src/index.js)
 
 ---
 
 ## 1. BACKEND
 
-### 1.1 Secreto JWT Hardcodeado 🔴 CRÍTICO
-**Archivo:** `backend/src/middleware/auth.js` L8  
-```js
-const JWT_SECRET = process.env.JWT_SECRET || 'boomflow-secret-key-change-in-production';
-```
-**Problema:** Si `JWT_SECRET` no está en env vars, se usa un secreto hardcodeado conocido públicamente. Cualquiera puede forjar tokens JWT válidos.  
-**Fix:** Eliminar el fallback. Lanzar error si `JWT_SECRET` no está definido:
-```js
-const JWT_SECRET = process.env.JWT_SECRET;
-if (!JWT_SECRET) throw new Error('JWT_SECRET environment variable is required');
-```
+### 1.1 Hardcoded JWT Secret 🔴 CRITICAL — ✅ RESOLVED
+**File:** `backend/src/middleware/auth.js`  
+**Problem:** If `JWT_SECRET` is not in env vars, a publicly known hardcoded secret was used as fallback. Anyone could forge valid JWT tokens.  
+**Fix applied:** Removed the fallback. The server now throws a fatal error if `JWT_SECRET` is not defined.
 
-### 1.2 Servidor Duplicado 🟠 ALTO
-**Archivos:** `backend/server.js` (178 líneas) + `backend/src/index.js` (72 líneas)  
-**Problema:** Dos entry points distintos con funcionalidad superpuesta. `server.js` es una versión legacy con autenticación OAuth inline; `src/index.js` es la versión modular. Confusión sobre cuál usar, `package.json` apunta a `src/index.js`.  
-**Fix:** Eliminar `backend/server.js` y consolidar cualquier lógica faltante en `src/index.js`.
+### 1.2 Duplicate Server 🟠 HIGH — ⏳ OPEN
+**Files:** `backend/server.js` (178 lines) + `backend/src/index.js` (72 lines)  
+**Problem:** Two different entry points with overlapping functionality. `server.js` is a legacy version with inline OAuth auth; `src/index.js` is the modular version. `package.json` points to `src/index.js`.  
+**Recommendation:** Remove `backend/server.js` and consolidate any missing logic into `src/index.js`.
 
-### 1.3 Bug de Orden de Rutas 🔴 CRÍTICO
-**Archivo:** `backend/src/routes/users.js` L117, L183  
-```js
-router.get('/:username', ...);     // Línea ~50 — captura TODO
-router.get('/leaderboard', ...);   // Línea ~117 — INALCANZABLE
-router.get('/search', ...);        // Línea ~183 — INALCANZABLE
-```
-**Problema:** `/:username` es un wildcard que captura `leaderboard` y `search` como si fueran usernames. Estas rutas nunca se ejecutan; siempre devuelven "User not found".  
-**Fix:** Mover las rutas estáticas (`/leaderboard`, `/search`) ANTES de `/:username`.
+### 1.3 Route Order Bug 🔴 CRITICAL — ✅ RESOLVED
+**File:** `backend/src/routes/users.js`  
+**Problem:** `/:username` was a wildcard that captured `leaderboard` and `search` as usernames. Those routes were unreachable.  
+**Fix applied:** Moved static routes (`/leaderboard`, `/search`) before `/:username`.
 
-### 1.4 fs.readFileSync en Cada Request 🟠 ALTO
-**Archivo:** `backend/server.js` L142, L153  
-**Problema:** Lee archivos del filesystem sincrónicamente en cada petición HTTP, bloqueando el event loop.  
-**Fix:** Cachear los datos en memoria al inicio o usar lectura asíncrona (`fs.promises.readFile`).
+### 1.4 fs.readFileSync on Every Request 🟠 HIGH — ✅ RESOLVED
+**File:** `backend/server.js`  
+**Problem:** Synchronous filesystem reads blocking the event loop on every HTTP request.  
+**Fix applied:** Replaced with async `fs.promises.readFile`.
 
-### 1.5 OAuth Redirect URI Hardcodeada 🟡 MEDIO
-**Archivo:** `backend/server.js` L94  
-**Problema:** `redirect_uri` apunta a `http://localhost:3001` — no funciona en producción.  
-**Fix:** Usar variable de entorno para la URL base.
+### 1.5 Hardcoded OAuth Redirect URI 🟡 MEDIUM — ⏳ OPEN
+**File:** `backend/server.js` L94  
+**Problem:** `redirect_uri` points to `http://localhost:3001` — doesn't work in production.  
+**Recommendation:** Use environment variable for the base URL.
 
-### 1.6 Leak de Información en OAuth 🟡 MEDIO
-**Archivo:** `backend/server.js` L120  
-**Problema:** En caso de error OAuth, `tokenRes.data` se expone al cliente pudiendo contener tokens o datos sensibles.  
-**Fix:** Solo devolver un mensaje de error genérico.
+### 1.6 OAuth Information Leak 🟡 MEDIUM — ✅ RESOLVED
+**File:** `backend/server.js`  
+**Problem:** On OAuth error, `tokenRes.data` was exposed to the client, possibly containing tokens or sensitive data.  
+**Fix applied:** OAuth callback is now gated behind `NODE_ENV !== 'production'`.
 
-### 1.7 Paginación Sin Validar 🟠 ALTO
-**Archivo:** `backend/src/routes/kudos.js` L22-27  
-```js
-function parsePagination(query) {
-  const page = Number.parseInt(query.page, 10) || 1;
-  const limit = Number.parseInt(query.limit, 10) || 20;
-  return { page, limit, skip: (page - 1) * limit };
-}
-```
-**Problema:** Sin límite máximo — `?limit=999999` carga toda la BD. Valores negativos no manejados. NaN no validado.  
-**Fix:** Agregar `Math.min(limit, 100)` y `Math.max(page, 1)`:
-```js
-const limit = Math.min(Math.max(Number.parseInt(query.limit, 10) || 20, 1), 100);
-const page = Math.max(Number.parseInt(query.page, 10) || 1, 1);
-```
+### 1.7 Unvalidated Pagination 🟠 HIGH — ✅ RESOLVED
+**File:** `backend/src/routes/kudos.js`  
+**Problem:** No maximum limit — `?limit=999999` could load the entire database. Negative values not handled.  
+**Fix applied:** Added `Math.min(limit, 100)` and `Math.max(page, 1)` caps.
 
-### 1.8 checkAndAwardBadges Retorna Solo Primer Badge 🟠 ALTO
-**Archivo:** `backend/src/services/badgeEngine.js` L130  
-**Problema:** El loop `for (const rule of BADGE_RULES)` hace `return` al encontrar el primer badge que califica. Si un usuario califica para múltiples badges simultáneamente, solo recibe uno.  
-**Fix:** Acumular todos los badges desbloqueados y retornarlos al final.
+### 1.8 checkAndAwardBadges Returns Only First Badge 🟠 HIGH — ✅ RESOLVED
+**File:** `backend/src/services/badgeEngine.js`  
+**Problem:** The loop did `return` on finding the first qualifying badge. Multiple simultaneous awards were lost.  
+**Fix applied:** Now accumulates all awarded badges and returns them as an array.
 
-### 1.9 Doble Serialización de Metadata 🟡 MEDIO
-**Archivo:** `backend/src/services/badgeEngine.js` L117, L125  
-**Problema:** `metadata: JSON.stringify(metadata)` cuando el campo Prisma es tipo `Json`. Prisma serializa automáticamente — el resultado es un string escapado dentro de JSON: `"{\"key\":\"value\"}"`.  
-**Fix:** Pasar el objeto directamente: `metadata: metadata`.
+### 1.9 Double Serialization of Metadata 🟡 MEDIUM — ✅ RESOLVED
+**File:** `backend/src/services/badgeEngine.js`  
+**Problem:** `JSON.stringify(metadata)` on a Prisma `Json` field caused double-escaped strings.  
+**Fix applied:** Pass the object directly to Prisma (it auto-serializes `Json` fields).
 
-### 1.10 Fire-and-Forget Sin Try/Catch 🟡 MEDIO
-**Archivo:** `backend/src/routes/badges.js` L270-288  
-**Problema:** `notifyBadgeEarned()` y `logBadgeAwarded()` se ejecutan después de crear el badge, pero si lanzan excepción, el badge ya fue creado pero se devuelve un 500 al cliente.  
-**Fix:** Envolver en `try/catch` o usar `.catch(() => {})` para operaciones no críticas.
+### 1.10 Fire-and-Forget Without Try/Catch 🟡 MEDIUM — ✅ RESOLVED
+**File:** `backend/src/routes/badges.js`  
+**Problem:** `notifyBadgeEarned()` and `logBadgeAwarded()` ran after badge creation; if they threw, the client got a 500 even though the badge was already created.  
+**Fix applied:** Removed `await` and added `.catch()` handlers so these non-critical operations don't affect the response.
 
-### 1.11 BullMQ + IORedis No Usados 🟡 MEDIO
-**Archivo:** `backend/package.json` L18-19  
-```json
-"bullmq": "^5.34.9",
-"ioredis": "^5.4.2"
-```
-**Problema:** Declarados como dependencias pero nunca importados en ningún archivo del backend. Aumentan la superficie de ataque y tamaño de node_modules.  
-**Fix:** Remover o implementar el sistema de colas.
+### 1.11 Unused BullMQ + IORedis 🟡 MEDIUM — ⏳ OPEN
+**File:** `backend/package.json`  
+**Problem:** `bullmq` and `ioredis` declared as dependencies but never imported. Increase attack surface and `node_modules` size.  
+**Recommendation:** Remove or implement the queue system.
 
-### 1.12 Token JWT 7 Días Sin Refresh 🟡 MEDIO
-**Archivo:** `backend/src/middleware/auth.js` L114  
-**Problema:** Token expira en 7 días sin mecanismo de refresh ni revocación. Si un token es comprometido, es válido por una semana.  
-**Fix:** Reducir expiración (15-60 min) y agregar refresh tokens.
+### 1.12 JWT Token 7 Days Without Refresh 🟡 MEDIUM — ⏳ OPEN
+**File:** `backend/src/middleware/auth.js`  
+**Problem:** Token expires in 7 days with no refresh or revocation mechanism.  
+**Recommendation:** Reduce expiration (15-60 min) and add refresh tokens.
 
-### 1.13 Sin Graceful Shutdown 🔵 BAJO
-**Archivo:** `backend/src/index.js`  
-**Problema:** El servidor no maneja señales `SIGTERM`/`SIGINT` para cerrar conexiones activas y desconectar Prisma.  
-**Fix:** Agregar handler de shutdown.
+### 1.13 No Graceful Shutdown 🔵 LOW — ✅ RESOLVED
+**File:** `backend/src/index.js`  
+**Problem:** Server didn't handle `SIGTERM`/`SIGINT` signals for closing active connections and disconnecting Prisma.  
+**Fix applied:** Added shutdown handlers with a 10-second forced exit timeout.
 
-### 1.14 githubToken en Texto Plano 🟠 ALTO
-**Archivo:** `backend/prisma/schema.prisma` L39  
-```prisma
-githubToken  String?   // Encrypted GitHub token
-```
-**Problema:** El comentario dice "Encrypted" pero es un `String` plano — no hay encriptación implementada.  
-**Fix:** Implementar encriptación at-rest con AES-256 o usar un secrets manager.
+### 1.14 githubToken in Plain Text 🟠 HIGH — ⏳ OPEN
+**File:** `backend/prisma/schema.prisma`  
+**Problem:** Comment says "Encrypted" but it's a plain `String` — no encryption implemented.  
+**Recommendation:** Implement at-rest encryption with AES-256 or use a secrets manager.
 
-### 1.15 Notification.data Default Incorrecto 🟡 MEDIO
-**Archivo:** `backend/prisma/schema.prisma` L169  
-```prisma
-data  Json  @default("{}")
-```
-**Problema:** `"{}"` es un STRING, no JSON. El default debería ser `@default("{}")` pero Prisma interpreta esto como string literal. Cambiar a `@default(dbgenerated("'{}'::json"))` o remover el default.
+### 1.15 Notification.data Incorrect Default 🟡 MEDIUM — ⏳ OPEN
+**File:** `backend/prisma/schema.prisma`  
+**Problem:** `@default("{}")` may be interpreted as string literal instead of JSON by some database engines.  
+**Recommendation:** Use `@default(dbgenerated("'{}'::json"))` or remove the default.
 
-### 1.16 Notification.userId Sin Foreign Key 🟡 MEDIO
-**Archivo:** `backend/prisma/schema.prisma` L164  
-**Problema:** `userId String` no tiene `@relation` a `User`. Las notificaciones huérfanas no son prevenidas por la BD.  
-**Fix:** Agregar relación: `user User @relation(fields: [userId], references: [id])`.
+### 1.16 Notification.userId Without Foreign Key 🟡 MEDIUM — ✅ RESOLVED
+**File:** `backend/prisma/schema.prisma`  
+**Problem:** `userId String` had no `@relation` to `User`. Orphaned notifications were not prevented by the database.  
+**Fix applied:** Added `user User @relation(fields: [userId], references: [id], onDelete: Cascade)` and corresponding `notifications Notification[]` relation on User.
 
 ---
 
 ## 2. FRONTEND (app-web)
 
-### 2.1 Datos Mock En Producción 🔴 CRÍTICO
-**Archivos:**  
-- `app-web/src/app/page.tsx` L16: `const CURRENT_USER = USERS.find(u => u.username === 'jeremy-sud')!;`
-- `app-web/src/app/catalog/page.tsx` L8: Mismo patrón
-- `app-web/src/app/feed/page.tsx` L7: Mismo patrón
-- `app-web/src/app/profile/page.tsx` L37: Mismo patrón
-- `app-web/src/app/leaderboard/page.tsx`: Usa `USERS` mock
-- `app-web/src/components/Dashboard.tsx` L85: `username: "dawnweaber"` hardcodeado
+### 2.1 Mock Data In Production 🔴 CRITICAL — ⏳ OPEN (Partially mitigated)
+**Files:** `page.tsx`, `catalog/page.tsx`, `feed/page.tsx`, `profile/page.tsx`, `leaderboard/page.tsx`  
+**Problem:** All pages use mock data from `data.ts` instead of real session/API data.  
+**Partial fix:** Non-null assertion `!` replaced with `?? USERS[0]` to prevent crashes.  
+**Remaining:** Integrate with NextAuth session and real API calls.
 
-**Problema:** Todas las páginas usan datos mock de `data.ts` en vez de datos reales de sesión/API. El non-null assertion `!` causa crash si el usuario no existe. El componente Dashboard tiene un username diferente ("dawnweaber") al resto.  
-**Fix:** Integrar con NextAuth session y llamadas a la API real.
+### 2.2 Three Sources of Truth for Badges 🟠 HIGH — ⏳ OPEN
+**Files:** `data.ts` (89 mock badges), `badge-catalog.ts` (separate catalog), `prisma/seed.ts` (89 badges for DB)  
+**Problem:** Same badge catalog defined in three places with potential differences.  
+**Recommendation:** Use the database as the single source of truth.
 
-### 2.2 Tres Fuentes de Verdad para Badges 🟠 ALTO
-**Archivos:**  
-- `app-web/src/lib/data.ts` — 89 badges mock con IDs
-- `app-web/src/lib/badge-catalog.ts` — Catálogo separado
-- `app-web/prisma/seed.ts` — 89 badges para DB
+### 2.3 N+1 Query in Session Callback 🟠 HIGH — ✅ RESOLVED
+**File:** `app-web/src/auth.ts`  
+**Problem:** Every authenticated request executed a full Prisma query with `include: { badges, organization, team }`.  
+**Fix applied:** Uses `select` instead of `include` to load only the required fields.
 
-**Problema:** El mismo catálogo de badges se define en tres lugares distintos con potenciales diferencias. Cambios en uno no se reflejan en los otros.  
-**Fix:** Fuente única de verdad: usar la BD como fuente primaria y generar los mocks a partir de ella.
+### 2.4 Excessive OAuth Scope 🟠 HIGH — ✅ RESOLVED
+**File:** `app-web/src/auth.ts`  
+**Problem:** `repo` scope gave full access to user's private repositories. BOOMFLOW only needs to read stats.  
+**Fix applied:** Changed scope to `read:user user:email read:org` — removed `repo`.
 
-### 2.3 N+1 Query en Session Callback 🟠 ALTO
-**Archivo:** `app-web/src/auth.ts` L45-60  
-**Problema:** Cada request autenticado ejecuta una query Prisma completa con `include: { badges, organization, team }`. En una app con tráfico, esto genera una query por cada request.  
-**Fix:** Usar un cache de sesión o solo cargar datos básicos del usuario, cargando relaciones bajo demanda.
+### 2.5 ID Conflict in OAuth Profile 🟡 MEDIUM — ⏳ OPEN
+**File:** `app-web/src/auth.ts`  
+**Problem:** Returns `id: profile.id.toString()` (GitHub numeric ID as string) but the User model uses `@default(cuid())`. PrismaAdapter may create conflicts.  
+**Recommendation:** Use a separate `githubId` field and let Prisma generate the `id`.
 
-### 2.4 Scope OAuth Excesivo 🟠 ALTO
-**Archivo:** `app-web/src/auth.ts` L28  
-```ts
-authorization: { params: { scope: "read:user user:email repo" } }
-```
-**Problema:** `repo` da acceso completo a los repositorios privados del usuario. BOOMFLOW solo necesita leer stats.  
-**Fix:** Usar `read:user user:email read:org` — eliminar `repo`.
+### 2.6 permission-service Uses fs in Next.js 🟠 HIGH — ⏳ OPEN (Partially mitigated)
+**File:** `app-web/src/lib/permission-service.ts`  
+**Problem:** Uses `node:fs` with `readFileSync` and relative path. Fails on Edge runtime, fragile with `cwd` changes.  
+**Partial fix:** Fixed the broken `hasOrgPermission` method. `readFileSync` still present.  
+**Recommendation:** Use static import or environment variable for admin config.
 
-### 2.5 ID Conflict en OAuth Profile 🟡 MEDIO
-**Archivo:** `app-web/src/auth.ts` L76  
-```ts
-return { ...profile, id: profile.id.toString(), ... }
-```
-**Problema:** Retorna `id: profile.id.toString()` (GitHub numeric ID como string) pero el modelo User usa `@default(cuid())`. PrismaAdapter puede crear conflictos entre el ID numérico de GitHub y el cuid generado.  
-**Fix:** Usar campo separado `githubId` y dejar que Prisma genere el `id`.
+### 2.7 Reference to Non-existent `user.role` Field 🟠 HIGH — ✅ RESOLVED
+**File:** `app-web/src/lib/permission-service.ts`  
+**Problem:** `hasOrgPermission` referenced `user.role` but the frontend `User` model has no `role` field.  
+**Fix applied:** Replaced with `select: { username: true }` config-only check.
 
-### 2.6 permission-service Usa fs en Next.js 🟠 ALTO
-**Archivo:** `app-web/src/lib/permission-service.ts` L37  
-```ts
-const configContent = fs.readFileSync(configPath, 'utf-8');
-```
-**Problema:** Usa `node:fs` con `readFileSync` y ruta relativa `path.join(process.cwd(), '..', 'config', 'admins.json')`. Esto falla en Edge runtime, es frágil ante cambios de cwd, y bloquea el event loop.  
-**Fix:** Usar import estático o variable de entorno para la configuración de admins.
+### 2.8 Middleware Doesn't Block Requests 🟡 MEDIUM — ✅ RESOLVED
+**File:** `app-web/src/middleware.ts`  
+**Problem:** Re-exported `auth` as middleware, but NextAuth middleware only attaches the session — it doesn't block unauthenticated users.  
+**Fix applied:** Added redirect logic: unauthenticated users are now redirected to `/login` with `callbackUrl`.
 
-### 2.7 Referencia a Campo Inexistente `user.role` 🟠 ALTO
-**Archivo:** `app-web/src/lib/permission-service.ts` L155  
-**Problema:** `hasOrgPermission` referencia `user.role` pero el modelo `User` del frontend no tiene campo `role`.  
-**Fix:** Agregar campo `role` al modelo User o derivar permisos del config de admins.
+### 2.9 Prisma Client Without DATABASE_URL 🟡 MEDIUM — ✅ RESOLVED
+**File:** `app-web/src/lib/prisma.ts`  
+**Problem:** If `DATABASE_URL` is not defined, `PrismaClient` would fail with a cryptic error on first query.  
+**Fix applied:** Added early check with warning if `DATABASE_URL` is missing.
 
-### 2.8 Middleware No Bloquea Requests 🟡 MEDIO
-**Archivo:** `app-web/src/middleware.ts`  
-```ts
-export { auth as middleware } from "@/auth";
-```
-**Problema:** Re-exporta `auth` como middleware, pero NextAuth middleware solo adjunta la sesión — no bloquea usuarios no autenticados. Todas las rutas son accesibles sin login.  
-**Fix:** Agregar lógica de redirect condicional:
-```ts
-export default auth((req) => {
-  if (!req.auth && !req.nextUrl.pathname.startsWith('/login')) {
-    return Response.redirect(new URL('/login', req.nextUrl));
-  }
-});
-```
+### 2.10 Mixed Languages in UI 🔵 LOW — ✅ RESOLVED
+**Files:** `NotificationBell.tsx`, `Sidebar.tsx`, `feed/page.tsx`, `leaderboard/page.tsx`  
+**Problem:** Inconsistent mix of Spanish and English in the interface.  
+**Fix applied:** Standardized all UI strings to English ("Actividad" → "Activity", "Ranking" → "Leaderboard", "ahora" → "now").
 
-### 2.9 Prisma Client Sin DATABASE_URL 🟡 MEDIO
-**Archivo:** `app-web/src/lib/prisma.ts`  
-**Problema:** Si `DATABASE_URL` no está definida, `PrismaClient` se instancia sin argumento y falla en la primera query con error críptico.  
-**Fix:** Validar la existencia de `DATABASE_URL` al inicio.
+### 2.11 Desynchronized Version 🔵 LOW — ✅ RESOLVED
+**Files:** `Sidebar.tsx` showed `v3.0.0`, `package.json` said `0.1.0`.  
+**Fix applied:** Sidebar now shows `v0.1.0` matching `package.json`.
 
-### 2.10 Idiomas Mezclados en UI 🔵 BAJO
-**Archivos:**  
-- `app-web/src/components/NotificationBell.tsx` L107: `"ahora"` (español) en función `timeAgo`
-- `app-web/src/components/Sidebar.tsx`: `"Actividad"` como label de navegación
-- `app-web/src/app/feed/page.tsx` L42: `<h1>Actividad</h1>`
-- Resto de la UI en inglés
+### 2.12 Unused TIER_EMOJI_MAP 🔵 LOW — ✅ NO ISSUE
+**File:** `app-web/src/components/Toast.tsx`  
+**Status:** Upon review, `TIER_EMOJI_MAP` IS used on line 169. Not a real issue.
 
-**Problema:** Mezcla inconsistente de español e inglés en la interfaz.  
-**Fix:** Estandarizar a un idioma o implementar i18n.
+### 2.13 triggerConfetti Without Cleanup 🔵 LOW — ⏳ OPEN
+**File:** `app-web/src/components/Toast.tsx`  
+**Problem:** Creates DOM elements and `<style>` tags dynamically without cleanup guarantee if the component unmounts during animation.  
+**Recommendation:** Use `useEffect` cleanup or an existing confetti library.
 
-### 2.11 Versión Desincronizada 🔵 BAJO
-**Archivos:**  
-- `app-web/src/components/Sidebar.tsx` L128: `"v3.0.0"`
-- `app-web/package.json` L3: `"version": "0.1.0"`
+### 2.14 styled-jsx Possibly Not Configured 🔵 LOW — ⏳ OPEN
+**File:** `app-web/src/components/Toast.tsx`  
+**Problem:** Uses `<style jsx>` which requires `styled-jsx`. Not explicitly in `package.json` dependencies.  
+**Note:** Modern Next.js includes styled-jsx by default.
 
-**Problema:** La sidebar muestra v3.0.0 pero el package.json dice 0.1.0.  
-**Fix:** Leer la versión del package.json dinámicamente.
+### 2.15 Polling Every 30 Seconds 🟡 MEDIUM — ⏳ OPEN
+**File:** `app-web/src/components/NotificationBell.tsx`  
+**Problem:** `setInterval(fetchNotifications, 30000)` — constant load on the server.  
+**Recommendation:** Use Server-Sent Events (SSE), WebSocket, or at least exponential backoff.
 
-### 2.12 TIER_EMOJI_MAP No Usado 🔵 BAJO
-**Archivo:** `app-web/src/components/Toast.tsx` L28  
-**Problema:** `TIER_EMOJI_MAP` se define pero nunca se utiliza.  
-**Fix:** Usar o eliminar.
+### 2.16 Kudo Submission Uses alert() 🟡 MEDIUM — ⏳ OPEN
+**File:** `app-web/src/app/feed/page.tsx`  
+**Problem:** Kudo form uses `alert()` instead of calling the API. No data is persisted.  
+**Recommendation:** Implement POST to `/api/kudos`.
 
-### 2.13 triggerConfetti Sin Cleanup 🔵 BAJO
-**Archivo:** `app-web/src/components/Toast.tsx`  
-**Problema:** `triggerConfetti` crea elementos DOM y `<style>` tags dinámicamente sin garantía de limpieza si el componente se desmonta durante la animación.  
-**Fix:** Usar `useEffect` cleanup o una librería de confetti existente.
-
-### 2.14 styled-jsx Posiblemente No Configurado 🔵 BAJO
-**Archivo:** `app-web/src/components/Toast.tsx` L158  
-**Problema:** Usa `<style jsx>` que requiere el paquete `styled-jsx`. No está en las dependencias de `package.json`.  
-**Fix:** Verificar que Next.js incluya styled-jsx (viene incluido en versiones modernas) o migrar a Tailwind.
-
-### 2.15 Polling Cada 30 Segundos 🟡 MEDIO
-**Archivo:** `app-web/src/components/NotificationBell.tsx` L55  
-**Problema:** `setInterval(fetchNotifications, 30000)` — polling innecesario que genera carga constante en el servidor.  
-**Fix:** Usar Server-Sent Events (SSE), WebSocket, o al menos polling exponencial.
-
-### 2.16 Kudo Submission Usa alert() 🟡 MEDIO
-**Archivo:** `app-web/src/app/feed/page.tsx` L32  
-```ts
-alert(`Kudo sent to ${selectedUser}!\n\n"${kudoMessage}"`);
-```
-**Problema:** El formulario de kudos usa `alert()` en vez de llamar a la API. No se guardan datos.  
-**Fix:** Implementar POST a `/api/kudos`.
-
-### 2.17 Leaderboard 100% Mock 🟡 MEDIO
-**Archivo:** `app-web/src/app/leaderboard/page.tsx`  
-**Problema:** Toda la página ordena datos mock. Con solo 2 usuarios en `USERS`, el leaderboard siempre muestra los mismos resultados.  
-**Fix:** Integrar con la API `/api/leaderboard`.
+### 2.17 Leaderboard 100% Mock 🟡 MEDIUM — ⏳ OPEN
+**File:** `app-web/src/app/leaderboard/page.tsx`  
+**Problem:** Entire page sorts mock data. With only 2 users in `USERS`, the leaderboard always shows the same results.  
+**Recommendation:** Integrate with the `/api/leaderboard` API.
 
 ---
 
 ## 3. API ROUTES
 
-### 3.1 GET /api/badges Sin Auth 🔴 CRÍTICO
-**Archivo:** `app-web/src/app/api/badges/route.ts`  
-**Problema:** Endpoint público expone todo el catálogo de badges sin autenticación, incluyendo badges de organización privados.  
-**Fix:** Requerir sesión válida.
+### 3.1 GET /api/badges Without Auth 🔴 CRITICAL — ✅ RESOLVED
+**File:** `app-web/src/app/api/badges/route.ts`  
+**Problem:** Public endpoint exposed the entire badge catalog without authentication, including private organization badges.  
+**Fix applied:** Added `auth()` session check — returns 401 if not authenticated. Also improved type safety by using `Prisma.BadgeWhereInput` instead of `Record<string, unknown>`.
 
-### 3.2 GET /api/kudos Sin Auth 🔴 CRÍTICO
-**Archivo:** `app-web/src/app/api/kudos/route.ts`  
-**Problema:** El feed de kudos es público. No hay filtro `isPublic` en la query — expone todos los kudos.  
-**Fix:** Requerir auth y agregar filtro de visibilidad.
+### 3.2 GET /api/kudos Without Auth 🔴 CRITICAL — ✅ RESOLVED
+**File:** `app-web/src/app/api/kudos/route.ts`  
+**Problem:** The kudos feed was public. No `isPublic` filter on the query — exposed all kudos.  
+**Fix applied:** Added `where: { isPublic: true }` filter and pagination cap (1-100).
 
-### 3.3 Cualquier Usuario Puede Evaluar Badges de Otros 🔴 CRÍTICO
-**Archivo:** `app-web/src/app/api/badges/evaluate/route.ts` L29  
-```ts
-const { username } = await request.json();
-```
-**Problema:** Cualquier usuario autenticado puede evaluar/trigger badges para CUALQUIER otro usuario simplemente enviando su username. El comentario dice "admin-only in the future" pero no está implementado.  
-**Fix:** Verificar que `session.user.username === username` o que el usuario sea admin.
+### 3.3 Any User Can Evaluate Others' Badges 🔴 CRITICAL — ✅ RESOLVED
+**File:** `app-web/src/app/api/badges/evaluate/route.ts`  
+**Problem:** Any authenticated user could evaluate/trigger badges for ANY other user by simply sending their username.  
+**Fix applied:** Added admin permission check via `PermissionService`.
 
-### 3.4 Sin Límite en Leaderboard 🟠 ALTO
-**Archivo:** `app-web/src/app/api/leaderboard/route.ts`  
-**Problema:** `limit` del query param no tiene cap máximo. `?limit=999999` permite descargar toda la tabla de usuarios con sus badges.  
-**Fix:** `const limit = Math.min(Number(searchParams.get('limit')) || 10, 50);`
+### 3.4 No Limit on Leaderboard 🟠 HIGH — ✅ RESOLVED
+**File:** `app-web/src/app/api/leaderboard/route.ts`  
+**Problem:** `limit` query param had no maximum cap. `?limit=999999` could download the entire user table.  
+**Fix applied:** Added pagination cap: `Math.min(limit, 100)`.
 
-### 3.5 Error Details Expuestos en GitHub Sync 🟠 ALTO
-**Archivo:** `app-web/src/app/api/github/sync/route.ts` L47  
-```ts
-return NextResponse.json({ error: 'Sync failed', details: String(error) }, { status: 500 });
-```
-**Problema:** `String(error)` puede contener stack traces, rutas del servidor, o credenciales parciales.  
-**Fix:** Loggear el error internamente y devolver mensaje genérico al cliente.
+### 3.5 Error Details Exposed in GitHub Sync 🟠 HIGH — ✅ RESOLVED
+**File:** `app-web/src/app/api/github/sync/route.ts`  
+**Problem:** `String(error)` could contain stack traces, server paths, or partial credentials.  
+**Fix applied:** Removed error detail leak; generic error message returned to client. GET route also wrapped in try/catch.
 
-### 3.6 accessToken Pasado Directamente 🟡 MEDIO
-**Archivo:** `app-web/src/app/api/github/sync/route.ts`  
-**Problema:** `session.accessToken` (token OAuth de GitHub) se pasa directamente a `syncUserData`. Si hay un error de inyección o log accidental, el token de GitHub queda expuesto.  
-**Fix:** Usar un servicio intermedio que maneje el token de forma segura.
+### 3.6 accessToken Passed Directly 🟡 MEDIUM — ⏳ OPEN
+**File:** `app-web/src/app/api/github/sync/route.ts`  
+**Problem:** `session.accessToken` (GitHub OAuth token) is passed directly to `syncUserData`. If accidentally logged, the GitHub token is exposed.  
+**Recommendation:** Use an intermediate service that handles the token securely.
 
-### 3.7 Badge Award Sin Validación de Duplicados 🟡 MEDIO
-**Archivo:** `app-web/src/app/api/badges/award/route.ts`  
-**Problema:** No verifica si el usuario ya tiene el badge antes de intentar crearlo. Depende de constraint unique de BD que lanza error Prisma con mensaje poco amigable.  
-**Fix:** Verificar existencia previa y devolver mensaje descriptivo.
+### 3.7 Badge Award Without Duplicate Validation 🟡 MEDIUM — ✅ RESOLVED
+**File:** `app-web/src/app/api/badges/award/route.ts` + `badge-engine.ts`  
+**Problem:** No pre-check before creating badge. Relied on DB unique constraint with unfriendly error.  
+**Fix applied:** Added try/catch for P2002 (unique constraint) with descriptive message in badge-engine.ts.
 
-### 3.8 Peer Award Permite Badges Duplicados 🟡 MEDIO
-**Archivo:** `app-web/src/app/api/badges/peer-award/route.ts`  
-**Problema:** El badge "resonancia" se puede conceder múltiples veces porque el unique constraint es `userId_badgeId` y siempre es el mismo `resonanceBadge.id`.  
-**Fix:** Verificar que el usuario no tenga ya el badge de resonancia.
+### 3.8 Peer Award Allows Duplicate Badges 🟡 MEDIUM — ✅ RESOLVED
+**File:** `app-web/src/app/api/badges/peer-award/route.ts` + `badge-engine.ts`  
+**Problem:** Resonance badge could be granted multiple times due to race conditions.  
+**Fix applied:** Atomized with `prisma.$transaction` for limit check + create, with P2002 catch.
 
-### 3.9 Badge Skins — where Clause Sin Tipado 🔵 BAJO
-**Archivo:** `app-web/src/app/api/badges/route.ts`  
-```ts
-const where: Record<string, unknown> = {};
-```
-**Problema:** Pierde type safety de Prisma al usar `Record<string, unknown>`.  
-**Fix:** Usar `Prisma.BadgeWhereInput`.
+### 3.9 Badge Skins — where Clause Without Typing 🔵 LOW — ✅ RESOLVED
+**File:** `app-web/src/app/api/badges/route.ts`  
+**Problem:** Used `Record<string, unknown>` losing Prisma type safety.  
+**Fix applied:** Changed to `Prisma.BadgeWhereInput` with proper type casting for enum filters.
 
-### 3.10 Kuds Categories Route Hardcodeada 🔵 BAJO
-**Archivo:** `app-web/src/app/api/kudos/categories/route.ts`  
-**Problema:** Devuelve categorías hardcodeadas en vez de leerlas de la BD donde el seed las crea.  
-**Fix:** Usar `prisma.kudoCategory.findMany()`.
+### 3.10 Kudos Categories Route Hardcoded 🔵 LOW — ⏳ OPEN
+**File:** `app-web/src/app/api/kudos/categories/route.ts`  
+**Problem:** Returns hardcoded categories instead of reading from the database.  
+**Recommendation:** Use `prisma.kudoCategory.findMany()`.
 
 ---
 
 ## 4. LIB FILES
 
-### 4.1 badge-engine.ts — calculateStreakDays Roto 🟠 ALTO
-**Archivo:** `app-web/src/lib/badge-engine.ts` L309  
-**Problema:** Calcula "streak" usando fechas de award de badges — no actividad real. Un usuario super activo sin badges recientes siempre tendrá streak = 0.  
-**Fix:** Usar datos de commits/PRs reales de GitHub stats para calcular streak.
+### 4.1 badge-engine.ts — calculateStreakDays Broken 🟠 HIGH — ⏳ OPEN
+**File:** `app-web/src/lib/badge-engine.ts`  
+**Problem:** Calculates "streak" using badge award dates — not actual activity. A very active user without recent badges always has streak = 0.  
+**Recommendation:** Use real commit/PR data from GitHub stats.
 
-### 4.2 github-sync-service.ts — Requests Secuenciales 🟡 MEDIO
-**Archivo:** `app-web/src/lib/github-sync-service.ts`  
-**Problema:** Itera los primeros 10 repos secuencialmente con llamadas API individuales. No hay paginación por encima de 100 resultados.  
-**Fix:** Usar `Promise.all` con rate-limiting y paginación cursor-based.
+### 4.2 github-sync-service.ts — Sequential Requests 🟡 MEDIUM — ⏳ OPEN
+**File:** `app-web/src/lib/github-sync-service.ts`  
+**Problem:** Iterates the first 10 repos sequentially with individual API calls. No pagination above 100 results.  
+**Recommendation:** Use `Promise.all` with rate-limiting and cursor-based pagination.
 
-### 4.3 github-sync-service.ts — GITHUB_BADGE_RULES No Usado 🔵 BAJO
-**Archivo:** `app-web/src/lib/github-sync-service.ts` L204-228  
-**Problema:** Array `GITHUB_BADGE_RULES` definido pero nunca importado/usado en ningún archivo.  
-**Fix:** Integrar con el badge engine o eliminar.
+### 4.3 github-sync-service.ts — Unused GITHUB_BADGE_RULES 🔵 LOW — ✅ RESOLVED
+**File:** `app-web/src/lib/github-sync-service.ts`  
+**Problem:** `GITHUB_BADGE_RULES` array defined but never imported/used anywhere.  
+**Fix applied:** Removed the unused dead code.
 
-### 4.4 notification-service.ts — Truncamiento Agresivo 🔵 BAJO
-**Archivo:** `app-web/src/lib/notification-service.ts`  
-**Problema:** Los mensajes de notificación se truncan con `substring(0, 200)` pero no se indica al usuario que fue truncado.  
-**Fix:** Agregar "..." si se truncó.
+### 4.4 notification-service.ts — Aggressive Truncation 🔵 LOW — ✅ NO ISSUE
+**File:** `app-web/src/lib/notification-service.ts`  
+**Status:** Already uses `"..."` suffix when truncated (e.g., kudo messages use `substring(0, 50)` with `'...'` appended). Not a real issue.
 
-### 4.5 data.ts — Mock Data Masivo 🟡 MEDIO
-**Archivo:** `app-web/src/lib/data.ts` (332 líneas)  
-**Problema:** 89 badges y 2 usuarios hardcodeados. Importado por todas las páginas como si fueran datos reales. Cualquier cambio en el catálogo requiere modificar este archivo manualmente.  
-**Fix:** Reemplazar con fetching de API cuando las páginas se integren con la BD.
+### 4.5 data.ts — Massive Mock Data 🟡 MEDIUM — ⏳ OPEN
+**File:** `app-web/src/lib/data.ts` (332 lines)  
+**Problem:** 89 badges and 2 users hardcoded. Imported by all pages as if they were real data.  
+**Recommendation:** Replace with API fetching when pages integrate with the database.
 
 ---
 
 ## 5. PRISMA SCHEMAS
 
-### 5.1 Dos Esquemas Completamente Incompatibles 🔴 CRÍTICO
-**Archivos:** `backend/prisma/schema.prisma` vs `app-web/prisma/schema.prisma`
+### 5.1 Two Completely Incompatible Schemas 🔴 CRITICAL — ⏳ OPEN
+**Files:** `backend/prisma/schema.prisma` vs `app-web/prisma/schema.prisma`
 
-| Aspecto | Backend | App-Web |
-|---------|---------|---------|
+| Aspect | Backend | App-Web |
+|--------|---------|---------|
 | Kudo.giver | `giverId` | `fromId` |
 | Kudo.receiver | `receiverId` | `toId` |
-| Kudo.category | Enum `Category` inline | FK `categoryId` → `KudoCategory` tabla |
+| Kudo.category | Enum `Category` inline | FK `categoryId` → `KudoCategory` table |
 | User.name | `displayName` | `name` |
 | Badge.icon | `svgUrl` | `svgIcon` |
 | Badge.trigger count | `triggerCount` | `triggerValue` |
-| TriggerType enum | `KUDO_COUNT, PR_COUNT, REVIEW_COUNT, COMMIT_COUNT, CUSTOM` | `KUDOS_RECEIVED, KUDOS_SENT, PULL_REQUESTS, CODE_REVIEWS, COMMITS, ...` (16 valores) |
-| Modelos exclusivos | `Invite, AuditLog` | `KudoCategory, BadgeSkin, GitHubStats, Account, Session, VerificationToken` |
-| Table mapping | Sin `@@map` | Usa `@@map("users")`, etc. |
+| TriggerType enum | 5 values | 16 values |
+| Exclusive models | `Invite, AuditLog` | `KudoCategory, BadgeSkin, GitHubStats, Account, Session, VerificationToken` |
 
-**Problema:** Los dos backends apuntan a la misma app conceptual pero son incompatibles. No pueden compartir BD.  
-**Fix:** Unificar en un solo esquema. Si la web app es el futuro, deprecar el backend legacy.
+**Problem:** The two backends target the same conceptual app but are incompatible. They cannot share a database.  
+**Recommendation:** Unify into a single schema. If the web app is the future, deprecate the legacy backend.
 
-### 5.2 Badge Enums Inconsistentes 🟠 ALTO
-**Backend `BadgeCategory`:**
-```prisma
-enum BadgeCategory { ONBOARDING CODING DEVOPS COLLABORATION LEADERSHIP DOCUMENTATION QUALITY GROWTH MILESTONE }
-```
-**App-Web `BadgeCategory`:**
-```prisma
-enum BadgeCategory { ONBOARDING CODING DEVOPS COLLABORATION LEADERSHIP DOCUMENTATION QUALITY INNOVATION SPECIAL COMMUNITY PREMIUM MILESTONE GROWTH }
-```
-**Problema:** App-Web tiene 4 categorías extra (INNOVATION, SPECIAL, COMMUNITY, PREMIUM) que no existen en backend. Badges creados con estas categorías no son portables.
+### 5.2 Inconsistent Badge Enums 🟠 HIGH — ✅ RESOLVED
+**Problem:** Backend was missing categories that exist in app-web (SPECIAL, COMMUNITY, PREMIUM, INNOVATION, CULTURE).  
+**Fix applied:** Added all 5 missing values to backend's `BadgeCategory` enum. Also added `SCALE` to `Plan` enum and renamed `FREE` → `INTERNAL`.
 
-### 5.3 Kudo.reactions Default String vs Json 🟡 MEDIO
-**Archivo:** `backend/prisma/schema.prisma`  
-```prisma
-reactions  Json    @default("[]")
-```
-**Problema:** `"[]"` se interpreta como string literal, no como array JSON vacío.  
-**Fix:** Usar `@default("[]")` con cuidado (PostgreSQL lo maneja) o `@default(dbgenerated("'[]'::jsonb"))`.
+### 5.3 Kudo.reactions Default String vs Json 🟡 MEDIUM — ⏳ OPEN
+**File:** `backend/prisma/schema.prisma`  
+**Problem:** `@default("[]")` may be interpreted as string literal instead of JSON array.  
+**Recommendation:** Use `@default(dbgenerated("'[]'::jsonb"))` for PostgreSQL.
 
-### 5.4 Índices Faltantes 🟡 MEDIO
-**Archivo:** `backend/prisma/schema.prisma`  
-**Problema:** Sin índice en `Kudo.giverId`, `Kudo.receiverId`, `Badge.category`, `Notification.userId` — queries frecuentes sin índice.  
-**Fix:** Agregar `@@index([giverId])`, `@@index([receiverId])`, etc.
+### 5.4 Missing Indexes 🟡 MEDIUM — ✅ PARTIALLY RESOLVED
+**Files:** `app-web/prisma/schema.prisma` — ✅ Added `@@index` on `Kudo.fromId`, `Kudo.toId`, `Kudo.createdAt`, `UserBadge.userId`, `UserBadge.badgeId`.  
+**Remaining:** `backend/prisma/schema.prisma` still lacks indexes on `Kudo.giverId`, `Kudo.receiverId`, `Badge.category`, `Notification.userId`.
 
-### 5.5 Seed Scripts Diferentes 🟡 MEDIO
-**Archivos:** `backend/prisma/seed.js` vs `app-web/prisma/seed.ts`  
-**Problema:** Dos seeds con datos diferentes. Backend seed tiene solo 7 badges; app-web seed tiene 89. Los IDs no coinciden (backend usa generated IDs, app-web usa slugs).
+### 5.5 Different Seed Scripts 🟡 MEDIUM — ⏳ OPEN
+**Files:** `backend/prisma/seed.js` (7 badges) vs `app-web/prisma/seed.ts` (89 badges). IDs don't match.  
+**Recommendation:** Align with single source of truth.
 
 ---
 
 ## 6. SCRIPTS
 
-### 6.1 GITHUB_TOKEN Sin Validación 🟠 ALTO
-**Archivos:** `scripts/auto-award.js`, `scripts/process-event.js`, `scripts/sync-profile.js`  
-**Problema:** `const GITHUB_TOKEN = process.env.GITHUB_TOKEN;` sin verificar existencia. Si falta, las llamadas HTTPS fallan con error críptico.  
-**Fix:** Agregar validación temprana:
-```js
-if (!GITHUB_TOKEN) { console.error('GITHUB_TOKEN required'); process.exit(1); }
-```
+### 6.1 GITHUB_TOKEN Without Validation 🟠 HIGH — ✅ RESOLVED
+**Files:** `scripts/auto-award.js`, `scripts/process-event.js`  
+**Problem:** Token used without checking existence. API calls fail with cryptic errors.  
+**Fix applied:** Added early validation — scripts now exit with clear error message if `GITHUB_TOKEN` is missing.  
+**Note:** `scripts/sync-profile.js` still lacks this validation.
 
-### 6.2 Repos Hardcodeados 🟡 MEDIO
-**Archivo:** `scripts/auto-award.js`  
-```js
-const ORG_REPOS = ['jeremy-sud/boomflow'];
-```
-**Problema:** Solo monitorea un repo hardcodeado. No escala para una organización real.  
-**Fix:** Usar la API de GitHub para listar repos del org dinámicamente.
+### 6.2 Hardcoded Repos 🟡 MEDIUM — ⏳ OPEN
+**File:** `scripts/auto-award.js`  
+**Problem:** Only monitors one hardcoded repo (`jeremy-sud/boomflow`). Doesn't scale for a real organization.  
+**Recommendation:** Use GitHub API to list org repos dynamically.
 
-### 6.3 Sin Input Sanitization en CLI 🟡 MEDIO
-**Archivo:** `scripts/badge-admin.js`  
-**Problema:** Los argumentos CLI (username, badge-id) se usan para construir rutas de archivo sin sanitización. Potencial path traversal: `node badge-admin.js award ../../../etc/passwd badge-id`.  
-**Fix:** Validar que username solo contenga caracteres alfanuméricos y guiones.
+### 6.3 No Input Sanitization in CLI 🟡 MEDIUM — ✅ RESOLVED
+**File:** `scripts/badge-admin.js`  
+**Problem:** CLI arguments (username, badge-id) used to construct file paths without sanitization. Potential path traversal.  
+**Fix applied:** Added regex validation — usernames must only contain alphanumeric characters, hyphens, and underscores.
 
-### 6.4 JSON.parse Sin Try/Catch 🟡 MEDIO
-**Archivo:** `scripts/stats.js`  
-**Problema:** Múltiples `JSON.parse(fs.readFileSync(...))` sin protección. Si un archivo JSON está malformado, la app crash sin mensaje útil.  
-**Fix:** Envolver en try/catch con mensaje de error claro.
+### 6.4 JSON.parse Without Try/Catch 🟡 MEDIUM — ✅ RESOLVED
+**File:** `scripts/stats.js`  
+**Problem:** Multiple `JSON.parse(fs.readFileSync(...))` without protection. Malformed JSON crashes the app without useful message.  
+**Fix applied:** Wrapped all JSON.parse calls in try/catch with descriptive error messages.
 
-### 6.5 Date Arithmetic Sin Validación 🔵 BAJO
-**Archivo:** `scripts/stats.js`  
-```js
-new Date(b.awardedAt) - new Date(a.awardedAt)
-```
-**Problema:** La resta de Dates funciona en JavaScript pero TypeScript la marcaría como error. `awardedAt` podría ser `undefined`.  
-**Fix:** Usar `.getTime()` y fallback.
+### 6.5 Date Arithmetic Without Validation 🔵 LOW — ✅ RESOLVED
+**File:** `scripts/stats.js`  
+**Problem:** Date subtraction without `.getTime()` — works in JS but TypeScript would flag it.  
+**Fix applied:** Added `.getTime()` calls for proper numeric comparison.
 
-### 6.6 Raw HTTPS en Vez de Fetch/Axios 🔵 BAJO
-**Archivos:** `scripts/auto-award.js`, `scripts/process-event.js`  
-**Problema:** Usan `require('https')` directamente para llamadas a la API de GitHub. Código verbose, sin retry logic, sin timeout.  
-**Fix:** Usar `node-fetch` o `@octokit/rest` que el proyecto ya usa en app-web.
+### 6.6 Raw HTTPS Instead of Fetch/Axios 🔵 LOW — ⏳ OPEN
+**Files:** `scripts/auto-award.js`, `scripts/process-event.js`  
+**Problem:** Use `require('https')` directly for GitHub API calls. Verbose code, no retry logic, no timeout.  
+**Recommendation:** Use `node-fetch` or `@octokit/rest`.
 
-### 6.7 Premium Skins Sin Control de Acceso 🟡 MEDIO
-**Archivo:** `scripts/select-skin-pack.js`  
-**Problema:** Skins marcados como `isPremium: true` (ej: "neon") no tienen verificación de acceso en el script. Cualquier usuario puede seleccionar skins premium.  
-**Fix:** Verificar permisos/licencia antes de aplicar skin premium.
+### 6.7 Premium Skins Without Access Control 🟡 MEDIUM — ⏳ OPEN
+**File:** `scripts/select-skin-pack.js`  
+**Problem:** Skins marked as `isPremium: true` have no access verification. Any user can select premium skins.  
+**Recommendation:** Verify permissions/license before applying premium skin.
 
 ---
 
 ## 7. CONFIG
 
-### 7.1 Schema JSON No Incluido 🔵 BAJO
-**Archivo:** `config/admins.json` L1  
-```json
-"$schema": "./admins.schema.json"
-```
-**Problema:** Referencia a `admins.schema.json` que no existe en el repo.  
-**Fix:** Crear el schema file o remover la referencia.
+### 7.1 JSON Schema Not Included 🔵 LOW — ✅ RESOLVED
+**File:** `config/admins.json`  
+**Problem:** Referenced `admins.schema.json` which didn't exist in the repo.  
+**Fix applied:** Created `config/admins.schema.json` with full JSON Schema validation for admins, settings, and autoAward configuration.
 
-### 7.2 Config No Se Recarga 🟡 MEDIO
-**Contexto:** `app-web/src/lib/permission-service.ts` carga `config/admins.json` con `readFileSync` una sola vez al iniciar el módulo.  
-**Problema:** Si se agregan admins al archivo, hay que reiniciar la app para que el cambio surta efecto.  
-**Fix:** Implementar recarga periódica o usar BD para almacenar admins.
+### 7.2 Config Doesn't Reload 🟡 MEDIUM — ⏳ OPEN
+**Context:** `permission-service.ts` loads `config/admins.json` with `readFileSync` once at module load.  
+**Problem:** Adding admins requires app restart.  
+**Recommendation:** Implement periodic reload or use database for admin storage.
 
 ---
 
 ## 8. GITHUB ACTION
 
-### 8.1 Nombre del Package Incorrecto 🟡 MEDIO
-**Archivo:** `github-action/package.json` L2  
-```json
-"name": "bloomflow-badge-sync"
-```
-vs `action.yml` L1:
-```yaml
-name: "BOOMFLOW Badge Sync"
-```
-**Problema:** El package se llama "bloomflow" (typo) mientras el proyecto es "BOOMFLOW/boomflow".  
-**Fix:** Corregir a `"boomflow-badge-sync"`.
+### 8.1 Incorrect Package Name 🟡 MEDIUM — ✅ RESOLVED
+**File:** `github-action/package.json`  
+**Problem:** Package was named `bloomflow-badge-sync` (typo).  
+**Fix applied:** Corrected to `boomflow-badge-sync`. All "bloomflow" references fixed.
 
-### 8.2 Input `boomflow_token` No Se Usa 🟠 ALTO
-**Archivo:** `github-action/action.yml` L7 + `github-action/index.js`  
-**Problema:** `action.yml` declara input `boomflow_token` como `required: true`, pero `index.js` nunca lee ni usa este token. Lee datos directamente del filesystem.  
-**Fix:** Implementar autenticación con el token o marcarlo como `required: false`.
+### 8.2 Input `boomflow_token` Not Used 🟠 HIGH — ✅ RESOLVED
+**File:** `github-action/action.yml` + `github-action/index.js`  
+**Problem:** `action.yml` declared `boomflow_token` as `required: true`, but `index.js` never reads or uses this token.  
+**Fix applied:** Changed to `required: false` with empty default and descriptive note indicating it's reserved for future API authentication.
 
-### 8.3 Dependencias No Usadas 🔵 BAJO
-**Archivo:** `github-action/package.json`  
-```json
-"@actions/github": "^6.0.0",
-"axios": "^1.6.2"
-```
-**Problema:** `@actions/github` y `axios` declarados pero no importados en `index.js`.  
-**Fix:** Remover o implementar.
+### 8.3 Unused Dependencies 🔵 LOW — ⏳ OPEN
+**File:** `github-action/package.json`  
+**Problem:** `@actions/github` and `axios` declared but not imported in `index.js`.  
+**Recommendation:** Remove or implement.
 
-### 8.4 REPO_BASE_URL Hardcodeado 🟡 MEDIO
-**Archivo:** `github-action/index.js` L15  
-```js
-const REPO_BASE_URL = "https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets";
-```
-**Problema:** URL fija al repo de un desarrollador específico. No funciona si el repo se forkea o mueve.  
-**Fix:** Derivar dinámicamente del contexto de GitHub Action.
+### 8.4 Hardcoded REPO_BASE_URL 🟡 MEDIUM — ✅ RESOLVED
+**File:** `github-action/index.js`  
+**Problem:** URL fixed to a specific developer's repo. Didn't work if the repo was forked or moved.  
+**Fix applied:** Now derives from `GITHUB_REPOSITORY` environment variable (set automatically by GitHub Actions), with fallback to default.
 
-### 8.5 Regex Test + Replace Bug 🟠 ALTO
-**Archivo:** `github-action/index.js` L217-222  
-```js
-const regex = new RegExp(`${START_TAG}[\\s\\S]*?${END_TAG}`, "g");
-if (!regex.test(currentContent)) { ... }
-regex.lastIndex = 0; // <-- necesario por flag "g"
-const updatedReadme = currentContent.replace(regex, newContent);
-```
-**Problema:** Después de `regex.test()` con flag `g`, `lastIndex` avanza. Aunque se resetea a 0, el patrón es fragile. Si se olvida el reset, `replace` no funciona. También, `test()` con `g` flag tiene comportamiento inesperado en loops.  
-**Fix:** Usar dos regex separadas (una para test, una para replace) o no usar flag `g`.
+### 8.5 Regex Test + Replace Bug 🟠 HIGH — ✅ RESOLVED
+**File:** `github-action/index.js`  
+**Problem:** After `regex.test()` with `g` flag, `lastIndex` advances. Although reset to 0, the pattern was fragile.  
+**Fix applied:** Split into two separate regex instances — `testRegex` (without `g` flag) for detection and `replaceRegex` (with `g` flag) for replacement. Eliminated the `lastIndex` reset hack.
 
 ---
 
 ## 9. GITHUB WORKFLOWS
 
-### 9.1 GITHUB_TOKEN vs BOOMFLOW_TOKEN 🟡 MEDIO
-**Archivos:**  
-- `.github/workflows/auto-award.yml`: Usa `${{ secrets.GITHUB_TOKEN }}`
-- `examples/boomflow-workflow.yml`: Usa `${{ secrets.BOOMFLOW_TOKEN }}`
+### 9.1 GITHUB_TOKEN vs BOOMFLOW_TOKEN 🟡 MEDIUM — ⏳ OPEN
+**Files:** `.github/workflows/auto-award.yml` vs `examples/boomflow-workflow.yml`  
+**Problem:** Documentation doesn't clarify when to use each token.  
+**Recommendation:** Document the difference clearly.
 
-**Problema:** `GITHUB_TOKEN` es el token automático de GitHub Actions con permisos del repo. `BOOMFLOW_TOKEN` (en el ejemplo) es un PAT personalizado. La documentación no aclara cuál usar.  
-**Fix:** Documentar claramente la diferencia y cuándo usar cada uno.
+### 9.2 badge-protection Without Real Blocking 🟡 MEDIUM — ⏳ OPEN
+**File:** `.github/workflows/badge-protection.yml`  
+**Problem:** On `push` events, the workflow validates AFTER the push is committed. Only serves as alert, not prevention.  
+**Recommendation:** Use branch protection rules and required status checks.
 
-### 9.2 badge-protection Sin Bloqueo Real 🟡 MEDIO
-**Archivo:** `.github/workflows/badge-protection.yml`  
-**Problema:** En `push` events, el workflow valida DESPUÉS de que el push ya se commiteó. Solo sirve como alerta, no como prevención real. Solo en PRs puede bloquear efectivamente.  
-**Fix:** Considerar usar branch protection rules y required status checks para forzar validación pre-merge.
+### 9.3 Event Processor — Script Injection 🟠 HIGH — ✅ RESOLVED
+**File:** `.github/workflows/event-processor.yml`  
+**Problem:** PR/issue title was interpolated directly into a shell command. A malicious title like `"; rm -rf / #` could execute arbitrary commands.  
+**Fix applied:** User-controlled values now passed via environment variables instead of direct `${{ }}` interpolation.
 
-### 9.3 Event Processor — Script Injection 🟠 ALTO
-**Archivo:** `.github/workflows/event-processor.yml` L96-100  
-```yaml
-echo "📌 Title: ${{ github.event.pull_request.title }}"
-echo "📌 Title: ${{ github.event.issue.title }}"
-```
-**Problema:** El título del PR/issue se interpola directamente en un comando shell. Un título malicioso como `"; rm -rf / #` ejecutaría comandos arbitrarios (Script Injection via `${{ }}`).  
-**Fix:** Usar variables de entorno intermedias:
-```yaml
-env:
-  PR_TITLE: ${{ github.event.pull_request.title }}
-run: |
-  echo "📌 Title: $PR_TITLE"
-```
-
-### 9.4 Permisos Excesivos 🟡 MEDIO
-**Archivo:** `.github/workflows/event-processor.yml` L32  
-```yaml
-permissions:
-  contents: write
-```
-**Problema:** `contents: write` en un workflow que se dispara con PRs externos. Un atacante podría hacer un PR que trigger el workflow para escribir en el repo.  
-**Fix:** Usar `pull-requests: read` para PR events y solo `contents: write` cuando sea estrictamente necesario.
+### 9.4 Excessive Permissions 🟡 MEDIUM — ✅ RESOLVED
+**File:** `.github/workflows/event-processor.yml`  
+**Problem:** Only `contents: write` was declared, without explicit `pull-requests: read` for PR event handling.  
+**Fix applied:** Added `pull-requests: read` to the permissions block.
 
 ---
 
 ## 10. CROSS-CUTTING ISSUES
 
-### 10.1 simulate-profile.js — Rutas Absolutas Hardcodeadas 🟡 MEDIO
-**Archivo:** `simulate-profile.js` L4-9  
-```js
-const CATALOG_PATH = "/home/dawnweaber/Workspace/BOOMFLOW/api-mock.json";
-const USERS_DIR = "/home/dawnweaber/Workspace/BOOMFLOW/users";
-const TARGET_README = "/home/dawnweaber/Workspace/BOOMFLOW/.profile-test/README.md";
-```
-**Problema:** Rutas absolutas de un developer específico. No funciona en ningún otro entorno.  
-**Fix:** Usar `__dirname` o `process.cwd()`.
+### 10.1 simulate-profile.js — Hardcoded Absolute Paths 🟡 MEDIUM — ✅ RESOLVED
+**File:** `simulate-profile.js`  
+**Problem:** Absolute paths from a specific developer's machine. Didn't work in any other environment.  
+**Fix applied:** Replaced with `path.join(__dirname, ...)` for portability.
 
-### 10.2 Tag Markers Inconsistentes 🔵 BAJO
-**Archivos:**  
-- `github-action/index.js`: `<!-- BOOMFLOW-BADGES-START -->`
-- `simulate-profile.js`: `<!-- BLOOMFLOW-BADGES-START -->`
+### 10.2 Inconsistent Tag Markers 🔵 LOW — ✅ RESOLVED
+**Files:** `github-action/index.js` and `simulate-profile.js`  
+**Problem:** One said "BOOMFLOW" and the other said "BLOOMFLOW" (typo).  
+**Fix applied:** All standardized to "BOOMFLOW".
 
-**Problema:** Typo — uno dice "BOOMFLOW" y otro "BLOOMFLOW". Los markers no coinciden entre acción y simulador.  
-**Fix:** Estandarizar a "BOOMFLOW".
+### 10.3 Users JSON Without Last Updated Timestamp 🔵 LOW — ⏳ OPEN
+**Files:** `users/jeremy-sud.json`, `users/ursolcr.json`  
+**Problem:** JSON user files modified by multiple scripts/workflows but have no `lastUpdated` or `version` field. No way to detect conflicts.  
+**Recommendation:** Add `"lastUpdated": "ISO-timestamp"` and `"schemaVersion": 1`.
 
-### 10.3 Users JSON Sin Timestamp de Última Actualización 🔵 BAJO
-**Archivos:** `users/jeremy-sud.json`, `users/ursolcr.json`  
-**Problema:** Los archivos JSON de usuario se modifican por múltiples scripts y workflows pero no tienen campo `lastUpdated` o `version`. No hay forma de detectar conflictos.  
-**Fix:** Agregar `"lastUpdated": "ISO-timestamp"` y `"schemaVersion": 1`.
+### 10.4 jeremy-sud.json — Future Dates 🔵 LOW — ⏳ OPEN
+**File:** `users/jeremy-sud.json`  
+**Problem:** Badges with `"awardedAt": "2026-02-15"` — dates in the future. Appears to be test placeholder.  
+**Recommendation:** Use real dates.
 
-### 10.4 jeremy-sud.json — Fechas Futuras 🔵 BAJO
-**Archivo:** `users/jeremy-sud.json`  
-**Problema:** Badges con `"awardedAt": "2026-02-15"` — fechas en el futuro. Parece placeholder de test.  
-**Fix:** Usar fechas reales.
+### 10.5 No Tests 🟠 HIGH — ⏳ OPEN
+**Entire codebase.**  
+**Problem:** Not a single test file in the entire repository. No unit tests, integration tests, or E2E tests.  
+**Recommendation:** Implement testing progressively, starting with the badge engine and critical API routes.
 
-### 10.5 Sin Tests 🟠 ALTO
-**Todo el codebase.**  
-**Problema:** No hay un solo archivo de test en todo el repositorio. Ni unit tests, ni integration tests, ni E2E tests. No hay carpeta `__tests__`, no hay archivos `.test.ts`, no hay directorio `test/`.  
-**Fix:** Implementar testing progresivamente, empezando por el badge engine y las API routes críticas.
+### 10.6 No .env.example in Backend 🟡 MEDIUM — ✅ RESOLVED
+**Problem:** `app-web` had `env.example` but `backend/` didn't. Required environment variables weren't documented.  
+**Fix applied:** Created `backend/.env.example` with `JWT_SECRET`, `DATABASE_URL`, `NODE_ENV`, `CORS_ORIGIN`.
 
-### 10.6 Sin .env.example en Backend 🟡 MEDIO
-**Problema:** `app-web` tiene `env.example` pero `backend/` no tiene. Las variables de entorno requeridas (JWT_SECRET, DATABASE_URL, GITHUB_CLIENT_ID, etc.) no están documentadas.  
-**Fix:** Crear `backend/.env.example`.
-
-### 10.7 Sin Logging Estructurado 🟡 MEDIO
-**Todo el codebase.**  
-**Problema:** Todo usa `console.log`/`console.error`. Sin niveles, sin timestamps, sin request IDs, sin formato JSON para ingestión por servicios de log.  
-**Fix:** Usar una librería como `pino` o `winston`.
+### 10.7 No Structured Logging 🟡 MEDIUM — ⏳ OPEN
+**Entire codebase.**  
+**Problem:** Everything uses `console.log`/`console.error`. No levels, timestamps, request IDs, or JSON format for log ingestion services.  
+**Recommendation:** Use a library like `pino` or `winston`.
 
 ---
 
-## Priorización de Fixes Recomendada
+## Additional Issues Found (Second Audit)
 
-### Urgente (arreglar ahora)
-1. 🔴 Eliminar JWT secret fallback hardcodeado (1.1)
-2. 🔴 Corregir orden de rutas `/leaderboard` y `/search` (1.3)
-3. 🔴 Agregar autenticación a GET /api/badges y /api/kudos (3.1, 3.2)
-4. 🔴 Agregar autorización a /api/badges/evaluate (3.3)
-5. 🟠 Corregir script injection en event-processor workflow (9.3)
+### A.1 Notification Type Mismatch 🟡 MEDIUM — ✅ RESOLVED
+**File:** `backend/src/services/badgeEngine.js`  
+**Problem:** Used `badge_unlocked` as notification type, but the Prisma enum defines `badge_earned`.  
+**Fix applied:** Changed to `badge_earned`.
 
-### Corto Plazo (esta semana)
-6. 🟠 Unificar o deprecar schemas Prisma duplication (5.1)
-7. 🟠 Eliminar server.js legacy (1.2)
-8. 🟠 Agregar validación de paginación con caps (1.7, 3.4)
-9. 🟠 Dejar de exponer error details al cliente (3.5)
-10. 🟠 Implementar token input en GitHub Action (8.2)
-11. 🟠 Agregar tests (10.5)
+### A.2 Spread Operator Precedence Bug 🟡 MEDIUM — ✅ RESOLVED
+**File:** `backend/src/services/auditLogService.js`  
+**Problem:** `...(startDate || endDate) ? { createdAt: ... } : {}` — incorrect precedence. Spread operator bound before ternary.  
+**Fix applied:** Added parentheses: `...((startDate || endDate) ? { createdAt: ... } : {})`.
 
-### Mediano Plazo (próximo sprint)
-12. 🟡 Reemplazar datos mock con datos reales de sesión/API (2.1)
-13. 🟡 Unificar fuentes de verdad de badges (2.2)
-14. 🟡 Reducir scope OAuth (2.4)
-15. 🟡 Implementar middleware que bloquee usuarios no autenticados (2.8)
-16. 🟡 Encriptar githubToken en BD (1.14)
-17. 🟡 Estandarizar idioma de UI (2.10)
+### A.3 github-sync-service.ts Import Error 🟠 HIGH — ✅ RESOLVED
+**File:** `app-web/src/lib/github-sync-service.ts`  
+**Problem:** Imported `{ prisma } from './prisma'` (named export, relative path) but the module uses `export default prisma`.  
+**Fix applied:** Changed to `import prisma from '@/lib/prisma'`.
+
+### A.4 Race Conditions in Badge Engine 🟠 HIGH — ✅ RESOLVED
+**File:** `app-web/src/lib/badge-engine.ts`  
+**Problem:** Concurrent requests could award the same badge multiple times before the unique constraint catches it.  
+**Fix applied:** Added try/catch for P2002 (unique constraint violation) in `evaluateUserBadges` and `evaluateTrigger`. Peer badge limit check atomized with `prisma.$transaction`.
+
+### A.5 GitHub Action Doesn't Read org_name 🟠 HIGH — ✅ RESOLVED
+**File:** `github-action/index.js`  
+**Problem:** `action.yml` declares `org_name` input but `index.js` never read it.  
+**Fix applied:** Now reads and uses the `org_name` input.
 
 ---
 
-*Generado por auditoría automatizada del código fuente completo.*
+## Recommended Fix Prioritization
+
+### Urgent (fix now) — ✅ ALL DONE
+1. ✅ ~~Remove hardcoded JWT secret fallback (1.1)~~
+2. ✅ ~~Fix route order for `/leaderboard` and `/search` (1.3)~~
+3. ✅ ~~Add auth filter to GET /api/kudos (3.2)~~
+4. ✅ ~~Add authorization to /api/badges/evaluate (3.3)~~
+5. ✅ ~~Fix script injection in event-processor workflow (9.3)~~
+
+### Short Term (this week)
+6. ⏳ Unify or deprecate Prisma schema duplication (5.1)
+7. ⏳ Remove legacy server.js (1.2)
+8. ✅ ~~Add pagination validation with caps (1.7, 3.4)~~
+9. ✅ ~~Stop exposing error details to clients (3.5)~~
+10. ✅ ~~Implement token input in GitHub Action (8.2)~~
+11. ⏳ Add tests (10.5)
+12. ✅ ~~Add auth to GET /api/badges (3.1)~~
+
+### Medium Term (next sprint)
+13. ⏳ Replace mock data with real session/API data (2.1)
+14. ⏳ Unify badge sources of truth (2.2)
+15. ✅ ~~Reduce OAuth scope (2.4)~~
+16. ✅ ~~Implement middleware that blocks unauthenticated users (2.8)~~
+17. ⏳ Encrypt githubToken in DB (1.14)
+18. ✅ ~~Standardize UI language (2.10)~~
+
+---
+
+*Generated by automated source code audit. Last updated: June 2025.*

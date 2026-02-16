@@ -1,19 +1,29 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { auth } from '@/auth'
 import prisma from '@/lib/prisma'
+import type { Prisma } from '@/generated/prisma'
 
-// GET /api/badges - Full badge catalog
+// GET /api/badges - Full badge catalog (requires authentication)
 export async function GET(request: NextRequest) {
   try {
+    const session = await auth()
+    if (!session?.user?.id) {
+      return NextResponse.json(
+        { error: 'Not authenticated' },
+        { status: 401 }
+      )
+    }
+
     const searchParams = request.nextUrl.searchParams
     const category = searchParams.get('category')
     const tier = searchParams.get('tier')
 
-    const where: Record<string, unknown> = { isActive: true }
+    const where: Prisma.BadgeWhereInput = { isActive: true }
     if (category) {
-      where.category = category.toUpperCase()
+      where.category = category.toUpperCase() as Prisma.EnumBadgeCategoryFilter['equals']
     }
     if (tier) {
-      where.tier = tier.toUpperCase()
+      where.tier = tier.toUpperCase() as Prisma.EnumBadgeTierFilter['equals']
     }
 
     const badges = await prisma.badge.findMany({

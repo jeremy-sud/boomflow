@@ -2,12 +2,12 @@ const fs = require("fs");
 const path = require("path");
 
 // Reuse the logic from the action
-const CATALOG_PATH = "/home/dawnweaber/Workspace/BOOMFLOW/api-mock.json";
-const USERS_DIR = "/home/dawnweaber/Workspace/BOOMFLOW/users";
+const CATALOG_PATH = path.join(__dirname, 'api-mock.json');
+const USERS_DIR = path.join(__dirname, 'users');
 const REPO_BASE_URL =
   "https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets";
 const TARGET_README =
-  "/home/dawnweaber/Workspace/BOOMFLOW/.profile-test/README.md";
+  path.join(__dirname, '.profile-test', 'README.md');
 
 const TIER_ICON = { bronze: "🥉", silver: "🥈", gold: "🥇" };
 const CATEGORIES = {

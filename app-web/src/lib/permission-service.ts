@@ -124,7 +124,7 @@ export class PermissionService {
 
   /**
    * Check if the user is an organization admin or team lead
-   * Uses database roles in addition to config file
+   * Uses config file admins as the source of truth
    * 
    * @param userId - Database user ID
    * @param permission - Permission to check
@@ -133,34 +133,19 @@ export class PermissionService {
   static async hasOrgPermission(userId: string, permission: Permission): Promise<boolean> {
     const user = await prisma.user.findUnique({
       where: { id: userId },
-      include: {
-        organization: true,
-        team: true,
+      select: {
+        username: true,
       }
     })
 
     if (!user) return false
 
-    // First check config file admins
+    // Check config file admins
     if (user.username && this.hasPermission(user.username, permission)) {
       return true
     }
 
-    // Database-backed role checking
-    // ADMIN users have all permissions
-    if (user.role === 'ADMIN') {
-      return true
-    }
-
-    // MANAGER users can grant badges and manage users in their org
-    if (user.role === 'MANAGER') {
-      const managerPermissions: Permission[] = ['grant_badges', 'manage_users']
-      if (managerPermissions.includes(permission)) {
-        return true
-      }
-    }
-
-    // Members don't have special permissions by default
+    // Non-admin users don't have special permissions by default
     return false
   }
 }

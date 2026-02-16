@@ -50,6 +50,11 @@ function loadCatalog() {
 }
 
 function loadUser(username) {
+  // Sanitize username to prevent path traversal
+  if (!username || !/^[a-zA-Z0-9_-]+$/.test(username)) {
+    log(colors.red, `❌ Invalid username: "${username}". Only alphanumeric, hyphens, and underscores allowed.`);
+    return null;
+  }
   const userPath = path.join(USERS_DIR, `${username}.json`);
   if (!fs.existsSync(userPath)) {
     return null;
@@ -58,6 +63,10 @@ function loadUser(username) {
 }
 
 function saveUser(username, data) {
+  // Sanitize username to prevent path traversal
+  if (!username || !/^[a-zA-Z0-9_-]+$/.test(username)) {
+    throw new Error(`Invalid username: "${username}"`);
+  }
   const userPath = path.join(USERS_DIR, `${username}.json`);
   fs.writeFileSync(userPath, JSON.stringify(data, null, 2) + '\n');
 }

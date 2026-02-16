@@ -1,0 +1,106 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "BOOMFLOW Admins Configuration",
+  "description": "Schema for the BOOMFLOW administrator configuration file",
+  "type": "object",
+  "required": ["admins"],
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "_comment": {
+      "type": "string"
+    },
+    "admins": {
+      "type": "array",
+      "description": "List of authorized administrators",
+      "items": {
+        "type": "object",
+        "required": ["username", "displayName", "permissions"],
+        "properties": {
+          "username": {
+            "type": "string",
+            "description": "GitHub username",
+            "pattern": "^[a-zA-Z0-9_-]+$"
+          },
+          "displayName": {
+            "type": "string",
+            "description": "Display name"
+          },
+          "role": {
+            "type": "string",
+            "description": "Role title"
+          },
+          "permissions": {
+            "type": "array",
+            "description": "List of granted permissions",
+            "items": {
+              "type": "string",
+              "enum": [
+                "grant_badges",
+                "revoke_badges",
+                "manage_users",
+                "manage_admins",
+                "view_analytics",
+                "manage_settings"
+              ]
+            },
+            "minItems": 1
+          },
+          "addedAt": {
+            "type": "string",
+            "format": "date",
+            "description": "Date when the admin was added"
+          },
+          "addedBy": {
+            "type": "string",
+            "description": "Who added this admin"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "settings": {
+      "type": "object",
+      "properties": {
+        "requireApproval": {
+          "type": "boolean",
+          "description": "Whether badge grants require approval"
+        },
+        "allowSelfAssignment": {
+          "type": "boolean",
+          "description": "Whether admins can award badges to themselves"
+        },
+        "auditLog": {
+          "type": "boolean",
+          "description": "Whether to log all admin actions"
+        }
+      },
+      "additionalProperties": false
+    },
+    "autoAward": {
+      "type": "object",
+      "properties": {
+        "_comment": {
+          "type": "string"
+        },
+        "enabled": {
+          "type": "boolean"
+        },
+        "schedule": {
+          "type": "string",
+          "description": "Cron expression for auto-award schedule"
+        },
+        "repos": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Repositories to monitor"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

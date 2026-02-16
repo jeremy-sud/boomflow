@@ -253,8 +253,8 @@ router.post('/award', authenticate, requireRole('ADMIN', 'MANAGER'), asyncHandle
     }
   })
 
-  // Send notification to user about their new badge
-  await notifyBadgeEarned({
+  // Send notification to user about their new badge (non-critical)
+  notifyBadgeEarned({
     userId: data.userId,
     badge: {
       id: userBadge.badge.id,
@@ -262,10 +262,10 @@ router.post('/award', authenticate, requireRole('ADMIN', 'MANAGER'), asyncHandle
       slug: userBadge.badge.slug,
       tier: userBadge.badge.tier,
     },
-  })
+  }).catch(err => console.error('Failed to send badge notification:', err.message))
 
-  // Log badge award to audit trail for compliance
-  await logBadgeAwarded({
+  // Log badge award to audit trail for compliance (non-critical)
+  logBadgeAwarded({
     awarderId: req.user.id,
     userId: data.userId,
     badgeId: data.badgeId,
@@ -273,7 +273,7 @@ router.post('/award', authenticate, requireRole('ADMIN', 'MANAGER'), asyncHandle
     badgeName: userBadge.badge.name,
     reason: data.reason,
     req,
-  })
+  }).catch(err => console.error('Failed to log badge award:', err.message))
 
   res.status(201).json(userBadge)
 }))

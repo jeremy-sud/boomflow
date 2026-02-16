@@ -1,4 +1,4 @@
-import { prisma } from './prisma'
+import prisma from '@/lib/prisma'
 import { Octokit } from '@octokit/rest'
 import { BadgeEngine, TriggerType } from './badge-engine'
 import { NotificationService } from './notification-service'
@@ -191,37 +191,3 @@ export class GitHubSyncService {
     return stats.lastSyncAt < hourAgo
   }
 }
-
-// GitHub trigger configuration for the Badge Engine
-export const GITHUB_BADGE_RULES = [
-  {
-    badgeId: 'first-commit',
-    trigger: TriggerType.GITHUB_COMMIT,
-    threshold: 1,
-    description: 'First commit detected',
-  },
-  {
-    badgeId: 'code-ninja',
-    trigger: TriggerType.GITHUB_COMMIT,
-    threshold: 50,
-    description: '50 commits completed',
-  },
-  {
-    badgeId: 'first-pr',
-    trigger: TriggerType.GITHUB_PR,
-    threshold: 1,
-    description: 'First PR merged',
-  },
-  {
-    badgeId: 'first-review',
-    trigger: TriggerType.GITHUB_REVIEW,
-    threshold: 1,
-    description: 'First code review',
-  },
-  {
-    badgeId: 'code-reviewer',
-    trigger: TriggerType.GITHUB_REVIEW,
-    threshold: 10,
-    description: '10 code reviews completed',
-  },
-]

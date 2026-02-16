@@ -23,8 +23,8 @@ const NAV_ITEMS = [
   { href: '/', label: 'Dashboard', icon: '🏠' },
   { href: '/profile', label: 'My Profile', icon: '👤' },
   { href: '/catalog', label: 'Catalog', icon: '🏅' },
-  { href: '/feed', label: 'Actividad', icon: '📣' },
-  { href: '/leaderboard', label: 'Ranking', icon: '🏆' },
+  { href: '/feed', label: 'Activity', icon: '📣' },
+  { href: '/leaderboard', label: 'Leaderboard', icon: '🏆' },
 ];
 
 export default function Sidebar({ user, badgeCount = 0 }: SidebarProps) {
@@ -114,7 +114,7 @@ export default function Sidebar({ user, badgeCount = 0 }: SidebarProps) {
 
       {/* Footer */}
       <div className="p-4 text-center text-xs text-zinc-600">
-        BOOMFLOW v3.0.0
+        BOOMFLOW v0.1.0
       </div>
     </aside>
   );

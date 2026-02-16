@@ -34,20 +34,34 @@ function loadUsers() {
   
   const files = fs.readdirSync(USERS_DIR).filter(f => f.endsWith('.json'));
   for (const file of files) {
-    const data = JSON.parse(fs.readFileSync(path.join(USERS_DIR, file), 'utf8'));
-    users.push(data);
+    try {
+      const data = JSON.parse(fs.readFileSync(path.join(USERS_DIR, file), 'utf8'));
+      users.push(data);
+    } catch (err) {
+      console.error(`⚠️  Skipping malformed JSON file: ${file} — ${err.message}`);
+    }
   }
   return users;
 }
 
 function loadCatalog() {
   if (!fs.existsSync(CATALOG_PATH)) return [];
-  return JSON.parse(fs.readFileSync(CATALOG_PATH, 'utf8'));
+  try {
+    return JSON.parse(fs.readFileSync(CATALOG_PATH, 'utf8'));
+  } catch (err) {
+    console.error(`⚠️  Failed to parse catalog: ${err.message}`);
+    return [];
+  }
 }
 
 function loadAdmins() {
   if (!fs.existsSync(ADMINS_PATH)) return { admins: [] };
-  return JSON.parse(fs.readFileSync(ADMINS_PATH, 'utf8'));
+  try {
+    return JSON.parse(fs.readFileSync(ADMINS_PATH, 'utf8'));
+  } catch (err) {
+    console.error(`⚠️  Failed to parse admins config: ${err.message}`);
+    return { admins: [] };
+  }
 }
 
 function printHeader() {
@@ -156,7 +170,7 @@ function main() {
   
   const recentBadges = allBadges
     .filter(b => b.awardedAt)
-    .sort((a, b) => new Date(b.awardedAt) - new Date(a.awardedAt))
+    .sort((a, b) => new Date(b.awardedAt).getTime() - new Date(a.awardedAt).getTime())
     .slice(0, 5);
   
   for (const badge of recentBadges) {

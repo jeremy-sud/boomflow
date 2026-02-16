@@ -5,8 +5,9 @@ branding:
   color: "purple"
 inputs:
   boomflow_token:
-    description: "Your personal BOOMFLOW token"
-    required: true
+    description: "Your personal BOOMFLOW token (reserved for future API authentication)"
+    required: false
+    default: ""
   github_username:
     description: "Your GitHub username"
     required: false

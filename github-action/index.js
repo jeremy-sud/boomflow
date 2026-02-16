@@ -11,8 +11,10 @@ const USERS_DIR = path.join(ACTION_DIR, "../users");
 // User's workspace (where their README lives) - uses GITHUB_WORKSPACE or cwd
 const WORKSPACE_DIR = process.env.GITHUB_WORKSPACE || process.cwd();
 
+// Derive repo base URL from GitHub context, fallback to default
+const GITHUB_REPOSITORY = process.env.GITHUB_REPOSITORY || "jeremy-sud/boomflow";
 const REPO_BASE_URL =
-  "https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets";
+  `https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/main/assets`;
 
 // Read org name from action input, fallback to default
 let ORG_NAME = "SistemasUrsol";
@@ -219,18 +221,18 @@ async function run() {
     let currentContent = fs.readFileSync(readmePath, "utf8");
 
     // Replace content between markers
-    const regex = new RegExp(`${START_TAG}[\\s\\S]*?${END_TAG}`, "g");
+    const testRegex = new RegExp(`${START_TAG}[\\s\\S]*?${END_TAG}`);
+    const replaceRegex = new RegExp(`${START_TAG}[\\s\\S]*?${END_TAG}`, "g");
 
-    if (!regex.test(currentContent)) {
+    if (!testRegex.test(currentContent)) {
       console.log(
         "⚠️  Markers not found in README. Add <!-- BOOMFLOW-BADGES-START --> and <!-- BOOMFLOW-BADGES-END --> to your README."
       );
       return;
     }
 
-    regex.lastIndex = 0;
     const newContent = `${START_TAG}${badgeContent}${END_TAG}`;
-    const updatedReadme = currentContent.replace(regex, newContent);
+    const updatedReadme = currentContent.replace(replaceRegex, newContent);
 
     fs.writeFileSync(readmePath, updatedReadme);
 

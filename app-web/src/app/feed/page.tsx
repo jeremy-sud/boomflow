@@ -33,7 +33,7 @@ export default function FeedPage() {
     <div className="max-w-4xl mx-auto space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold text-gradient">Actividad</h1>
+        <h1 className="text-3xl font-bold text-gradient">Activity</h1>
         <p className="text-zinc-500 mt-1">Team recognition and achievement feed</p>
       </div>
 

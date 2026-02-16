@@ -11,8 +11,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       clientSecret: process.env.GITHUB_CLIENT_SECRET!,
       authorization: {
         params: {
-          // Permissions to read profile, repos and activity
-          scope: "read:user user:email repo",
+          // Minimal permissions: profile, email, and org membership
+          scope: "read:user user:email read:org",
         },
       },
       // Map GitHub data to User model

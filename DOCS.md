@@ -2,7 +2,7 @@
 
 <p align="center">
   <img src="https://img.shields.io/badge/🔒_Exclusive_Use-Sistemas_Ursol-8B5CF6.svg" alt="Exclusive"/>
-  <img src="https://img.shields.io/badge/version-3.0.0-blue.svg" alt="Version"/>
+  <img src="https://img.shields.io/badge/version-0.1.0-blue.svg" alt="Version"/>
 </p>
 
 > Complete technical reference for the BOOMFLOW Professional Recognition System
@@ -134,17 +134,19 @@ NEXTAUTH_URL=http://localhost:3000
 
 ### Authentication
 
-All APIs that modify data require authentication via NextAuth.
-The token is handled automatically through session cookies.
+All API routes require authentication via NextAuth session cookies.  
+Unauthenticated requests to protected pages are automatically redirected to `/login`.
+
+**Pagination limits:** All paginated endpoints enforce a maximum of **100 items per request** (`limit` capped to 1-100). Invalid or negative values are normalized automatically.
 
 ### Kudos
 
 #### `GET /api/kudos`
 
-Retrieves the public kudos feed.
+Retrieves the **public** kudos feed (only kudos with `isPublic: true`).
 
 **Query Params:**
-- `limit` (int, default: 20) - Number of kudos
+- `limit` (int, default: 20, max: 100) - Number of kudos
 - `cursor` (string) - ID for pagination
 
 **Response:**

@@ -34,7 +34,7 @@ export default function LeaderboardPage() {
     <div className="max-w-5xl mx-auto space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold text-gradient">Ranking</h1>
+        <h1 className="text-3xl font-bold text-gradient">Leaderboard</h1>
         <p className="text-zinc-500 mt-1">Top collaborators at Sistemas Ursol</p>
       </div>
 
