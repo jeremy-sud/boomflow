@@ -1,40 +1,40 @@
-Nombre Sugerido: Bloomflow
-Slogan: Donde el talento no se gestiona, se cultiva.
+Suggested Name: Boomflow
+Tagline: Where talent isn't managed — it's cultivated.
 
-1. El Concepto Humanista
-En lugar de medir "productividad" (cuántas horas estás sentado), la app mide el flujo y el propósito. Se trata de crear un ecosistema donde el colega no sea un número, sino un individuo con metas, miedos y talentos ocultos.
+1. The Humanist Concept
+Instead of measuring "productivity" (how many hours you sit at a desk), the app measures flow and purpose. It's about creating an ecosystem where a colleague isn't just a number, but an individual with goals, fears, and hidden talents.
 
-2. Funcionalidades "Generosas" y Empáticas
-Reconocimiento entre Pares (Micro-Kudos):
-Un espacio donde cualquier compañero puede enviar un "Kudo" (un agradecimiento público o privado) por una ayuda específica. Estos puntos no se canjean por dinero necesariamente, sino por "tiempo para proyectos personales" o formación.
+2. "Generous" and Empathetic Features
+Peer-to-Peer Recognition (Micro-Kudos):
+A space where any colleague can send a "Kudo" (a public or private thank-you) for specific help. These points aren't necessarily redeemed for money, but rather for "time for personal projects" or training.
 
-Check-in de Estado de Ánimo (Safe Space):
-Cada mañana, la app pregunta: "¿Cómo está tu energía hoy?". Si un empleado marca niveles bajos varios días seguidos, la app alerta al manager, no para reprender, sino para sugerir: "Oye, esta persona podría necesitar un día libre o apoyo en su carga actual".
+Mood Check-in (Safe Space):
+Every morning, the app asks: "How's your energy today?" If an employee marks low levels several days in a row, the app alerts the manager — not to reprimand, but to suggest: "Hey, this person might need a day off or help with their current workload."
 
-Mentoría Interna Cruzada:
-Un algoritmo que conecta a alguien que quiere aprender Python con alguien del equipo técnico que quiere mejorar su liderazgo. Fomenta la comunidad en lugar de la jerarquía.
+Cross-functional Internal Mentorship:
+An algorithm that connects someone who wants to learn Python with someone on the technical team who wants to improve their leadership. It fosters community instead of hierarchy.
 
-El "Curriculum de Fracasos" y Aprendizajes:
-Una sección donde los líderes comparten en qué se equivocaron y qué aprendieron, normalizando el error y reduciendo la ansiedad laboral.
+The "Failure Resume" and Learnings:
+A section where leaders share their mistakes and what they learned, normalizing error and reducing workplace anxiety.
 
-3. Modelo de Negocio (Monetización Ética)
-Para que genere dinero sin traicionar su esencia, pueden aplicar estas estrategias:
+3. Business Model (Ethical Monetization)
+To generate revenue without betraying its essence, these strategies can be applied:
 
-Suscripción por "Felicidad y Retención": Las empresas pagan porque un empleado feliz es un 30% más productivo y, sobre todo, porque perder un talento les cuesta miles de dólares en nuevas contrataciones.
+Subscription for "Happiness and Retention": Companies pay because a happy employee is 30% more productive and, above all, because losing talent costs them thousands of dollars in new hires.
 
-Marketplace de Beneficios de Bienestar: Integrar servicios de terceros (terapia online, sesiones de yoga, cursos) y llevarse una comisión por cada servicio contratado a través de la app.
+Wellness Benefits Marketplace: Integrate third-party services (online therapy, yoga sessions, courses) and take a commission for each service booked through the app.
 
-Data Insights (Anonimizados): Vender a la empresa reportes de "puntos ciegos". Ejemplo: "Tu equipo de diseño está agotado los jueves, considera reducir reuniones ese día".
+Data Insights (Anonymized): Sell aggregated reports of "blind spots" to the company. Example: "Your design team is exhausted on Thursdays — consider reducing meetings that day."
 
-4. Arquitectura para construir en GitHub
-Como van a trabajar con su colega, así podrían dividir el corazón del proyecto:
+4. Architecture for Building on GitHub
+Here's how the core of the project could be divided:
 
-Backend (API de Empatía): Desarrollar un motor que procese el sentimiento de los mensajes y gestione las conexiones de mentoría.
+Backend (Empathy API): Develop an engine that processes message sentiment and manages mentorship connections.
 
-Frontend (Dashboard Humano): Una interfaz limpia, con colores suaves (psicología del color), lejos de las tablas de Excel grises y aburridas.
+Frontend (Human Dashboard): A clean interface with soft colors (color psychology), far from boring gray Excel tables.
 
-Seguridad y Privacidad: Esto es vital. Deben implementar encriptación de extremo a extremo para los comentarios anónimos, para que el usuario confíe plenamente en la herramienta.
+Security and Privacy: This is vital. End-to-end encryption must be implemented for anonymous comments, so the user fully trusts the tool.
 
-Reflexión Pro: El verdadero dinero hoy en día está en resolver la crisis de salud mental y la desconexión laboral. Si construyen algo que haga que la gente no odie los lunes, las empresas se pelearán por comprárselo.
+Pro Insight: The real money today is in solving the mental health crisis and workplace disconnection. If you build something that makes people not hate Mondays, companies will fight to buy it.
 
-¿Qué stack tecnológico dominan tú y tu colega? (Por ejemplo: React/Node, Python/Django, Flutter...) Así puedo darte una hoja de ruta técnica para su primer Sprint.
+What tech stack do you and your colleague know? (For example: React/Node, Python/Django, Flutter...) That way I can give you a technical roadmap for your first Sprint.

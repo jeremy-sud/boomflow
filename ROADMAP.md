@@ -1,54 +1,54 @@
 # 🗺️ BOOMFLOW Roadmap
 
-> De MVP a Plataforma Enterprise de Reconocimiento Profesional
+> From MVP to Enterprise Professional Recognition Platform
 
 ---
 
-## 📋 Tabla de Contenidos
+## 📋 Table of Contents
 
-- [Visión del Producto](#visión-del-producto)
-- [Arquitectura](#arquitectura)
-- [Fases de Desarrollo](#fases-de-desarrollo)
-- [Modelo de Datos](#modelo-de-datos)
+- [Product Vision](#product-vision)
+- [Architecture](#architecture)
+- [Development Phases](#development-phases)
+- [Data Model](#data-model)
 - [API Design](#api-design)
-- [Integraciones](#integraciones)
-- [Monetización](#monetización)
+- [Integrations](#integrations)
+- [Monetization](#monetization)
 - [Timeline](#timeline)
 
 ---
 
-## 🎯 Visión del Producto
+## 🎯 Product Vision
 
-### El Problema
-- **70% de empleados** se sienten infravalorados en su trabajo
-- El trabajo "soft" (mentoría, colaboración, resolución de crisis) es **invisible** en CVs
-- Los sistemas de evaluación tradicionales son **anuales y subjetivos**
-- No hay forma de **verificar** habilidades blandas
+### The Problem
+- **70% of employees** feel undervalued at work
+- "Soft" work (mentoring, collaboration, crisis resolution) is **invisible** on résumés
+- Traditional evaluation systems are **annual and subjective**
+- There is no way to **verify** soft skills
 
-### La Solución
-BOOMFLOW transforma el reconocimiento entre pares en **activos profesionales verificables**:
+### The Solution
+BOOMFLOW transforms peer recognition into **verifiable professional assets**:
 
 ```
-Kudos (reconocimientos) → Acumulación → Badges (medallas) → GitHub Profile
+Kudos (recognition) → Accumulation → Badges → GitHub Profile
 ```
 
-### Propuesta de Valor
+### Value Proposition
 
-| Para Empleados | Para Empresas | Para RRHH |
-|----------------|---------------|-----------|
-| Portfolio de soft skills verificado | Cultura de reconocimiento | Data de engagement en tiempo real |
-| Motivación y gamificación | Retención de talento | Identificar top performers |
-| CV diferenciado | Employer branding | Predicción de rotación |
+| For Employees | For Companies | For HR |
+|----------------|---------------|--------|
+| Verified soft skills portfolio | Recognition culture | Real-time engagement data |
+| Motivation and gamification | Talent retention | Identify top performers |
+| Differentiated résumé | Employer branding | Turnover prediction |
 
 ---
 
-## 🏗️ Arquitectura
+## 🏗️ Architecture
 
-### Arquitectura Actual (v1.0)
+### Current Architecture (v1.0)
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                    BOOMFLOW v1.0 (Actual)                   │
+│                    BOOMFLOW v1.0 (Current)                  │
 ├─────────────────────────────────────────────────────────────┤
 │                                                             │
 │  ┌──────────────┐     ┌──────────────┐                     │
@@ -57,14 +57,14 @@ Kudos (reconocimientos) → Acumulación → Badges (medallas) → GitHub Profil
 │  └──────────────┘     └──────────────┘                     │
 │                                                             │
 │  ┌──────────────┐     ┌──────────────┐                     │
-│  │  SVG Assets  │     │  Express API │ (básico)            │
+│  │  SVG Assets  │     │  Express API │ (basic)             │
 │  │  (26 badges) │     │  (backend/)  │                     │
 │  └──────────────┘     └──────────────┘                     │
 │                                                             │
 └─────────────────────────────────────────────────────────────┘
 ```
 
-### Arquitectura Target (v2.0)
+### Target Architecture (v2.0)
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────┐
@@ -109,117 +109,117 @@ Kudos (reconocimientos) → Acumulación → Badges (medallas) → GitHub Profil
 
 ---
 
-## 📅 Fases de Desarrollo
+## 📅 Development Phases
 
-### Fase 1: Core Platform (MVP) — 4-6 semanas
+### Phase 1: Core Platform (MVP) — 4–6 weeks
 
-**Objetivo:** Sistema funcional de kudos → badges → GitHub sync
+**Goal:** Functional kudos → badges → GitHub sync system
 
-#### 1.1 Base de Datos
+#### 1.1 Database
 - [ ] Setup PostgreSQL + Prisma
 - [ ] Schema: users, organizations, teams, kudos, badges, user_badges
-- [ ] Migraciones y seeds
+- [ ] Migrations and seeds
 
-#### 1.2 API de Kudos
-- [ ] `POST /api/kudos` — Enviar un kudo
-- [ ] `GET /api/kudos/received` — Kudos recibidos
-- [ ] `GET /api/kudos/given` — Kudos enviados
-- [ ] `GET /api/kudos/feed` — Feed de la organización
+#### 1.2 Kudos API
+- [ ] `POST /api/kudos` — Send a kudo
+- [ ] `GET /api/kudos/received` — Received kudos
+- [ ] `GET /api/kudos/given` — Given kudos
+- [ ] `GET /api/kudos/feed` — Organization feed
 
 #### 1.3 Badge Engine
-- [ ] Triggers automáticos (X kudos → badge)
-- [ ] Validación de reglas de badges
-- [ ] Notificaciones de nuevo badge
+- [ ] Automatic triggers (X kudos → badge)
+- [ ] Badge rule validation
+- [ ] New badge notifications
 
-#### 1.4 Autenticación
-- [ ] OAuth con GitHub
-- [ ] Sesiones con NextAuth.js
-- [ ] Roles básicos (admin, member)
+#### 1.4 Authentication
+- [ ] OAuth with GitHub
+- [ ] Sessions with NextAuth.js
+- [ ] Basic roles (admin, member)
 
-#### 1.5 Dashboard Web
-- [ ] Página de perfil con badges
-- [ ] Formulario para enviar kudos
-- [ ] Feed de actividad
-- [ ] Configuración de cuenta
+#### 1.5 Web Dashboard
+- [ ] Profile page with badges
+- [ ] Form to send kudos
+- [ ] Activity feed
+- [ ] Account settings
 
-### Fase 2: Organizacional — 4 semanas
+### Phase 2: Organizational — 4 weeks
 
-**Objetivo:** Multi-tenancy y features de equipo
+**Goal:** Multi-tenancy and team features
 
 #### 2.1 Organizations & Teams
-- [ ] CRUD de organizaciones
-- [ ] Invitaciones por email/link
-- [ ] Equipos dentro de organización
-- [ ] Badges privados por organización
+- [ ] Organization CRUD
+- [ ] Invitations via email/link
+- [ ] Teams within an organization
+- [ ] Private badges per organization
 
 #### 2.2 Admin Dashboard
-- [ ] Gestión de miembros
-- [ ] Crear badges personalizados
-- [ ] Configurar reglas de acumulación
-- [ ] Reportes básicos
+- [ ] Member management
+- [ ] Create custom badges
+- [ ] Configure accumulation rules
+- [ ] Basic reports
 
 #### 2.3 Leaderboards
-- [ ] Rankings por equipo
-- [ ] Rankings por categoría de badge
-- [ ] Histórico mensual/trimestral
+- [ ] Rankings by team
+- [ ] Rankings by badge category
+- [ ] Monthly/quarterly history
 
-### Fase 3: Integraciones — 3 semanas
+### Phase 3: Integrations — 3 weeks
 
-**Objetivo:** Kudos desde donde trabaja el equipo
+**Goal:** Kudos from wherever the team works
 
 #### 3.1 Slack Integration
-- [ ] App de Slack
-- [ ] Comando `/kudo @user mensaje`
-- [ ] Notificaciones en canal
-- [ ] Bot para badges nuevos
+- [ ] Slack App
+- [ ] `/kudo @user message` command
+- [ ] Channel notifications
+- [ ] Bot for new badges
 
-#### 3.2 Discord Integration (Opcional)
-- [ ] Bot de Discord
-- [ ] Comando similar a Slack
+#### 3.2 Discord Integration (Optional)
+- [ ] Discord Bot
+- [ ] Command similar to Slack
 
-#### 3.3 GitHub Integration Mejorada ✅
-- [x] Webhook: PR merged → badge "First PR"
+#### 3.3 Enhanced GitHub Integration ✅
+- [x] Webhook: PR merged → "First PR" badge
 - [x] Webhook: Issue closed → badges
 - [x] Webhook: Code Review → badges
 - [x] Webhook: Release published → badges
 - [x] Auto-detect contributions via API
 
-> **✅ IMPLEMENTADO** - Ver `.github/workflows/event-processor.yml` y `scripts/process-event.js`
+> **✅ IMPLEMENTED** — See `.github/workflows/event-processor.yml` and `scripts/process-event.js`
 
-### Fase 4: Analytics & AI — 4 semanas
+### Phase 4: Analytics & AI — 4 weeks
 
-**Objetivo:** Insights para RRHH
+**Goal:** Insights for HR
 
-#### 4.1 Dashboard Analytics
-- [ ] Engagement score por equipo
-- [ ] Tendencias de reconocimiento
-- [ ] Mapas de colaboración
-- [ ] Alertas de bajo engagement
+#### 4.1 Analytics Dashboard
+- [ ] Engagement score per team
+- [ ] Recognition trends
+- [ ] Collaboration maps
+- [ ] Low-engagement alerts
 
 #### 4.2 AI Features
-- [ ] Análisis de sentimiento en kudos
-- [ ] Sugerencias de kudos ("Hace tiempo que no reconoces a X")
-- [ ] Predicción de rotación (bajo engagement = riesgo)
+- [ ] Sentiment analysis on kudos
+- [ ] Kudo suggestions ("It's been a while since you recognized X")
+- [ ] Turnover prediction (low engagement = risk)
 
-#### 4.3 Exportación
-- [ ] Reportes PDF/Excel
-- [ ] Integración con HRIS (BambooHR, Workday)
+#### 4.3 Export
+- [ ] PDF/Excel reports
+- [ ] HRIS integration (BambooHR, Workday)
 
-### Fase 5: Enterprise — Ongoing
+### Phase 5: Enterprise — Ongoing
 
-**Objetivo:** Features para grandes empresas
+**Goal:** Features for large companies
 
 - [ ] SSO/SAML
-- [ ] API dedicada con rate limits
-- [ ] SLA y soporte premium
+- [ ] Dedicated API with rate limits
+- [ ] SLA and premium support
 - [ ] On-premise deployment option
-- [ ] Auditoría y compliance
+- [ ] Audit and compliance
 
 ---
 
-## 📊 Modelo de Datos
+## 📊 Data Model
 
-### Schema Principal
+### Main Schema
 
 ```prisma
 // prisma/schema.prisma
@@ -363,52 +363,52 @@ enum TriggerType {
 
 ## 🔌 API Design
 
-### Endpoints Principales
+### Main Endpoints
 
 #### Kudos
 
 ```
-POST   /api/kudos                 # Enviar kudo
-GET    /api/kudos/feed            # Feed de la org
-GET    /api/kudos/received        # Mis kudos recibidos
-GET    /api/kudos/given           # Kudos que he dado
-GET    /api/kudos/stats           # Estadísticas
+POST   /api/kudos                 # Send a kudo
+GET    /api/kudos/feed            # Organization feed
+GET    /api/kudos/received        # My received kudos
+GET    /api/kudos/given           # Kudos I have given
+GET    /api/kudos/stats           # Statistics
 ```
 
 #### Badges
 
 ```
-GET    /api/badges/catalog        # Catálogo completo
-GET    /api/badges/my             # Mis badges
-GET    /api/badges/:id            # Detalle de badge
-POST   /api/badges                # Crear badge (admin)
+GET    /api/badges/catalog        # Full catalog
+GET    /api/badges/my             # My badges
+GET    /api/badges/:id            # Badge details
+POST   /api/badges                # Create badge (admin)
 ```
 
 #### Users
 
 ```
-GET    /api/users/me              # Mi perfil
-GET    /api/users/:username       # Perfil público
-PATCH  /api/users/me              # Actualizar perfil
+GET    /api/users/me              # My profile
+GET    /api/users/:username       # Public profile
+PATCH  /api/users/me              # Update profile
 GET    /api/users/leaderboard     # Rankings
 ```
 
 #### Organizations
 
 ```
-POST   /api/orgs                  # Crear organización
-GET    /api/orgs/:slug            # Detalle
-POST   /api/orgs/:slug/invite     # Invitar miembro
-GET    /api/orgs/:slug/members    # Listar miembros
+POST   /api/orgs                  # Create organization
+GET    /api/orgs/:slug            # Details
+POST   /api/orgs/:slug/invite     # Invite member
+GET    /api/orgs/:slug/members    # List members
 ```
 
-### Ejemplo: Enviar Kudo
+### Example: Send a Kudo
 
 ```typescript
 // POST /api/kudos
 {
   "receiverUsername": "maria",
-  "message": "Excelente trabajo en el refactor del módulo de auth!",
+  "message": "Excellent work on the auth module refactor!",
   "category": "CODING",
   "isPublic": true
 }
@@ -418,78 +418,78 @@ GET    /api/orgs/:slug/members    # Listar miembros
   "id": "clx1234...",
   "giver": { "username": "jeremy-sud", "displayName": "Jeremy Alva" },
   "receiver": { "username": "maria", "displayName": "María García" },
-  "message": "Excelente trabajo en el refactor del módulo de auth!",
+  "message": "Excellent work on the auth module refactor!",
   "category": "CODING",
   "createdAt": "2026-02-15T10:30:00Z",
   "badgeUnlocked": {
     "slug": "code-ninja",
     "name": "Code Ninja",
-    "message": "¡María desbloqueó el badge Code Ninja!"
+    "message": "María unlocked the Code Ninja badge!"
   }
 }
 ```
 
 ---
 
-## 🔗 Integraciones
+## 🔗 Integrations
 
 ### Slack App
 
 ```
-/kudo @maria Gracias por ayudarme con el bug de producción! #collaboration
+/kudo @maria Thanks for helping me with that production bug! #collaboration
 ```
 
 ### GitHub Webhooks
 
-| Evento | Acción |
-|--------|--------|
-| `pull_request.merged` | +1 punto coding, check badge "First PR" |
-| `pull_request_review.submitted` | +1 punto collaboration |
-| `issues.closed` | +1 punto si assignee |
+| Event | Action |
+|-------|--------|
+| `pull_request.merged` | +1 coding point, check "First PR" badge |
+| `pull_request_review.submitted` | +1 collaboration point |
+| `issues.closed` | +1 point if assignee |
 
 ### Zapier/Make
 
-Triggers disponibles:
-- Nuevo kudo recibido
-- Nuevo badge desbloqueado
-- Milestone alcanzado
+Available triggers:
+- New kudo received
+- New badge unlocked
+- Milestone reached
 
 ---
 
-## 💰 Monetización
+## 💰 Monetization
 
-### Planes
+### Plans
 
-| Feature | Free | Pro ($5/user/mo) | Enterprise |
-|---------|------|------------------|------------|
-| Usuarios | 10 | 100 | Ilimitado |
-| Kudos/mes | 50 | Ilimitado | Ilimitado |
-| Badges globales | ✅ | ✅ | ✅ |
-| Badges custom | ❌ | ✅ | ✅ |
-| GitHub Sync | ✅ | ✅ | ✅ |
-| Slack/Discord | ❌ | ✅ | ✅ |
-| Analytics | Básico | Avanzado | Premium |
-| SSO/SAML | ❌ | ❌ | ✅ |
-| API dedicada | ❌ | ❌ | ✅ |
-| Soporte | Community | Email | Dedicado |
+| Feature | Open ($0) | Pro ($149/mo) | Scale ($499/mo) | Enterprise ($1,499/mo) |
+|---------|-----------|---------------|-----------------|------------------------|
+| Monthly Active Collaborators | 10 | Up to 50 MAC | Up to 200 MAC | Up to 500 MAC |
+| Kudos/month | 50 | Unlimited | Unlimited | Unlimited |
+| Global badges | ✅ | ✅ | ✅ | ✅ |
+| Custom badges | ❌ | ✅ | ✅ | ✅ |
+| GitHub Sync | ✅ | ✅ | ✅ | ✅ |
+| Slack/Discord | ❌ | ✅ | ✅ | ✅ |
+| Analytics | Basic | Advanced | Advanced | Premium |
+| SSO/SAML | ❌ | ❌ | ❌ | ✅ |
+| Dedicated API | ❌ | ❌ | ✅ | ✅ |
+| Support | Community | Email | Priority | Dedicated |
 
 ---
 
-## 📅 Timeline Estimado
+## 📅 Estimated Timeline
 
 ```
-2026 Q1 (Feb-Mar)
-├── Semana 1-2: Database + Auth
-├── Semana 3-4: API Kudos + Badge Engine
-├── Semana 5-6: Dashboard Web MVP
-└── Semana 7-8: Testing + Polish
+2026 Q1 (Feb–Mar)
+├── Week 1–2: Database + Auth
+├── Week 3–4: Kudos API + Badge Engine
+├── Week 5–6: Web Dashboard MVP
+└── Week 7–8: Testing + Polish
 
-2026 Q2 (Abr-Jun)
-├── Mes 1: Organizations + Teams
-├── Mes 2: Slack Integration
-└── Mes 3: Analytics Dashboard
+2026 Q2 (Apr–Jun)
+├── Month 1: Organizations + Teams
+├── Month 2: Slack Integration
+└── Month 3: Analytics Dashboard
 
-2026 Q3 (Jul-Sep)
+2026 Q3 (Jul–Sep)
 ├── AI Features
 ├── Enterprise Features
 └── Public Launch
@@ -512,7 +512,7 @@ Triggers disponibles:
 
 ---
 
-## 📁 Estructura de Proyecto Target
+## 📁 Target Project Structure
 
 ```
 BOOMFLOW/
@@ -521,7 +521,7 @@ BOOMFLOW/
 │   │   ├── app/
 │   │   ├── components/
 │   │   └── lib/
-│   └── api/                 # Backend API (si se separa)
+│   └── api/                 # Backend API (if separated)
 ├── packages/
 │   ├── database/            # Prisma schema + client
 │   ├── ui/                  # Shared components
@@ -529,10 +529,10 @@ BOOMFLOW/
 ├── services/
 │   ├── badge-engine/        # Badge logic
 │   └── notifications/       # Email, Slack, etc.
-├── github-action/           # (existente)
-├── assets/                  # (existente) SVG badges
+├── github-action/           # (existing)
+├── assets/                  # (existing) SVG badges
 ├── docs/
-│   ├── ROADMAP.md          # Este archivo
+│   ├── ROADMAP.md          # This file
 │   └── API.md              # API documentation
 └── docker-compose.yml       # Local dev
 ```

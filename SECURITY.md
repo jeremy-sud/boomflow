@@ -1,20 +1,20 @@
-# 🛡️ Sistema de Protección de Medallas BOOMFLOW
+# 🛡️ BOOMFLOW Badge Protection System
 
-> **⚠️ DOCUMENTO INTERNO - Solo para administradores de Sistemas Ursol**
+> **⚠️ INTERNAL DOCUMENT - Administrators only (Sistemas Ursol)**
 
-## Descripción General
+## Overview
 
-BOOMFLOW implementa un sistema de protección multinivel para garantizar que **solo administradores autorizados de Sistemas Ursol** puedan otorgar medallas a colaboradores.
+BOOMFLOW implements a multi-layered protection system to ensure that **only authorized Sistemas Ursol administrators** can award badges to contributors.
 
-Este sistema previene que usuarios no autorizados se auto-asignen medallas o modifiquen los datos de otros usuarios.
+This system prevents unauthorized users from self-assigning badges or modifying other users' data.
 
 ---
 
-## 🔐 Capas de Protección
+## 🔐 Protection Layers
 
-### 1. Lista de Administradores (`config/admins.json`)
+### 1. Administrator List (`config/admins.json`)
 
-Archivo central que define quién puede otorgar medallas:
+Central file that defines who can award badges:
 
 ```json
 {
@@ -31,30 +31,30 @@ Archivo central que define quién puede otorgar medallas:
 }
 ```
 
-**Administradores actuales:**
-| Usuario | Nombre | Permisos |
-|---------|--------|----------|
-| `jeremy-sud` | Jeremy Alva | Todos |
-| `ursolcr` | Ursol CR | Todos |
+**Current administrators:**
+| Username | Name | Permissions |
+|----------|------|-------------|
+| `jeremy-sud` | Jeremy Alva | All |
+| `ursolcr` | Ursol CR | All |
 
 ### 2. GitHub Actions Workflow
 
-El workflow `.github/workflows/badge-protection.yml` se ejecuta automáticamente en cada Push o PR que modifique:
-- `users/**` - Archivos de datos de usuarios
-- `config/admins.json` - Lista de administradores
+The `.github/workflows/badge-protection.yml` workflow runs automatically on every Push or PR that modifies:
+- `users/**` - User data files
+- `config/admins.json` - Administrator list
 
-**Validaciones:**
-- ✅ Verifica que el autor sea un administrador autorizado
-- ✅ Valida la estructura JSON de los archivos modificados
-- ✅ Registra un log de auditoría de cambios
+**Validations:**
+- ✅ Verifies the author is an authorized administrator
+- ✅ Validates the JSON structure of modified files
+- ✅ Records an audit log of changes
 
-**Si falla:**
-- ❌ El workflow bloqueará el merge del PR
-- ❌ El push será marcado como fallido
+**On failure:**
+- ❌ The workflow will block the PR merge
+- ❌ The push will be marked as failed
 
 ### 3. CODEOWNERS
 
-El archivo `.github/CODEOWNERS` requiere aprobación explícita de administradores para:
+The `.github/CODEOWNERS` file requires explicit administrator approval for:
 
 ```
 /users/              @jeremy-sud @ursolcr
@@ -62,11 +62,11 @@ El archivo `.github/CODEOWNERS` requiere aprobación explícita de administrador
 /.github/            @jeremy-sud @ursolcr
 ```
 
-**Nota:** Para que CODEOWNERS funcione completamente, debes habilitar "Require review from Code Owners" en la configuración de protección de rama del repositorio.
+**Note:** For CODEOWNERS to work fully, you must enable "Require review from Code Owners" in the repository's branch protection settings.
 
-### 4. Trazabilidad (`awardedBy`)
+### 4. Traceability (`awardedBy`)
 
-Cada medalla registra quién la otorgó:
+Each badge records who awarded it:
 
 ```json
 {
@@ -76,133 +76,133 @@ Cada medalla registra quién la otorgó:
 }
 ```
 
-Esto permite:
-- Auditar quién otorgó cada medalla
-- Verificar que fue un administrador autorizado
-- Mantener historial de reconocimientos
+This allows:
+- Auditing who awarded each badge
+- Verifying it was an authorized administrator
+- Maintaining a recognition history
 
-### 5. Sistema de Auto-Award 🤖
+### 5. Auto-Award System 🤖
 
-Para colaboradores registrados (como `jeremy-sud` y `ursolcr`), existe un **sistema automático** que verifica y otorga medallas diariamente.
+For registered contributors (such as `jeremy-sud` and `ursolcr`), there is an **automated system** that verifies and awards badges daily.
 
 **Workflow:** `.github/workflows/auto-award.yml`
 
-**Horario:** Todos los días a las 6:00 AM UTC (medianoche Costa Rica)
+**Schedule:** Every day at 6:00 AM UTC (midnight Costa Rica)
 
-**Funcionamiento:**
-1. El workflow se ejecuta automáticamente según el cron
-2. El script `scripts/auto-award.js` analiza métricas de GitHub
-3. Verifica commits, PRs, reviews, issues, etc.
-4. Otorga medallas automáticamente si se cumplen los criterios
-5. Hace commit y push de los cambios
+**How it works:**
+1. The workflow runs automatically on the cron schedule
+2. The `scripts/auto-award.js` script analyzes GitHub metrics
+3. It checks commits, PRs, reviews, issues, etc.
+4. It awards badges automatically if the criteria are met
+5. It commits and pushes the changes
 
-**Medallas Auto-Otorgables:**
+**Auto-Awardable Badges:**
 
-| Categoría | Medallas |
-|-----------|----------|
+| Category | Badges |
+|----------|--------|
 | **Onboarding** | hello-world, first-commit, first-pr, first-review, week-one, month-one, year-one |
 | **Coding** | code-ninja, bug-hunter, commit-century, commit-500, commit-1000 |
-| **Colaboración** | pr-champion, review-guru, team-player, helpful-hero |
-| **Documentación** | docs-contributor, docs-hero |
+| **Collaboration** | pr-champion, review-guru, team-player, helpful-hero |
+| **Documentation** | docs-contributor, docs-hero |
 | **Milestones** | streak-7, streak-30, early-bird, night-owl |
 
-**Medallas Solo Manuales:**
+**Manual-Only Badges:**
 - mentor, tech-lead, architect, team-spirit, sprint-hero, innovation-award, founder
 
-**Ejecución Manual:**
+**Manual Execution:**
 ```bash
-# Ejecutar localmente
+# Run locally
 node scripts/auto-award.js
 
-# Ejecutar desde GitHub Actions (manual trigger)
-# Ve a Actions > "BOOMFLOW Auto-Award (Diario)" > Run workflow
+# Run from GitHub Actions (manual trigger)
+# Go to Actions > "BOOMFLOW Auto-Award (Daily)" > Run workflow
 ```
 
-### 6. Sistema de Webhooks de GitHub 🎯
+### 6. GitHub Webhooks System 🎯
 
-BOOMFLOW detecta eventos de GitHub **en tiempo real** y otorga medallas automáticamente.
+BOOMFLOW detects GitHub events **in real time** and awards badges automatically.
 
 **Workflow:** `.github/workflows/event-processor.yml`
 
-**Eventos Detectados:**
+**Detected Events:**
 
-| Evento | Trigger | Medallas Posibles |
-|--------|---------|-------------------|
-| `pull_request.merged` | PR mergeado | first-pr, pr-champion, hotfix-hero, docs-contributor |
-| `pull_request_review.submitted` | Code review enviado | first-review, team-player, review-guru, code-guardian |
-| `issues.opened` | Issue creado | bug-reporter, feature-requester |
-| `issues.closed` | Issue cerrado | bug-slayer, issue-closer |
-| `release.published` | Release publicado | release-master |
-| `push` | Commits pusheados | code-ninja, commit-century, commit-500 |
+| Event | Trigger | Possible Badges |
+|-------|---------|-----------------|
+| `pull_request.merged` | PR merged | first-pr, pr-champion, hotfix-hero, docs-contributor |
+| `pull_request_review.submitted` | Code review submitted | first-review, team-player, review-guru, code-guardian |
+| `issues.opened` | Issue created | bug-reporter, feature-requester |
+| `issues.closed` | Issue closed | bug-slayer, issue-closer |
+| `release.published` | Release published | release-master |
+| `push` | Commits pushed | code-ninja, commit-century, commit-500 |
 
-**Flujo:**
+**Flow:**
 ```
-Evento de GitHub → Workflow se dispara → Procesa evento → Evalúa reglas → Otorga medallas → Commit & Push
+GitHub Event → Workflow triggers → Process event → Evaluate rules → Award badges → Commit & Push
 ```
 
 **Script:** `scripts/process-event.js`
 
 ```bash
-# Uso manual para testing
+# Manual usage for testing
 echo '{"pull_request":{"user":{"login":"jeremy-sud"},"merged":true}}' | \
   node scripts/process-event.js pull_request.merged
 ```
 
 ---
 
-## 🛠️ Herramientas de Administración
+## 🛠️ Administration Tools
 
-### CLI de Administración
+### Administration CLI
 
 ```bash
-# Ver administradores autorizados
+# List authorized administrators
 node scripts/badge-admin.js list-admins
 
-# Otorgar medalla
-node scripts/badge-admin.js grant <usuario> <badge-id> --admin <tu-usuario>
+# Award a badge
+node scripts/badge-admin.js grant <user> <badge-id> --admin <your-username>
 
-# Revocar medalla
-node scripts/badge-admin.js revoke <usuario> <badge-id> --admin <tu-usuario>
+# Revoke a badge
+node scripts/badge-admin.js revoke <user> <badge-id> --admin <your-username>
 
-# Ver perfil de usuario
-node scripts/badge-admin.js user <usuario>
+# View user profile
+node scripts/badge-admin.js user <user>
 ```
 
-**Ejemplos:**
+**Examples:**
 ```bash
-# Jeremy otorga medalla a un colaborador
-node scripts/badge-admin.js grant nuevo-dev first-commit --admin jeremy-sud
+# Jeremy awards a badge to a contributor
+node scripts/badge-admin.js grant new-dev first-commit --admin jeremy-sud
 
-# Ursolcr revoca una medalla
-node scripts/badge-admin.js revoke usuario code-ninja --admin ursolcr
+# Ursolcr revokes a badge
+node scripts/badge-admin.js revoke user code-ninja --admin ursolcr
 ```
 
 ---
 
-## 📋 Proceso para Otorgar Medallas
+## 📋 Badge Awarding Process
 
-### Para Administradores
+### For Administrators
 
-1. **Evaluar** si el colaborador merece la medalla según los criterios definidos
-2. **Ejecutar** el comando de CLI o editar manualmente el archivo JSON
-3. **Verificar** que el archivo tenga el campo `awardedBy` con tu usuario
-4. **Commit & Push** los cambios al repositorio
-5. El workflow validará automáticamente los permisos
+1. **Evaluate** whether the contributor deserves the badge according to the defined criteria
+2. **Execute** the CLI command or manually edit the JSON file
+3. **Verify** that the file contains the `awardedBy` field with your username
+4. **Commit & Push** the changes to the repository
+5. The workflow will automatically validate permissions
 
-### Estructura del archivo de usuario
+### User file structure
 
 ```json
 {
-  "username": "colaborador-github",
-  "displayName": "Nombre Completo",
-  "role": "Desarrollador",
+  "username": "github-contributor",
+  "displayName": "Full Name",
+  "role": "Developer",
   "org": "SistemasUrsol",
   "joinedAt": "2024-01-15",
   "badges": [
     {
       "id": "badge-id",
       "awardedAt": "2024-02-01",
-      "awardedBy": "admin-que-otorgo"
+      "awardedBy": "awarding-admin"
     }
   ]
 }
@@ -210,81 +210,81 @@ node scripts/badge-admin.js revoke usuario code-ninja --admin ursolcr
 
 ---
 
-## ⚠️ Qué NO Hacer
+## ⚠️ What NOT to Do
 
-- ❌ **NO** otorgarse medallas a uno mismo (excepto medallas de sistema)
-- ❌ **NO** modificar el archivo `config/admins.json` sin autorización
-- ❌ **NO** aprobar PRs de usuarios no autorizados que modifiquen medallas
-- ❌ **NO** compartir acceso al repositorio con personas fuera de Ursol
+- ❌ **DO NOT** award badges to yourself (except system badges)
+- ❌ **DO NOT** modify the `config/admins.json` file without authorization
+- ❌ **DO NOT** approve PRs from unauthorized users that modify badges
+- ❌ **DO NOT** share repository access with people outside of Ursol
 
 ---
 
-## 🔧 Configuración del Repositorio (GitHub)
+## 🔧 Repository Configuration (GitHub)
 
-Para máxima protección, configura en GitHub → Settings → Branches:
+For maximum protection, configure in GitHub → Settings → Branches:
 
-### Protección de rama `main`:
+### Branch protection for `main`:
 - [x] Require a pull request before merging
-- [x] Require approvals (mínimo 1)
+- [x] Require approvals (minimum 1)
 - [x] Require review from Code Owners
 - [x] Require status checks to pass before merging
   - [x] `validate-badge-permissions`
 - [x] Require branches to be up to date before merging
-- [ ] Do not allow bypassing the above settings (opcional para emergencias)
+- [ ] Do not allow bypassing the above settings (optional for emergencies)
 
 ---
 
-## 📞 Agregar Nuevos Administradores
+## 📞 Adding New Administrators
 
-Solo los administradores actuales pueden agregar nuevos administradores.
+Only current administrators can add new administrators.
 
-1. Editar `config/admins.json`
-2. Agregar el nuevo administrador con sus permisos
-3. Actualizar `.github/CODEOWNERS` si es necesario
-4. Crear PR y obtener aprobación de otro administrador
+1. Edit `config/admins.json`
+2. Add the new administrator with their permissions
+3. Update `.github/CODEOWNERS` if necessary
+4. Create a PR and obtain approval from another administrator
 
 ```json
 {
-  "username": "nuevo-admin",
-  "displayName": "Nombre del Admin",
-  "role": "Rol en Ursol",
+  "username": "new-admin",
+  "displayName": "Admin Name",
+  "role": "Role at Ursol",
   "permissions": ["grant_badges", "revoke_badges", "manage_users"],
   "addedAt": "2024-XX-XX",
-  "addedBy": "admin-existente"
+  "addedBy": "existing-admin"
 }
 ```
 
 ---
 
-## 📊 Auditoría
+## 📊 Auditing
 
-Todos los cambios de medallas quedan registrados en:
-1. **Git History** - Commits con autor y fecha
-2. **GitHub Actions Logs** - Registro de validaciones
-3. **Campo `awardedBy`** - En cada medalla
+All badge changes are recorded in:
+1. **Git History** - Commits with author and date
+2. **GitHub Actions Logs** - Validation records
+3. **`awardedBy` field** - In each badge
 
-Para auditar:
+To audit:
 ```bash
-# Ver historial de cambios en usuarios
+# View change history for users
 git log --oneline -- users/
 
-# Ver quién modificó un archivo específico
-git log -p -- users/colaborador.json
+# View who modified a specific file
+git log -p -- users/contributor.json
 ```
 
 ---
 
-## 🚨 En Caso de Incidente
+## 🚨 In Case of Incident
 
-Si detectas una medalla otorgada incorrectamente:
+If you detect an incorrectly awarded badge:
 
-1. **Identificar** el usuario y medalla afectada
-2. **Revocar** usando el CLI: `node scripts/badge-admin.js revoke ...`
-3. **Revisar** el historial de git para identificar cómo ocurrió
-4. **Reportar** al equipo de administración
-5. **Reforzar** la protección si es necesario
+1. **Identify** the affected user and badge
+2. **Revoke** using the CLI: `node scripts/badge-admin.js revoke ...`
+3. **Review** the git history to determine how it happened
+4. **Report** to the administration team
+5. **Strengthen** protections if necessary
 
 ---
 
-*Sistema de protección implementado el 15 de febrero de 2026*
-*Mantenido por: @jeremy-sud y @ursolcr*
+*Protection system implemented on February 15, 2026*
+*Maintained by: @jeremy-sud and @ursolcr*

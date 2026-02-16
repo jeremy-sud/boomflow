@@ -1,98 +1,98 @@
-# 💎 BOOMFLOW — Economía de Reconocimiento
+# 💎 BOOMFLOW — Recognition Economy
 
 <p align="center">
-  <img src="https://img.shields.io/badge/🔒_Uso_Exclusivo-Sistemas_Ursol-8B5CF6.svg" alt="Exclusivo"/>
-  <img src="https://img.shields.io/badge/Versión-1.0-gold.svg" alt="Versión"/>
+  <img src="https://img.shields.io/badge/🔒_Exclusive_Use-Sistemas_Ursol-8B5CF6.svg" alt="Exclusive"/>
+  <img src="https://img.shields.io/badge/Version-1.0-gold.svg" alt="Version"/>
 </p>
 
-> **"En Ursol, el valor no solo se genera con commits, se genera con conexiones y apoyo mutuo. Estas medallas representan la inversión en nuestra comunidad."**
+> **"At Ursol, value is not only generated through commits — it is generated through connections and mutual support. These badges represent an investment in our community."**
 
 ---
 
-## 📖 Índice
+## 📖 Table of Contents
 
-1. [Filosofía del Sistema](#filosofía-del-sistema)
-2. [Medallas de Vínculo (Peer-to-Peer)](#-medallas-de-vínculo-peer-to-peer)
-3. [Medallas de Inversión (Premium/Patron)](#-medallas-de-inversión-premiumpatron)
-4. [Beneficios por Categoría](#beneficios-por-categoría)
-5. [Protección contra "Pay-to-Win"](#-protección-contra-pay-to-win)
-6. [Implementación Técnica](#implementación-técnica)
+1. [System Philosophy](#system-philosophy)
+2. [Bond Badges (Peer-to-Peer)](#-bond-badges-peer-to-peer)
+3. [Investment Badges (Premium/Patron)](#-investment-badges-premiumpatron)
+4. [Benefits by Category](#benefits-by-category)
+5. [Protection against "Pay-to-Win"](#-protection-against-pay-to-win)
+6. [Technical Implementation](#technical-implementation)
 
 ---
 
-## Filosofía del Sistema
+## System Philosophy
 
-BOOMFLOW reconoce que el talento va más allá del código. Un equipo excepcional se construye sobre **tres pilares**:
+BOOMFLOW recognizes that talent goes beyond code. An exceptional team is built on **three pillars**:
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                    DIMENSIONES DEL VALOR                        │
+│                     DIMENSIONS OF VALUE                         │
 ├─────────────────────────────────────────────────────────────────┤
 │                                                                 │
-│   ⚙️ TÉCNICO           ❤️ SOCIAL            💎 COMPROMISO       │
+│   ⚙️ TECHNICAL         ❤️ SOCIAL            💎 COMMITMENT       │
 │   ──────────          ────────             ───────────          │
-│   • Código            • Vínculos           • Inversión          │
-│   • DevOps            • Mentoría           • Patrocinio         │
-│   • Arquitectura      • Cultura            • Sostenibilidad     │
+│   • Code              • Bonds              • Investment         │
+│   • DevOps            • Mentorship         • Sponsorship        │
+│   • Architecture      • Culture            • Sustainability     │
 │                                                                 │
-│   Medallas de         Medallas de          Medallas de          │
-│   mérito técnico      conexión humana      apoyo comunitario    │
+│   Technical           Human                Community            │
+│   merit badges        connection badges    support badges       │
 │                                                                 │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## ❤️ Medallas de Vínculo (Peer-to-Peer)
+## ❤️ Bond Badges (Peer-to-Peer)
 
-### El Concepto: "Resonancia"
+### The Concept: "Resonance"
 
-En entornos corporativos, preferimos llamarlas medallas de **Resonancia** o **Vínculo**. No son medallas que "ganas" por métricas — son medallas que **transfieres** a un compañero.
+In corporate environments, we prefer to call them **Resonance** or **Bond** badges. These are not badges you "earn" through metrics — they are badges you **transfer** to a colleague.
 
-### Mecánica
+### Mechanics
 
 ```yaml
-# Reglas del Sistema de Resonancia
+# Resonance System Rules
 allocation:
   badges_per_user_per_year: 2
-  type: "compañerismo"
+  type: "camaraderie"
   transferable: true
   
 restrictions:
   - no_self_award: true
-  - no_reciprocal_immediate: true  # No puedes dar a quien te dio en 30 días
-  - requires_message: true          # Debe incluir razón
+  - no_reciprocal_immediate: true  # Cannot award someone who awarded you within 30 days
+  - requires_message: true          # Must include a reason
 ```
 
-### ¿Por qué funciona?
+### Why Does It Work?
 
-| Aspecto | Medalla Automática | Medalla de Vínculo |
-|---------|-------------------|-------------------|
-| Origen | Algoritmo | Colega |
-| Valor | Objetivo | Emocional |
-| Mensaje | "Cumpliste X commits" | "Gracias por aguantarme en el despliegue del viernes" |
-| Impacto | Reconocimiento | Conexión humana |
+| Aspect | Automatic Badge | Bond Badge |
+|--------|----------------|------------|
+| Origin | Algorithm | Colleague |
+| Value | Objective | Emotional |
+| Message | "You completed X commits" | "Thanks for sticking with me during Friday's deployment" |
+| Impact | Recognition | Human connection |
 
-### Medallas Disponibles
+### Available Badges
 
-| Medalla | Descripción | Trigger |
-|---------|-------------|---------|
-| 🤝 **Resonancia** | Un colega te reconoce por tu apoyo | `MANUAL_PEER_AWARD` |
-| 💫 **Vínculo Fuerte** | Recibiste 3+ medallas de Resonancia | Automático |
-| 🌟 **Alma del Equipo** | Recibiste 10+ medallas de Resonancia | Automático |
+| Badge | Description | Trigger |
+|-------|-------------|---------|
+| 🤝 **Resonance** | A colleague recognizes you for your support | `MANUAL_PEER_AWARD` |
+| 💫 **Strong Bond** | Received 3+ Resonance badges | Automatic |
+| 🌟 **Team Soul** | Received 10+ Resonance badges | Automatic |
 
 ---
 
-## 💎 Medallas de Inversión (Premium/Patron)
+## 💎 Investment Badges (Premium/Patron)
 
-### El Concepto: Compromiso Tangible
+### The Concept: Tangible Commitment
 
-Cuando un miembro invierte (aunque sea simbólicamente) en el ecosistema BOOMFLOW, está haciendo un **compromiso público** con la comunidad de Ursol.
+When a member invests (even symbolically) in the BOOMFLOW ecosystem, they are making a **public commitment** to the Ursol community.
 
-### Beneficios Sensibles
+### Meaningful Benefits
 
 ```yaml
-# Tier de Beneficios por Inversión
+# Investment Tier Benefits
 patron_tiers:
   - tier: "seed"        # $1-5
     benefits:
@@ -102,190 +102,190 @@ patron_tiers:
   - tier: "growth"      # $10-20
     benefits:
       - badge: "patron-growth" 
-      - time_off: "1 tarde libre al mes"
-      - course_access: "1 curso Udemy/Coursera"
+      - time_off: "1 free afternoon per month"
+      - course_access: "1 Udemy/Coursera course"
       
   - tier: "bloom"       # $50+
     benefits:
       - badge: "patron-bloom"
-      - project_choice: "Prioridad en elección de stack"
-      - impact_certificate: "Donación a causa social"
+      - project_choice: "Priority in stack selection"
+      - impact_certificate: "Donation to a social cause"
 ```
 
-### Impacto Social (Opcional)
+### Social Impact (Optional)
 
-El dinero recaudado puede destinarse a:
+The funds raised can be allocated to:
 
-| Destino | Descripción |
-|---------|-------------|
-| 🌳 **Reforestación** | Plantar árboles con el fondo |
-| 💻 **Educación** | Becar a estudiantes de programación |
-| 🏠 **Comunidad** | Apoyar proyectos open source |
+| Destination | Description |
+|-------------|-------------|
+| 🌳 **Reforestation** | Plant trees with the fund |
+| 💻 **Education** | Sponsor programming students |
+| 🏠 **Community** | Support open source projects |
 
-La medalla se convierte en un **recibo** de que "Ursol y yo ayudamos".
+The badge becomes a **receipt** that "Ursol and I helped."
 
-### Medallas Disponibles
+### Available Badges
 
-| Medalla | Inversión | Beneficio Principal |
-|---------|-----------|---------------------|
-| 🌱 **Patron Seed** | $1-5 | Reconocimiento público |
-| 🌿 **Patron Growth** | $10-20 | Tiempo de desconexión |
-| 🌸 **Patron Bloom** | $50+ | Elección de proyecto |
-| 🌳 **Eco Champion** | Donación social | Certificado de impacto |
+| Badge | Investment | Main Benefit |
+|-------|-----------|--------------|
+| 🌱 **Patron Seed** | $1-5 | Public recognition |
+| 🌿 **Patron Growth** | $10-20 | Disconnect time |
+| 🌸 **Patron Bloom** | $50+ | Project choice |
+| 🌳 **Eco Champion** | Social donation | Impact certificate |
 
 ---
 
-## Beneficios por Categoría
+## Benefits by Category
 
-### Matriz de Beneficios
+### Benefits Matrix
 
-| Categoría | Tipo de Medalla | Beneficio Tangible |
-|-----------|-----------------|-------------------|
-| 🔵 Coding | Mérito técnico | Reconocimiento profesional |
-| 🟣 DevOps | Mérito técnico | Reconocimiento profesional |
-| ❤️ Community | Vínculo social | Conexión humana |
-| 💎 Premium | Inversión | Beneficios reales |
+| Category | Badge Type | Tangible Benefit |
+|----------|-----------|-----------------|
+| 🔵 Coding | Technical merit | Professional recognition |
+| 🟣 DevOps | Technical merit | Professional recognition |
+| ❤️ Community | Social bond | Human connection |
+| 💎 Premium | Investment | Real benefits |
 
-### Tiempo de Desconexión
+### Disconnect Time
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                  🎫 PASE DE DESCONEXIÓN                         │
+│                  🎫 DISCONNECT PASS                              │
 ├─────────────────────────────────────────────────────────────────┤
 │                                                                 │
-│   Este pase otorga 1 día libre (24 horas) al mes              │
+│   This pass grants 1 day off (24 hours) per month              │
 │                                                                 │
-│   Válido para: Patrons Growth y Bloom                          │
-│   Uso: Cualquier viernes del mes                               │
-│   Requisito: Aviso 48h antes                                   │
+│   Valid for: Growth and Bloom Patrons                          │
+│   Usage: Any Friday of the month                               │
+│   Requirement: 48-hour advance notice                          │
 │                                                                 │
-│   "El descanso es parte de la productividad."                  │
+│   "Rest is part of productivity."                              │
 │                                                                 │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## ⚠️ Protección contra "Pay-to-Win"
+## ⚠️ Protection against "Pay-to-Win"
 
-### El Riesgo
+### The Risk
 
-El principal peligro de monetizar medallas es que las de **mérito técnico** se perciban como menos valiosas que las "compradas".
+The main danger of monetizing badges is that **technical merit** badges may be perceived as less valuable than "purchased" ones.
 
-### Solución: Separación Visual y Semántica
+### Solution: Visual and Semantic Separation
 
 ```yaml
 badge_visual_distinction:
   merit_badges:         # Coding, DevOps, Leadership
     border: "standard"
-    category_label: "MÉRITO"
+    category_label: "MERIT"
     
-  community_badges:     # Vínculo, Resonancia
+  community_badges:     # Bond, Resonance
     border: "heart_shape"
     category_label: "SOCIAL"
     
-  patron_badges:        # Inversión
+  patron_badges:        # Investment
     border: "diamond_sparkle"
     category_label: "PATRON"
     color_scheme: "purple_gradient"
 ```
 
-### Principios de Diseño
+### Design Principles
 
-1. **Estética Diferenciada**: Las medallas de inversión tienen un marco especial (borde brillante tipo diamante)
-2. **Categoría Visible**: Siempre se muestra "PATRON" o "SOCIAL" para distinguirlas del mérito técnico
-3. **No Compiten**: Las medallas de inversión **nunca** aparecen en el leaderboard de habilidades técnicas
-4. **Transparencia Total**: El perfil muestra claramente el origen de cada medalla
+1. **Differentiated Aesthetics**: Investment badges have a special frame (diamond-like shiny border)
+2. **Visible Category**: "PATRON" or "SOCIAL" is always shown to distinguish them from technical merit
+3. **Non-Competing**: Investment badges **never** appear in the technical skills leaderboard
+4. **Full Transparency**: The profile clearly shows the origin of each badge
 
-### Lo que NO se puede comprar
+### What Money Can NOT Buy
 
-| ❌ Nunca comprables | ✅ Obtenibles por inversión |
-|--------------------|----------------------------|
+| ❌ Never Purchasable | ✅ Obtainable through Investment |
+|---------------------|--------------------------------|
 | Code Ninja | Patron Seed |
 | Bug Slayer | Patron Growth |
 | Algorithm Ace | Patron Bloom |
 | Tech Lead | Eco Champion |
-| Cualquier medalla de mérito | Medallas de categoría Premium |
+| Any merit badge | Premium category badges |
 
 ---
 
-## Implementación Técnica
+## Technical Implementation
 
-### Nuevas Categorías en el Schema
+### New Categories in the Schema
 
 ```prisma
 enum BadgeCategory {
-  // ... categorías existentes
-  COMMUNITY    // ❤️ Medallas sociales/vínculo
-  PREMIUM      // 💎 Medallas de inversión/patron
+  // ... existing categories
+  COMMUNITY    // ❤️ Social/bond badges
+  PREMIUM      // 💎 Investment/patron badges
 }
 ```
 
-### Nuevos Triggers
+### New Triggers
 
 ```prisma
 enum TriggerType {
-  // ... triggers existentes
-  MANUAL_PEER_AWARD    // Otorgado por un compañero (Resonancia)
-  INVESTMENT           // Otorgado por inversión/donación
+  // ... existing triggers
+  MANUAL_PEER_AWARD    // Awarded by a colleague (Resonance)
+  INVESTMENT           // Awarded through investment/donation
 }
 ```
 
 ### API Endpoints
 
 ```http
-# Dar medalla de Resonancia a un compañero
+# Award a Resonance badge to a colleague
 POST /api/badges/peer-award
 {
   "toUserId": "user123",
-  "message": "Gracias por tu apoyo en el sprint"
+  "message": "Thanks for your support during the sprint"
 }
 
-# Procesar inversión y otorgar medalla Patron
+# Process investment and award a Patron badge
 POST /api/badges/patron
 {
   "tier": "growth",
   "paymentId": "stripe_123",
-  "impactChoice": "reforestation"  // opcional
+  "impactChoice": "reforestation"  // optional
 }
 ```
 
-### Validaciones
+### Validations
 
 ```typescript
-// peer-award: máximo 2 por año por usuario
+// peer-award: maximum 2 per year per user
 const peerAwardsThisYear = await getPeerAwardsCount(fromUserId, currentYear)
 if (peerAwardsThisYear >= 2) {
-  throw new Error('Has agotado tus medallas de Resonancia este año')
+  throw new Error('You have used all your Resonance badges for this year')
 }
 
-// No auto-otorgamiento
+// No self-awarding
 if (fromUserId === toUserId) {
-  throw new Error('No puedes darte una medalla a ti mismo')
+  throw new Error('You cannot award a badge to yourself')
 }
 ```
 
 ---
 
-## 📊 Resumen de Categorías
+## 📊 Category Summary
 
-| Categoría | Emoji | Tipo | Origen |
-|-----------|-------|------|--------|
-| 🟢 Onboarding | 🟢 | Mérito | Automático |
-| 🔵 Coding | 🔵 | Mérito | Automático/Manual |
-| 🟣 DevOps | 🟣 | Mérito | Automático/Manual |
-| 🩷 Collaboration | 🩷 | Mérito | Manual |
-| 🟡 Leadership | 🟡 | Mérito | Manual |
-| 📚 Documentation | 📚 | Mérito | Manual |
-| 🌱 Growth | 🌱 | Mérito | Manual |
-| ❤️ Milestones | ❤️ | Acumulativo | Automático |
-| ⭐ Special | ⭐ | Especial | Automático |
+| Category | Emoji | Type | Origin |
+|----------|-------|------|--------|
+| 🟢 Onboarding | 🟢 | Merit | Automatic |
+| 🔵 Coding | 🔵 | Merit | Automatic/Manual |
+| 🟣 DevOps | 🟣 | Merit | Automatic/Manual |
+| 🩷 Collaboration | 🩷 | Merit | Manual |
+| 🟡 Leadership | 🟡 | Merit | Manual |
+| 📚 Documentation | 📚 | Merit | Manual |
+| 🌱 Growth | 🌱 | Merit | Manual |
+| ❤️ Milestones | ❤️ | Cumulative | Automatic |
+| ⭐ Special | ⭐ | Special | Automatic |
 | ❤️ **Community** | ❤️ | **Social** | **Peer-to-Peer** |
-| 💎 **Premium** | 💎 | **Inversión** | **Donación** |
+| 💎 **Premium** | 💎 | **Investment** | **Donation** |
 
 ---
 
 <p align="center">
-  <strong>🌸 BOOMFLOW Economy — Valor Multidimensional</strong><br/>
-  <sub>El mérito técnico es solo una dimensión del talento — Sistemas Ursol</sub>
+  <strong>🌸 BOOMFLOW Economy — Multidimensional Value</strong><br/>
+  <sub>Technical merit is only one dimension of talent — Sistemas Ursol</sub>
 </p>

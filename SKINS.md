@@ -1,77 +1,77 @@
 # 🎨 BOOMFLOW Badge Skins
 
-Sistema de personalización visual para medallas BOOMFLOW. Cada skin ofrece un estilo único para representar tus logros.
+Visual customization system for BOOMFLOW badges. Each skin offers a unique style to represent your achievements.
 
-## 📦 Paquetes de Skins Disponibles
+## 📦 Available Skin Packs
 
-### 1. **DEFAULT** - Diseño Original
-El estilo clásico de BOOMFLOW con colores vibrantes y gradientes modernos.
-- **Archivo:** Badges individuales en `/assets/badges/`
-- **Estilo:** Colorido, moderno, profesional
-- **Acceso:** Gratis para todos
+### 1. **DEFAULT** - Original Design
+The classic BOOMFLOW style with vibrant colors and modern gradients.
+- **File:** Individual badges in `/assets/badges/`
+- **Style:** Colorful, modern, professional
+- **Access:** Free for all
 
-### 2. **CRYSTAL** 💎 - Gema Facetada
-Diseño inspirado en piedras preciosas con efectos de cristal y reflejos.
-- **Archivo:** `assets/skins/skin-crystal-template.svg`
-- **Colores:** Tonos azules cian con destellos
-- **Forma:** Hexagonal con facetas
-- **Acceso:** Gratis para todos
+### 2. **CRYSTAL** 💎 - Faceted Gem
+Design inspired by precious stones with crystal effects and reflections.
+- **File:** `assets/skins/skin-crystal-template.svg`
+- **Colors:** Cyan blue tones with sparkles
+- **Shape:** Hexagonal with facets
+- **Access:** Free for all
 
-### 3. **ACADEMIC** 🎓 - Escolar/Formal
-Estilo clásico académico con escudo, laureles y medallón dorado.
-- **Archivo:** `assets/skins/skin-academic-template.svg`
-- **Colores:** Pergamino, dorado, verde laurel
-- **Forma:** Escudo heráldico con listón
-- **Acceso:** Gratis para todos
+### 3. **ACADEMIC** 🎓 - Scholarly/Formal
+Classic academic style with shield, laurels, and gold medallion.
+- **File:** `assets/skins/skin-academic-template.svg`
+- **Colors:** Parchment, gold, laurel green
+- **Shape:** Heraldic shield with ribbon
+- **Access:** Free for all
 
-### 4. **MINIMALIST** ◻️ - Limpio y Simple
-Diseño ultra-minimalista con líneas limpias y colores neutros.
-- **Archivo:** `assets/skins/skin-minimalist-template.svg`
-- **Colores:** Blanco, gris, slate
-- **Forma:** Círculo simple
-- **Acceso:** Gratis para todos
+### 4. **MINIMALIST** ◻️ - Clean and Simple
+Ultra-minimalist design with clean lines and neutral colors.
+- **File:** `assets/skins/skin-minimalist-template.svg`
+- **Colors:** White, gray, slate
+- **Shape:** Simple circle
+- **Access:** Free for all
 
-### 5. **VINTAGE** 🏛️ - Retro/Clásico
-Estilo antiguo con ornamentos, texturas envejecidas y tonos sepia.
-- **Archivo:** `assets/skins/skin-vintage-template.svg`
-- **Colores:** Marrón, sepia, dorado antiguo
-- **Forma:** Óvalo ornamentado
-- **Acceso:** Gratis para todos
+### 5. **VINTAGE** 🏛️ - Retro/Classic
+Antique style with ornaments, aged textures, and sepia tones.
+- **File:** `assets/skins/skin-vintage-template.svg`
+- **Colors:** Brown, sepia, antique gold
+- **Shape:** Ornate oval
+- **Access:** Free for all
 
-### 6. **NEON** ⚡ - Moderno/Cyberpunk
-Diseño futurista con efectos de brillo neón sobre fondo oscuro.
-- **Archivo:** `assets/skins/skin-neon-template.svg`
-- **Colores:** Rosa neón, cian, fondo negro
-- **Forma:** Octágono con resplandor
-- **Acceso:** **Premium** (requiere badge de patrón)
+### 6. **NEON** ⚡ - Modern/Cyberpunk
+Futuristic design with neon glow effects on a dark background.
+- **File:** `assets/skins/skin-neon-template.svg`
+- **Colors:** Neon pink, cyan, black background
+- **Shape:** Octagon with glow
+- **Access:** **Premium** (requires patron badge)
 
 ---
 
-## 🔄 Cómo Cambiar de Skin
+## 🔄 How to Change Skins
 
-### Opción 1: Desde la Web App
+### Option 1: From the Web App
 ```
-1. Ve a tu Perfil → Medallas
-2. Click en cualquier medalla
-3. Selecciona "Cambiar Skin"
-4. Elige de los paquetes disponibles
-5. Guarda cambios
+1. Go to your Profile → Badges
+2. Click on any badge
+3. Select "Change Skin"
+4. Choose from the available packs
+5. Save changes
 ```
 
-### Opción 2: Via API
+### Option 2: Via API
 ```bash
-# Obtener skins disponibles
+# Get available skins
 GET /api/badges/skins
 
-# Cambiar skin de una medalla específica
+# Change the skin of a specific badge
 PATCH /api/badges/user/:badgeId
 {
   "skinId": "crystal-v1"
 }
 ```
 
-### Opción 3: Configuración en JSON (usuarios avanzados)
-Edita tu archivo en `users/{username}.json`:
+### Option 3: JSON Configuration (advanced users)
+Edit your file in `users/{username}.json`:
 ```json
 {
   "badges": [
@@ -88,125 +88,125 @@ Edita tu archivo en `users/{username}.json`:
 
 ---
 
-## 🛠️ Crear tu Propia Skin Personalizada
+## 🛠️ Create Your Own Custom Skin
 
-### Requisitos
-- Node.js 18+ instalado
-- Editor de SVG (Figma, Inkscape, Adobe Illustrator, o VS Code)
+### Requirements
+- Node.js 18+ installed
+- SVG editor (Figma, Inkscape, Adobe Illustrator, or VS Code)
 
-### Paso 1: Usar el Generador de Skins
+### Step 1: Use the Skin Generator
 
-Ejecuta el script interactivo:
+Run the interactive script:
 ```bash
 node scripts/generate-custom-skin.js
 ```
 
-Este script te guiará para crear un SVG personalizado con:
-- Selección de forma base (círculo, hexágono, escudo, óvalo)
-- Esquema de colores personalizable
-- Efectos opcionales (brillo, sombra, gradiente)
-- Texto personalizado
+This script will guide you through creating a custom SVG with:
+- Base shape selection (circle, hexagon, shield, oval)
+- Customizable color scheme
+- Optional effects (glow, shadow, gradient)
+- Custom text
 
-### Paso 2: Estructura del SVG
+### Step 2: SVG Structure
 
-Tu skin debe seguir esta estructura básica:
+Your skin must follow this basic structure:
 ```xml
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 140">
   <defs>
-    <!-- Gradientes y filtros aquí -->
+    <!-- Gradients and filters go here -->
   </defs>
   
-  <!-- Forma base (background) -->
+  <!-- Base shape (background) -->
   <!-- id: bg-shape -->
   
-  <!-- Decoraciones/bordes -->
+  <!-- Decorations/borders -->
   <!-- id: decorations -->
   
-  <!-- Área central para ícono de badge -->
-  <!-- id: icon-area - centrado en (60, 65) -->
+  <!-- Central area for badge icon -->
+  <!-- id: icon-area - centered at (60, 65) -->
   
-  <!-- Área de texto -->
-  <!-- id: text-area - centrado en (60, 120-130) -->
+  <!-- Text area -->
+  <!-- id: text-area - centered at (60, 120-130) -->
 </svg>
 ```
 
-### Paso 3: Dimensiones Importantes
+### Step 3: Important Dimensions
 
-| Elemento | Posición | Tamaño |
-|----------|----------|--------|
+| Element | Position | Size |
+|---------|----------|------|
 | ViewBox | - | 120 × 140 |
-| Centro del ícono | (60, 65) | 40-60px |
-| Área de texto | (60, 105-130) | font-size 7-10 |
-| Margen exterior | 10-15px | - |
+| Icon center | (60, 65) | 40-60px |
+| Text area | (60, 105-130) | font-size 7-10 |
+| Outer margin | 10-15px | - |
 
-### Paso 4: Registrar la Skin
+### Step 4: Register the Skin
 
-Una vez creado tu SVG, agrégalo al sistema:
+Once your SVG is created, add it to the system:
 
 ```bash
-# Copiar al directorio de skins
-cp mi-skin-custom.svg assets/skins/
+# Copy to the skins directory
+cp my-custom-skin.svg assets/skins/
 
-# Registrar en la base de datos (requiere permisos de admin)
+# Register in the database (requires admin permissions)
 node scripts/badge-admin.js register-skin \
-  --name "Mi Skin Custom" \
-  --slug "mi-skin-custom" \
-  --file "assets/skins/mi-skin-custom.svg" \
+  --name "My Custom Skin" \
+  --slug "my-custom-skin" \
+  --file "assets/skins/my-custom-skin.svg" \
   --style "CUSTOM"
 ```
 
 ---
 
-## 🎨 Paletas de Colores Recomendadas
+## 🎨 Recommended Color Palettes
 
-### Para Fondos Claros
+### For Light Backgrounds
 ```css
---primary: #3b82f6;    /* Azul */
---secondary: #f8fafc;  /* Gris claro */
---accent: #fbbf24;     /* Dorado */
---text: #1e293b;       /* Slate oscuro */
+--primary: #3b82f6;    /* Blue */
+--secondary: #f8fafc;  /* Light gray */
+--accent: #fbbf24;     /* Gold */
+--text: #1e293b;       /* Dark slate */
 ```
 
-### Para Fondos Oscuros
+### For Dark Backgrounds
 ```css
---primary: #22d3ee;    /* Cian */
---secondary: #0f172a;  /* Azul muy oscuro */
---accent: #f472b6;     /* Rosa */
---text: #e2e8f0;       /* Gris claro */
+--primary: #22d3ee;    /* Cyan */
+--secondary: #0f172a;  /* Very dark blue */
+--accent: #f472b6;     /* Pink */
+--text: #e2e8f0;       /* Light gray */
 ```
 
-### Para Estilo Corporativo
+### For Corporate Style
 ```css
---primary: #2563eb;    /* Azul corporativo */
---secondary: #ffffff;  /* Blanco */
---accent: #16a34a;     /* Verde éxito */
---text: #374151;       /* Gris */
+--primary: #2563eb;    /* Corporate blue */
+--secondary: #ffffff;  /* White */
+--accent: #16a34a;     /* Success green */
+--text: #374151;       /* Gray */
 ```
 
 ---
 
-## 📋 Referencia Rápida de Estilos
+## 📋 Quick Style Reference
 
-### Enum `SkinStyle` (Prisma Schema)
+### `SkinStyle` Enum (Prisma Schema)
 ```typescript
 enum SkinStyle {
-  DEFAULT      // Diseño original
-  CRYSTAL      // Gema facetada
-  ACADEMIC     // Formal escolar
-  MINIMALIST   // Limpio simple
-  VINTAGE      // Retro clásico
-  NEON         // Cyberpunk brillante
+  DEFAULT      // Original design
+  CRYSTAL      // Faceted gem
+  ACADEMIC     // Scholarly formal
+  MINIMALIST   // Clean simple
+  VINTAGE      // Retro classic
+  NEON         // Bright cyberpunk
 }
 ```
 
-### Modelo de Base de Datos
+### Database Model
 ```typescript
 model BadgeSkin {
   id          String    @id
-  name        String    // Nombre legible
+  name        String    // Display name
   slug        String    @unique
   description String?
-  svgIcon     String    // Contenido SVG
+  svgIcon     String    // SVG content
   style       SkinStyle @default(DEFAULT)
   isDefault   Boolean   @default(false)
   isPremium   Boolean   @default(false)
@@ -215,53 +215,53 @@ model BadgeSkin {
 
 ---
 
-## ❓ Preguntas Frecuentes
+## ❓ FAQ
 
-### ¿Puedo usar cualquier skin para cualquier badge?
-Sí, todas las skins son compatibles con todas las medallas. El ícono central se adapta automáticamente.
+### Can I use any skin for any badge?
+Yes, all skins are compatible with all badges. The central icon adapts automatically.
 
-### ¿Qué pasa si no me gusta ninguna skin?
-¡Crea la tuya! Usa el script `generate-custom-skin.js` o diseña manualmente un SVG siguiendo las especificaciones.
+### What if I don't like any of the available skins?
+Create your own! Use the `generate-custom-skin.js` script or manually design an SVG following the specifications.
 
-### ¿Las skins premium cuestan dinero?
-No directamente. Las skins premium se desbloquean al obtener badges de tipo "PREMIUM" (patrón/inversor del proyecto).
+### Do premium skins cost money?
+Not directly. Premium skins are unlocked by earning "PREMIUM" type badges (project patron/investor).
 
-### ¿Puedo compartir mis skins personalizadas?
-¡Absolutamente! Puedes contribuir tus skins al repositorio mediante un Pull Request. Ver [CONTRIBUTING.md](CONTRIBUTING.md).
+### Can I share my custom skins?
+Absolutely! You can contribute your skins to the repository via a Pull Request. See [CONTRIBUTING.md](CONTRIBUTING.md).
 
-### ¿Cómo veo las skins en mi perfil de GitHub README?
-Las skins se aplican automáticamente cuando usas los badges en tu README:
+### How do I display skins in my GitHub README profile?
+Skins are automatically applied when you use badges in your README:
 ```markdown
-![Badge](https://boomflow.sistemasursol.com/api/badge/tu-usuario/first-commit?skin=crystal)
+![Badge](https://boomflow.sistemasursol.com/api/badge/your-username/first-commit?skin=crystal)
 ```
 
 ---
 
-## 🤝 Contribuir Skins
+## 🤝 Contributing Skins
 
-¿Diseñaste una skin increíble? ¡Compártela!
+Designed an awesome skin? Share it!
 
-1. Fork el repositorio
-2. Agrega tu SVG en `assets/skins/skin-{nombre}-template.svg`
-3. Actualiza este documento con la descripción
-4. Crea un Pull Request
+1. Fork the repository
+2. Add your SVG in `assets/skins/skin-{name}-template.svg`
+3. Update this document with the description
+4. Create a Pull Request
 
-**Requisitos para contribuir:**
-- SVG válido con viewBox `0 0 120 140`
-- Incluir comentarios descriptivos
-- Seguir la estructura de archivos existentes
-- Probar que funciona con al menos 3 badges diferentes
+**Contribution requirements:**
+- Valid SVG with viewBox `0 0 120 140`
+- Include descriptive comments
+- Follow the existing file structure
+- Test that it works with at least 3 different badges
 
 ---
 
-## 📁 Estructura de Archivos
+## 📁 File Structure
 
 ```
 assets/
-├── badges/              # Badges individuales (estilo DEFAULT)
+├── badges/              # Individual badges (DEFAULT style)
 │   ├── badge-first-commit.svg
 │   └── ...
-└── skins/               # Plantillas de skin
+└── skins/               # Skin templates
     ├── skin-academic-template.svg
     ├── skin-crystal-template.svg
     ├── skin-minimalist-template.svg
@@ -269,10 +269,10 @@ assets/
     └── skin-vintage-template.svg
 
 scripts/
-├── generate-custom-skin.js    # Generador interactivo de skins
-└── update-svg-gems.py         # Actualizar íconos a estilo gema
+├── generate-custom-skin.js    # Interactive skin generator
+└── update-svg-gems.py         # Update icons to gem style
 ```
 
 ---
 
-*Documentación BOOMFLOW Skins v1.0 - Sistemas Ursol*
+*BOOMFLOW Skins Documentation v1.0 - Sistemas Ursol*

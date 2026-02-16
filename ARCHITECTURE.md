@@ -1,38 +1,38 @@
-# 🏗️ BOOMFLOW — Arquitectura del Sistema
+# 🏗️ BOOMFLOW — System Architecture
 
 <p align="center">
-  <img src="https://img.shields.io/badge/🔒_Documento_Técnico-Sistemas_Ursol-8B5CF6.svg" alt="Técnico"/>
+  <img src="https://img.shields.io/badge/Technical_Document-8B5CF6.svg" alt="Technical"/>
 </p>
 
-> Guía completa de la arquitectura, componentes y flujos de datos del sistema BOOMFLOW
+> Complete guide to the architecture, components, and data flows of the BOOMFLOW system
 
 ---
 
-## 📖 Índice
+## 📖 Index
 
-1. [Visión General](#visión-general)
-2. [Componentes del Sistema](#componentes-del-sistema)
-3. [Flujos de Datos](#flujos-de-datos)
-4. [Sistema de Protección](#sistema-de-protección)
-5. [Almacenamiento de Datos](#almacenamiento-de-datos)
-6. [Automatización](#automatización)
-7. [Integración con GitHub](#integración-con-github)
-8. [Escalabilidad](#escalabilidad)
+1. [Overview](#overview)
+2. [System Components](#system-components)
+3. [Data Flows](#data-flows)
+4. [Protection System](#protection-system)
+5. [Data Storage](#data-storage)
+6. [Automation](#automation)
+7. [GitHub Integration](#github-integration)
+8. [Scalability](#scalability)
 
 ---
 
-## Visión General
+## Overview
 
-BOOMFLOW es un sistema de reconocimiento profesional que transforma logros en medallas verificables. La arquitectura está diseñada para ser:
+BOOMFLOW is a professional recognition system that transforms achievements into verifiable badges. The architecture is designed to be:
 
-- **Descentralizada**: Los datos viven en el repositorio Git
-- **Verificable**: Cada medalla tiene trazabilidad completa
-- **Automatizada**: Detección de logros sin intervención manual
-- **Segura**: Sistema de permisos multinivel
+- **Decentralized**: Data lives in the Git repository
+- **Verifiable**: Every badge has complete traceability
+- **Automated**: Achievement detection without manual intervention
+- **Secure**: Multi-level permission system
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│                         ARQUITECTURA BOOMFLOW                               │
+│                         BOOMFLOW ARCHITECTURE                               │
 ├─────────────────────────────────────────────────────────────────────────────┤
 │                                                                             │
 │  ┌─────────────────┐                                                        │
@@ -42,19 +42,19 @@ BOOMFLOW es un sistema de reconocimiento profesional que transforma logros en me
 │                           ▼                                                 │
 │  ┌─────────────────┐  ┌──────────────────┐  ┌─────────────────────────┐    │
 │  │  Cron Daily     │──│  BOOMFLOW Core   │──│  users/*.json           │    │
-│  │  (Auto-Award)   │  │                  │  │  (Datos de Usuarios)    │    │
+│  │  (Auto-Award)   │  │                  │  │  (User Data)            │    │
 │  └─────────────────┘  │  - auto-award.js │  └─────────────────────────┘    │
 │                       │  - process-event │            │                     │
 │  ┌─────────────────┐  │  - badge-admin   │            │                     │
 │  │  Admin CLI      │──│  - sync-profile  │            ▼                     │
 │  │  (Manual)       │  │                  │  ┌─────────────────────────┐    │
 │  └─────────────────┘  └──────────────────┘  │  Profile README.md      │    │
-│                                │             │  (Usuario GitHub)       │    │
+│                                │             │  (GitHub User)          │    │
 │                                │             └─────────────────────────┘    │
 │                                ▼                                            │
 │                       ┌──────────────────┐                                  │
 │                       │  api-mock.json   │                                  │
-│                       │  (Catálogo)      │                                  │
+│                       │  (Catalog)       │                                  │
 │                       └──────────────────┘                                  │
 │                                                                             │
 └─────────────────────────────────────────────────────────────────────────────┘
@@ -62,43 +62,43 @@ BOOMFLOW es un sistema de reconocimiento profesional que transforma logros en me
 
 ---
 
-## Componentes del Sistema
+## System Components
 
-### 📦 Datos
+### 📦 Data
 
 ```
 config/
-└── admins.json          # Lista de administradores y permisos
+└── admins.json          # Administrator list and permissions
 
 users/
-├── jeremy-sud.json      # Datos y medallas de cada usuario
+├── jeremy-sud.json      # User data and badges
 └── ursolcr.json
 
-api-mock.json            # Catálogo maestro de 89 medallas
+api-mock.json            # Master catalog of 89 badges
 
 assets/
-└── badge-*.svg          # 89 archivos SVG de medallas
+└── badge-*.svg          # 89 badge SVG files
 ```
 
-### 🤖 Scripts de Automatización
+### 🤖 Automation Scripts
 
-| Script | Propósito | Trigger |
-|--------|-----------|---------|
-| `auto-award.js` | Verifica métricas GitHub y otorga medallas | Cron diario |
-| `process-event.js` | Procesa webhooks en tiempo real | GitHub Events |
-| `badge-admin.js` | CLI para administradores | Manual |
-| `sync-profile.js` | Sincroniza medallas a README de perfil | Manual/Action |
-| `stats.js` | Panel de estadísticas | Manual |
+| Script | Purpose | Trigger |
+|--------|---------|---------|
+| `auto-award.js` | Verifies GitHub metrics and awards badges | Daily cron |
+| `process-event.js` | Processes real-time webhooks | GitHub events |
+| `badge-admin.js` | Administrator CLI | Manual |
+| `sync-profile.js` | Syncs badges to profile README | Manual/Action |
+| `stats.js` | Statistics dashboard | Manual |
 
 ### 🔄 GitHub Workflows
 
-| Workflow | Archivo | Schedule | Propósito |
-|----------|---------|----------|-----------|
-| Auto-Award | `auto-award.yml` | `0 6 * * *` (6AM UTC) | Verificación diaria |
-| Event Processor | `event-processor.yml` | On PR/Review/Issue/Release | Detección en tiempo real |
-| Badge Protection | `badge-protection.yml` | On push to users/ | Validación de permisos |
+| Workflow | File | Schedule | Purpose |
+|----------|------|----------|---------|
+| Auto-Award | `auto-award.yml` | `0 6 * * *` (6AM UTC) | Daily verification |
+| Event Processor | `event-processor.yml` | On PR/Review/Issue/Release | Real-time detection |
+| Badge Protection | `badge-protection.yml` | On push to users/ | Permission validation |
 
-### 🌐 Web App (En Desarrollo)
+### 🌐 Web App
 
 ```
 app-web/
@@ -115,23 +115,23 @@ app-web/
 
 ---
 
-## Flujos de Datos
+## Data Flows
 
-### Flujo 1: Auto-Award (Automático Diario)
+### Flow 1: Auto-Award (Daily Automatic)
 
 ```
 ┌──────────────────────────────────────────────────────────────────────────┐
-│                     FLUJO AUTO-AWARD (Diario 6AM UTC)                    │
+│                     AUTO-AWARD FLOW (Daily 6AM UTC)                      │
 ├──────────────────────────────────────────────────────────────────────────┤
 │                                                                          │
 │   ┌─────────┐    ┌────────────┐    ┌─────────────┐    ┌───────────┐     │
-│   │  Cron   │───►│ auto-award │───►│ GitHub API  │───►│  Métricas │     │
-│   │ Trigger │    │    .js     │    │  (fetch)    │    │  Usuario  │     │
+│   │  Cron   │───►│ auto-award │───►│ GitHub API  │───►│  User     │     │
+│   │ Trigger │    │    .js     │    │  (fetch)    │    │  Metrics  │     │
 │   └─────────┘    └────────────┘    └─────────────┘    └───────────┘     │
 │                                                              │           │
 │                                                              ▼           │
 │                  ┌────────────────────────────────────────────────┐      │
-│                  │          EVALUAR REGLAS AUTO-AWARD            │      │
+│                  │          EVALUATE AUTO-AWARD RULES            │      │
 │                  │                                                │      │
 │                  │  commits >= 1?     ──► first-commit           │      │
 │                  │  commits >= 50?    ──► code-ninja             │      │
@@ -145,60 +145,60 @@ app-web/
 │                                            ▼                             │
 │                               ┌────────────────────┐                     │
 │                               │ users/username.json │                    │
-│                               │ (actualizado)       │                    │
+│                               │ (updated)           │                    │
 │                               └────────────────────┘                     │
 │                                            │                             │
 │                                            ▼                             │
 │                               ┌────────────────────┐                     │
 │                               │   git commit/push  │                     │
-│                               │   (automático)     │                     │
+│                               │   (automatic)      │                     │
 │                               └────────────────────┘                     │
 │                                                                          │
 └──────────────────────────────────────────────────────────────────────────┘
 ```
 
-### Flujo 2: Event Processor (Tiempo Real)
+### Flow 2: Event Processor (Real-time)
 
 ```
 ┌──────────────────────────────────────────────────────────────────────────┐
-│                     FLUJO EVENT PROCESSOR (Real-time)                    │
+│                     EVENT PROCESSOR FLOW (Real-time)                     │
 ├──────────────────────────────────────────────────────────────────────────┤
 │                                                                          │
-│   EVENTO GITHUB                    PROCESO                   RESULTADO   │
-│   ─────────────                    ───────                   ─────────   │
+│   GITHUB EVENT                     PROCESS                   RESULT      │
+│   ────────────                     ───────                   ──────      │
 │                                                                          │
 │   PR merged  ────────────────────► process-event.js                      │
 │   (pull_request.closed)            │                                     │
-│                                    ├─► ¿Es usuario registrado?           │
-│                                    │   └─► Sí: pre-evaluar first-pr      │
+│                                    ├─► Registered user?                  │
+│                                    │   └─► Yes: pre-evaluate first-pr    │
 │                                    │                                     │
 │   Review submitted ──────────────► │                                     │
-│   (pull_request_review.submitted)  ├─► ¿Es usuario registrado?           │
-│                                    │   └─► Sí: pre-evaluar first-review  │
+│   (pull_request_review.submitted)  ├─► Registered user?                  │
+│                                    │   └─► Yes: pre-evaluate first-review│
 │                                    │                                     │
 │   Issue closed ──────────────────► │                                     │
-│   (issues.closed)                  ├─► ¿Es usuario registrado?           │
-│                                    │   └─► Sí: pre-evaluar bug-slayer    │
+│   (issues.closed)                  ├─► Registered user?                  │
+│                                    │   └─► Yes: pre-evaluate bug-slayer  │
 │                                    │                                     │
 │   Release published ─────────────► │                                     │
-│   (release.published)              └─► ¿Es usuario registrado?           │
-│                                        └─► Sí: pre-evaluar deploy-master │
+│   (release.published)              └─► Registered user?                  │
+│                                        └─► Yes: pre-evaluate deploy-master│
 │                                                                          │
 └──────────────────────────────────────────────────────────────────────────┘
 ```
 
-### Flujo 3: Admin CLI (Manual)
+### Flow 3: Admin CLI (Manual)
 
 ```
 ┌──────────────────────────────────────────────────────────────────────────┐
-│                        FLUJO ADMIN CLI (Manual)                          │
+│                        ADMIN CLI FLOW (Manual)                           │
 ├──────────────────────────────────────────────────────────────────────────┤
 │                                                                          │
 │   $ node scripts/badge-admin.js grant jeremy-sud architect               │
 │                         │                                                │
 │                         ▼                                                │
 │              ┌─────────────────────┐                                     │
-│              │  VERIFICAR ADMIN    │                                     │
+│              │  VERIFY ADMIN       │                                     │
 │              │  config/admins.json │                                     │
 │              └─────────────────────┘                                     │
 │                         │                                                │
@@ -206,26 +206,26 @@ app-web/
 │              │                     │                                     │
 │              ▼                     ▼                                     │
 │      ┌─────────────┐       ┌─────────────┐                               │
-│      │  ✅ Admin   │       │  ❌ No Admin │                              │
-│      │  válido     │       │  RECHAZADO   │                              │
+│      │  ✅ Valid   │       │  ❌ Not Admin│                              │
+│      │  Admin      │       │  REJECTED    │                              │
 │      └─────────────┘       └─────────────┘                               │
 │              │                                                           │
 │              ▼                                                           │
 │   ┌───────────────────────┐                                              │
-│   │ VERIFICAR BADGE       │                                              │
+│   │ VERIFY BADGE          │                                              │
 │   │ api-mock.json         │                                              │
-│   │ ¿Existe "architect"?  │                                              │
+│   │ Does "architect" exist?│                                             │
 │   └───────────────────────┘                                              │
 │              │                                                           │
 │              ▼                                                           │
 │   ┌───────────────────────┐                                              │
-│   │ VERIFICAR USUARIO     │                                              │
-│   │ ¿Tiene ya la medalla? │                                              │
+│   │ VERIFY USER           │                                              │
+│   │ Already has the badge?│                                              │
 │   └───────────────────────┘                                              │
 │              │                                                           │
 │              ▼                                                           │
 │   ┌───────────────────────┐                                              │
-│   │ OTORGAR MEDALLA       │                                              │
+│   │ AWARD BADGE           │                                              │
 │   │ users/jeremy-sud.json │                                              │
 │   │ + { id: "architect",  │                                              │
 │   │     awardedAt: "...", │                                              │
@@ -235,52 +235,48 @@ app-web/
 └──────────────────────────────────────────────────────────────────────────┘
 ```
 
-### Flujo 4: Sincronización de Perfil
+### Flow 4: Profile Synchronization
 
 ```
 ┌──────────────────────────────────────────────────────────────────────────┐
-│                    FLUJO SYNC-PROFILE                                    │
+│                    SYNC-PROFILE FLOW                                     │
 ├──────────────────────────────────────────────────────────────────────────┤
 │                                                                          │
 │   $ node scripts/sync-profile.js jeremy-sud /path/to/README.md           │
 │                         │                                                │
 │                         ▼                                                │
 │   ┌─────────────────────────────────────────────────────────────────┐   │
-│   │                    CARGAR DATOS                                  │   │
+│   │                    LOAD DATA                                     │   │
 │   │                                                                  │   │
-│   │   api-mock.json ──► Catálogo de medallas                        │   │
-│   │   users/jeremy-sud.json ──► Medallas del usuario                │   │
-│   │                                                                  │   │
+│   │   api-mock.json ──► Badge catalog                               │   │
+│   │   users/jeremy-sud.json ──► User badges                         │   │
 │   └─────────────────────────────────────────────────────────────────┘   │
 │                         │                                                │
 │                         ▼                                                │
 │   ┌─────────────────────────────────────────────────────────────────┐   │
-│   │                 CRUZAR DATOS                                     │   │
+│   │                 CROSS-REFERENCE DATA                             │   │
 │   │                                                                  │   │
-│   │   Para cada badge en user.badges:                               │   │
-│   │     └─► Buscar info completa en catálogo                        │   │
+│   │   For each badge in user.badges:                                │   │
+│   │     └─► Look up full info in catalog                            │   │
 │   │         └─► { ...catalogBadge, ...userBadge }                   │   │
-│   │                                                                  │   │
 │   └─────────────────────────────────────────────────────────────────┘   │
 │                         │                                                │
 │                         ▼                                                │
 │   ┌─────────────────────────────────────────────────────────────────┐   │
-│   │                 GENERAR HTML                                     │   │
+│   │                 GENERATE HTML                                    │   │
 │   │                                                                  │   │
-│   │   Agrupar badges por categoría                                  │   │
-│   │   └─► Generar <table> con badges                                │   │
-│   │       └─► Cada badge: <img>, label, tier icon                   │   │
-│   │                                                                  │   │
+│   │   Group badges by category                                      │   │
+│   │   └─► Generate <table> with badges                              │   │
+│   │       └─► Each badge: <img>, label, tier icon                   │   │
 │   └─────────────────────────────────────────────────────────────────┘   │
 │                         │                                                │
 │                         ▼                                                │
 │   ┌─────────────────────────────────────────────────────────────────┐   │
-│   │                 INYECTAR EN README                               │   │
+│   │                 INJECT INTO README                               │   │
 │   │                                                                  │   │
 │   │   <!-- BOOMFLOW-BADGES-START -->                                │   │
-│   │   [HTML generado se inserta aquí]                               │   │
+│   │   [Generated HTML inserted here]                                │   │
 │   │   <!-- BOOMFLOW-BADGES-END -->                                  │   │
-│   │                                                                  │   │
 │   └─────────────────────────────────────────────────────────────────┘   │
 │                                                                          │
 └──────────────────────────────────────────────────────────────────────────┘
@@ -288,93 +284,93 @@ app-web/
 
 ---
 
-## Sistema de Protección
+## Protection System
 
-### Capas de Seguridad
+### Security Layers
 
 ```
 ┌──────────────────────────────────────────────────────────────────────────┐
-│                    SISTEMA DE PROTECCIÓN MULTINIVEL                      │
+│                    MULTI-LEVEL PROTECTION SYSTEM                        │
 ├──────────────────────────────────────────────────────────────────────────┤
 │                                                                          │
-│  CAPA 1: CODEOWNERS                                                      │
+│  LAYER 1: CODEOWNERS                                                     │
 │  ─────────────────                                                       │
 │  .github/CODEOWNERS                                                      │
-│  ├── users/    → @jeremy-sud @ursolcr (requiere aprobación)             │
-│  └── config/   → @jeremy-sud @ursolcr (requiere aprobación)             │
+│  ├── users/    → @jeremy-sud @ursolcr (requires approval)               │
+│  └── config/   → @jeremy-sud @ursolcr (requires approval)               │
 │                                                                          │
-│  CAPA 2: WORKFLOW DE PROTECCIÓN                                          │
-│  ────────────────────────────────                                        │
+│  LAYER 2: PROTECTION WORKFLOW                                            │
+│  ────────────────────────────                                            │
 │  .github/workflows/badge-protection.yml                                  │
-│  └── Valida que cambios a users/ vengan de admins autorizados           │
+│  └── Validates that changes to users/ come from authorized admins       │
 │                                                                          │
-│  CAPA 3: CONFIGURACIÓN DE ADMINS                                         │
-│  ───────────────────────────────                                         │
+│  LAYER 3: ADMIN CONFIGURATION                                            │
+│  ───────────────────────────                                             │
 │  config/admins.json                                                      │
-│  └── Lista oficial de administradores con permisos específicos          │
-│      ├── grant_badges   (otorgar medallas)                              │
-│      ├── revoke_badges  (revocar medallas)                              │
-│      ├── manage_users   (gestionar usuarios)                            │
-│      └── manage_admins  (gestionar administradores)                     │
+│  └── Official list of administrators with specific permissions          │
+│      ├── grant_badges   (award badges)                                  │
+│      ├── revoke_badges  (revoke badges)                                 │
+│      ├── manage_users   (manage users)                                  │
+│      └── manage_admins  (manage administrators)                         │
 │                                                                          │
-│  CAPA 4: TRAZABILIDAD                                                    │
+│  LAYER 4: TRACEABILITY                                                   │
 │  ────────────────────                                                    │
-│  Cada medalla registra:                                                  │
+│  Every badge records:                                                    │
 │  └── { awardedAt: "2026-02-15", awardedBy: "jeremy-sud" }               │
 │                                                                          │
-│  CAPA 5: VALIDACIÓN EN SCRIPTS                                           │
+│  LAYER 5: SCRIPT VALIDATION                                              │
 │  ────────────────────────────                                            │
-│  badge-admin.js verifica isAdmin() antes de ejecutar                    │
+│  badge-admin.js verifies isAdmin() before executing                     │
 │                                                                          │
 └──────────────────────────────────────────────────────────────────────────┘
 ```
 
-### Matriz de Permisos
+### Permissions Matrix
 
-| Acción | Admin | Usuario Regular | Sistema |
-|--------|-------|-----------------|---------|
-| Ver medallas | ✅ | ✅ | ✅ |
-| Otorgar medallas manuales | ✅ | ❌ | ❌ |
-| Revocar medallas | ✅ | ❌ | ❌ |
-| Auto-award medallas | ❌ | ❌ | ✅ |
-| Modificar users/*.json | ✅ | ❌ | ✅ |
-| Modificar config/admins.json | ✅* | ❌ | ❌ |
+| Action | Admin | Regular User | System |
+|--------|-------|--------------|--------|
+| View badges | ✅ | ✅ | ✅ |
+| Award manual badges | ✅ | ❌ | ❌ |
+| Revoke badges | ✅ | ❌ | ❌ |
+| Auto-award badges | ❌ | ❌ | ✅ |
+| Modify users/*.json | ✅ | ❌ | ✅ |
+| Modify config/admins.json | ✅* | ❌ | ❌ |
 
-*Requiere aprobación de otro admin
+*Requires approval from another admin
 
 ---
 
-## Almacenamiento de Datos
+## Data Storage
 
-### Estructura de Archivos
+### File Structure
 
 ```
 BOOMFLOW/
-├── api-mock.json                 # Catálogo maestro (89 medallas)
+├── api-mock.json                 # Master catalog (89 badges)
 │   └── [ { id, emoji, label, category, tier, meta, description, svg }, ... ]
 │
 ├── users/
-│   ├── jeremy-sud.json           # Datos de usuario
+│   ├── jeremy-sud.json           # User data
 │   │   └── { username, displayName, role, org, joinedAt, badges: [...] }
 │   └── ursolcr.json
 │
 ├── config/
-│   └── admins.json               # Configuración de administradores
+│   └── admins.json               # Administrator configuration
 │       └── { admins: [...], settings: {...}, autoAward: {...} }
 │
 └── assets/
-    ├── badge-code-ninja.svg      # SVG de cada medalla
+    ├── badge-code-ninja.svg      # SVG for each badge
     ├── badge-tech-lead.svg
-    └── ... (89 archivos SVG)
+    └── ... (89 SVG files)
 ```
 
-### Ejemplo: User JSON
+### Example: User JSON
 
 ```json
 {
   "username": "jeremy-sud",
   "displayName": "Jeremy Alva",
-  "role": "Co-Fundador & Dev Lead",
+  "role": "Co-Founder & Dev Lead",
   "org": "SistemasUrsol",
   "joinedAt": "2024-01-15",
   "badges": [
@@ -397,7 +393,7 @@ BOOMFLOW/
 }
 ```
 
-### Ejemplo: Badge (Catálogo)
+### Example: Badge (Catalog)
 
 ```json
 {
@@ -406,21 +402,21 @@ BOOMFLOW/
   "label": "Code Ninja",
   "category": "coding",
   "tier": "silver",
-  "meta": "Nivel 2",
-  "description": "Código limpio, rápido y eficiente. Demuestra dominio del lenguaje y buenas prácticas.",
+  "meta": "Level 2",
+  "description": "Clean, fast, and efficient code. Demonstrates language mastery and best practices.",
   "svg": "badge-code-ninja.svg"
 }
 ```
 
 ---
 
-## Automatización
+## Automation
 
 ### Cron Jobs
 
-| Job | Schedule | Timezone | Propósito |
-|-----|----------|----------|-----------|
-| Auto-Award | `0 6 * * *` | UTC | 6:00 AM UTC (medianoche Costa Rica) |
+| Job | Schedule | Timezone | Purpose |
+|-----|----------|----------|---------|
+| Auto-Award | `0 6 * * *` | UTC | 6:00 AM UTC (midnight Costa Rica) |
 
 ### GitHub Actions Triggers
 
@@ -454,49 +450,49 @@ on:
 
 ---
 
-## Integración con GitHub
+## GitHub Integration
 
-### APIs Utilizadas
+### APIs Used
 
-| API | Endpoint | Uso |
-|-----|----------|-----|
-| Users | `GET /users/{username}` | Verificar existencia de usuario |
-| Repos | `GET /repos/{owner}/{repo}/contributors` | Contar commits por usuario |
-| Search | `GET /search/issues?q=` | Contar PRs, reviews, issues |
-| Commits | `GET /repos/{owner}/{repo}/commits?author=` | Historial de commits |
-| Deployments | `GET /repos/{owner}/{repo}/deployments` | Contar deployments |
+| API | Endpoint | Usage |
+|-----|----------|-------|
+| Users | `GET /users/{username}` | Verify user existence |
+| Repos | `GET /repos/{owner}/{repo}/contributors` | Count user commits |
+| Search | `GET /search/issues?q=` | Count PRs, reviews, issues |
+| Commits | `GET /repos/{owner}/{repo}/commits?author=` | Commit history |
+| Deployments | `GET /repos/{owner}/{repo}/deployments` | Count deployments |
 
 ### Rate Limits
 
-- Sin autenticación: 60 requests/hora
-- Con token: 5,000 requests/hora
+- Without authentication: 60 requests/hour
+- With token: 5,000 requests/hour
 
-### Token Requerido
+### Required Token
 
 ```bash
-# Para auto-award
+# For auto-award
 GITHUB_TOKEN=ghp_xxx node scripts/auto-award.js
 
-# Para sync-profile
-BOOMFLOW_TOKEN=ghp_xxx # En secrets del repo
+# For sync-profile
+BOOMFLOW_TOKEN=ghp_xxx # In repo secrets
 ```
 
 ---
 
-## Escalabilidad
+## Scalability
 
-### Actual (v2.1.0)
+### Current (v2.1.0)
 
-- Almacenamiento: Archivos JSON en Git
-- Usuarios: 2-50 colaboradores
-- Medallas: 89 en catálogo
-- Sync: Manual + Cron diario
+- Storage: JSON files in Git
+- Users: 2-50 collaborators
+- Badges: 89 in catalog
+- Sync: Manual + daily cron
 
-### Futuro (v3.0+)
+### Future (v3.0+)
 
 ```
 ┌──────────────────────────────────────────────────────────────────────────┐
-│                    ARQUITECTURA FUTURA (v3.0+)                           │
+│                    FUTURE ARCHITECTURE (v3.0+)                           │
 ├──────────────────────────────────────────────────────────────────────────┤
 │                                                                          │
 │   ┌─────────────┐     ┌─────────────┐     ┌─────────────┐               │
@@ -523,5 +519,5 @@ BOOMFLOW_TOKEN=ghp_xxx # En secrets del repo
 
 <p align="center">
   <strong>🌸 BOOMFLOW v2.1.0</strong><br/>
-  <sub>Arquitectura del Sistema — Sistemas Ursol</sub>
+  <sub>System Architecture — Sistemas Ursol</sub>
 </p>

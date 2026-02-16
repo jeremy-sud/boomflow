@@ -1,87 +1,87 @@
-# 📚 BOOMFLOW — Documentación Técnica
+# 📚 BOOMFLOW — Technical Documentation
 
 <p align="center">
-  <img src="https://img.shields.io/badge/🔒_Uso_Exclusivo-Sistemas_Ursol-8B5CF6.svg" alt="Exclusivo"/>
+  <img src="https://img.shields.io/badge/🔒_Exclusive_Use-Sistemas_Ursol-8B5CF6.svg" alt="Exclusive"/>
   <img src="https://img.shields.io/badge/version-3.0.0-blue.svg" alt="Version"/>
 </p>
 
-> Referencia técnica completa del Sistema de Reconocimiento Profesional BOOMFLOW
+> Complete technical reference for the BOOMFLOW Professional Recognition System
 
 ---
 
-## 📖 Índice
+## 📖 Table of Contents
 
-1. [Conceptos Fundamentales](#conceptos-fundamentales)
-2. [Dashboard Web](#dashboard-web)
+1. [Core Concepts](#core-concepts)
+2. [Web Dashboard](#web-dashboard)
 3. [API REST Reference](#api-rest-reference)
    - [Kudos](#kudos)
    - [Badges](#badges)
    - [Leaderboard](#leaderboard)
-   - [Notificaciones](#notificaciones)
+   - [Notifications](#notifications)
    - [GitHub Sync](#github-sync)
 4. [Badge Engine](#badge-engine)
-5. [Base de Datos](#base-de-datos)
-6. [Catálogo de Medallas](#catálogo-de-medallas)
-7. [Sistema de Auto-Award](#sistema-de-auto-award)
-8. [Webhooks en Tiempo Real](#webhooks-en-tiempo-real)
-9. [CLI de Administración](#cli-de-administración)
+5. [Database](#database)
+6. [Badge Catalog](#badge-catalog)
+7. [Auto-Award System](#auto-award-system)
+8. [Real-time Webhooks](#real-time-webhooks)
+9. [Administration CLI](#administration-cli)
 10. [GitHub Action](#github-action)
-11. [Modelos de Datos](#modelos-de-datos)
-12. [Especificación SVG](#especificación-svg)
+11. [Data Models](#data-models)
+12. [SVG Specification](#svg-specification)
 
 ---
 
-## Conceptos Fundamentales
+## Core Concepts
 
-### ¿Qué es una Medalla?
+### What Is a Badge?
 
-Una medalla en BOOMFLOW representa un **logro profesional verificado**. Cada medalla tiene:
+A badge in BOOMFLOW represents a **verified professional achievement**. Each badge has:
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                        ANATOMÍA DE UNA MEDALLA                  │
+│                        ANATOMY OF A BADGE                       │
 ├─────────────────────────────────────────────────────────────────┤
 │                                                                 │
 │   ┌─────────┐                                                   │
-│   │  🥇     │  ◄── Anillo exterior: indica el TIER (bronce,    │
-│   │ [Icon]  │      plata, oro)                                  │
+│   │  🥇     │  ◄── Outer ring: indicates the TIER (bronze,     │
+│   │ [Icon]  │      silver, gold)                                │
 │   │         │                                                   │
-│   └─────────┘  ◄── Círculo interior: color de CATEGORÍA        │
+│   └─────────┘  ◄── Inner circle: CATEGORY color                │
 │                                                                 │
-│   Metadatos:                                                    │
+│   Metadata:                                                     │
 │   • id: "code-ninja"                                            │
 │   • label: "Code Ninja"                                         │
 │   • category: "coding"                                          │
 │   • tier: "silver"                                              │
-│   • description: "Código limpio, rápido y eficiente"            │
+│   • description: "Clean, fast, and efficient code"              │
 │   • svg: "badge-code-ninja.svg"                                 │
 │                                                                 │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-### Ciclo de Vida de una Medalla
+### Badge Lifecycle
 
 ```
 ┌──────────┐    ┌──────────┐    ┌──────────┐    ┌──────────┐
-│  TRIGGER │───►│ EVALUAR  │───►│ OTORGAR  │───►│  SYNC    │
+│  TRIGGER │───►│ EVALUATE │───►│  AWARD   │───►│  SYNC    │
 └──────────┘    └──────────┘    └──────────┘    └──────────┘
      │               │               │               │
      │               │               │               │
      ▼               ▼               ▼               ▼
-  - Cron           - Verificar    - Agregar      - Actualizar
-  - Webhook          métricas       a user/        README.md
-  - Admin CLI      - Validar        *.json
-                     permisos
+  - Cron           - Verify       - Add to       - Update
+  - Webhook          metrics        user/          README.md
+  - Admin CLI      - Validate       *.json
+                     permissions
 ```
 
 ---
 
-## Dashboard Web
+## Web Dashboard
 
-### Stack Tecnológico
+### Technology Stack
 
-| Componente | Tecnología | Versión |
-|------------|------------|---------|
+| Component | Technology | Version |
+|-----------|------------|---------|
 | Framework | Next.js | 16.1.6 |
 | Runtime | React | 19.2.3 |
 | ORM | Prisma | 7.4.0 |
@@ -89,42 +89,42 @@ Una medalla en BOOMFLOW representa un **logro profesional verificado**. Cada med
 | CSS | Tailwind CSS | 4.x |
 | DB | PostgreSQL | 15+ |
 
-### Estructura del Proyecto
+### Project Structure
 
 ```
 app-web/
 ├── prisma/
-│   ├── schema.prisma      # Schema de BD (10 modelos)
-│   └── seed.ts            # Datos iniciales (89 badges)
+│   ├── schema.prisma      # DB Schema (10 models)
+│   └── seed.ts            # Initial data (89 badges)
 ├── src/
 │   ├── app/
 │   │   ├── api/           # API Routes
 │   │   │   ├── badges/    # CRUD badges
 │   │   │   ├── kudos/     # CRUD kudos
 │   │   │   └── leaderboard/
-│   │   ├── catalog/       # Catálogo de badges
-│   │   ├── feed/          # Feed de actividad
+│   │   ├── catalog/       # Badge catalog
+│   │   ├── feed/          # Activity feed
 │   │   ├── leaderboard/   # Rankings
-│   │   ├── login/         # Auth con GitHub
-│   │   └── profile/       # Perfil de usuario
+│   │   ├── login/         # Auth with GitHub
+│   │   └── profile/       # User profile
 │   ├── components/        # UI Components
-│   ├── generated/prisma/  # Cliente Prisma generado
+│   ├── generated/prisma/  # Generated Prisma client
 │   └── lib/
-│       ├── badge-engine.ts # Motor de badges automáticos
-│       ├── data.ts        # Datos mock/constantes
-│       └── prisma.ts      # Cliente Prisma singleton
+│       ├── badge-engine.ts # Automatic badge engine
+│       ├── data.ts        # Mock data/constants
+│       └── prisma.ts      # Prisma singleton client
 ├── package.json
-└── env.example            # Variables de entorno
+└── env.example            # Environment variables
 ```
 
-### Configuración
+### Configuration
 
 ```bash
-# Variables de entorno requeridas (.env.local)
+# Required environment variables (.env.local)
 DATABASE_URL=postgresql://user:pass@localhost:5432/boomflow
 AUTH_SECRET=openssl-rand-base64-32
-GITHUB_CLIENT_ID=tu-client-id
-GITHUB_CLIENT_SECRET=tu-client-secret
+GITHUB_CLIENT_ID=your-client-id
+GITHUB_CLIENT_SECRET=your-client-secret
 NEXTAUTH_URL=http://localhost:3000
 ```
 
@@ -132,20 +132,20 @@ NEXTAUTH_URL=http://localhost:3000
 
 ## API REST Reference
 
-### Autenticación
+### Authentication
 
-Todas las APIs que modifican datos requieren autenticación via NextAuth.
-El token se maneja automáticamente por cookies de sesión.
+All APIs that modify data require authentication via NextAuth.
+The token is handled automatically through session cookies.
 
 ### Kudos
 
 #### `GET /api/kudos`
 
-Obtiene el feed de kudos públicos.
+Retrieves the public kudos feed.
 
 **Query Params:**
-- `limit` (int, default: 20) - Cantidad de kudos
-- `cursor` (string) - ID para paginación
+- `limit` (int, default: 20) - Number of kudos
+- `cursor` (string) - ID for pagination
 
 **Response:**
 ```json
@@ -153,10 +153,10 @@ Obtiene el feed de kudos públicos.
   "kudos": [
     {
       "id": "clxyz...",
-      "message": "¡Excelente trabajo!",
+      "message": "Excellent work!",
       "from": { "id": "...", "username": "ursolcr", "image": "..." },
       "to": { "id": "...", "username": "jeremy-sud", "image": "..." },
-      "category": { "name": "Trabajo en equipo", "emoji": "🤝" },
+      "category": { "name": "Teamwork", "emoji": "🤝" },
       "createdAt": "2026-02-15T10:00:00Z"
     }
   ],
@@ -166,13 +166,13 @@ Obtiene el feed de kudos públicos.
 
 #### `POST /api/kudos`
 
-Crea un nuevo kudo. **Requiere autenticación.**
+Creates a new kudo. **Requires authentication.**
 
 **Body:**
 ```json
 {
   "toUsername": "jeremy-sud",
-  "message": "¡Excelente trabajo en el PR!",
+  "message": "Great work on the PR!",
   "categoryId": "clxyz...",
   "isPublic": true
 }
@@ -191,24 +191,24 @@ Crea un nuevo kudo. **Requiere autenticación.**
 
 #### `GET /api/kudos/user/:username`
 
-Kudos de un usuario específico.
+Kudos for a specific user.
 
 **Query Params:**
 - `type` (string: "received" | "sent" | "all", default: "received")
 
 #### `GET /api/kudos/categories`
 
-Lista de categorías de kudos disponibles.
+List of available kudo categories.
 
 ### Badges
 
 #### `GET /api/badges`
 
-Catálogo completo de badges.
+Full badge catalog.
 
 **Query Params:**
-- `category` (string) - Filtrar por categoría (ej: "COLABORACION")
-- `tier` (string) - Filtrar por tier (ej: "GOLD")
+- `category` (string) - Filter by category (e.g.: "COLABORACION")
+- `tier` (string) - Filter by tier (e.g.: "GOLD")
 
 **Response:**
 ```json
@@ -224,7 +224,7 @@ Catálogo completo de badges.
 
 #### `GET /api/badges/user/:username`
 
-Badges de un usuario con estadísticas.
+Badges for a user with statistics.
 
 **Response:**
 ```json
@@ -243,20 +243,20 @@ Badges de un usuario con estadísticas.
 
 #### `POST /api/badges/award`
 
-Otorga un badge manualmente. **Requiere autenticación.**
+Awards a badge manually. **Requires authentication.**
 
 **Body:**
 ```json
 {
   "toUsername": "jeremy-sud",
   "badgeSlug": "code-ninja",
-  "reason": "Excelente calidad de código en el proyecto X"
+  "reason": "Excellent code quality on project X"
 }
 ```
 
 #### `DELETE /api/badges/award`
 
-Revoca un badge. **Requiere autenticación.**
+Revokes a badge. **Requires authentication.**
 
 **Body:**
 ```json
@@ -268,10 +268,10 @@ Revoca un badge. **Requiere autenticación.**
 
 #### `GET /api/badges/progress`
 
-Progreso hacia badges no obtenidos.
+Progress toward unearned badges.
 
 **Query Params:**
-- `username` (string) - Usuario a consultar (default: usuario autenticado)
+- `username` (string) - User to query (default: authenticated user)
 
 **Response:**
 ```json
@@ -296,7 +296,7 @@ Progreso hacia badges no obtenidos.
 
 #### `POST /api/badges/evaluate`
 
-Evalúa y otorga badges automáticos pendientes.
+Evaluates and awards pending automatic badges.
 
 **Body:**
 ```json
@@ -309,7 +309,7 @@ Evalúa y otorga badges automáticos pendientes.
 
 #### `GET /api/leaderboard`
 
-Rankings de usuarios.
+User rankings.
 
 **Query Params:**
 - `type` (string: "badges" | "kudos_received" | "kudos_sent", default: "badges")
@@ -329,15 +329,15 @@ Rankings de usuarios.
 }
 ```
 
-### Notificaciones
+### Notifications
 
 #### `GET /api/notifications`
 
-Lista de notificaciones del usuario autenticado.
+List of notifications for the authenticated user.
 
 **Query Params:**
-- `limit` (int, default: 20) - Cantidad de notificaciones
-- `unreadOnly` (boolean, default: false) - Solo no leídas
+- `limit` (int, default: 20) - Number of notifications
+- `unreadOnly` (boolean, default: false) - Unread only
 
 **Response:**
 ```json
@@ -346,8 +346,8 @@ Lista de notificaciones del usuario autenticado.
     {
       "id": "clxyz...",
       "type": "BADGE_EARNED",
-      "title": "🏆 Nueva Medalla!",
-      "message": "Has obtenido Code Ninja",
+      "title": "🏆 New Badge!",
+      "message": "You have earned Code Ninja",
       "data": { "badgeSlug": "code-ninja" },
       "read": false,
       "createdAt": "2026-02-15T10:00:00Z"
@@ -359,13 +359,13 @@ Lista de notificaciones del usuario autenticado.
 
 #### `PATCH /api/notifications`
 
-Marca notificaciones como leídas.
+Marks notifications as read.
 
 **Body:**
 ```json
 {
   "notificationIds": ["clxyz...", "clxyz2..."],
-  "markAll": false  // Si true, marca todas como leídas
+  "markAll": false  // If true, marks all as read
 }
 ```
 
@@ -373,7 +373,7 @@ Marca notificaciones como leídas.
 
 #### `GET /api/github/sync`
 
-Obtiene estadísticas de GitHub del usuario.
+Retrieves the user's GitHub statistics.
 
 **Response:**
 ```json
@@ -392,7 +392,7 @@ Obtiene estadísticas de GitHub del usuario.
 
 #### `POST /api/github/sync`
 
-Sincroniza estadísticas de GitHub y evalúa badges.
+Syncs GitHub statistics and evaluates badges.
 
 **Response:**
 ```json
@@ -413,19 +413,19 @@ Sincroniza estadísticas de GitHub y evalúa badges.
 
 ## Badge Engine
 
-### Arquitectura
+### Architecture
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
 │                        BADGE ENGINE                             │
 ├─────────────────────────────────────────────────────────────────┤
 │                                                                 │
-│   EVENTO                   EVALUACIÓN              RESULTADO    │
-│   ──────                   ──────────              ─────────    │
+│   EVENT                    EVALUATION              RESULT       │
+│   ─────                    ──────────              ──────       │
 │                                                                 │
-│   Kudo enviado ──────►  evaluateTrigger()  ──────► Badge?      │
-│   Kudo recibido ─────►  KUDOS_RECEIVED     ──────► team-spirit │
-│   PR mergeado ───────►  PULL_REQUESTS      ──────► first-pr    │
+│   Kudo sent ─────────►  evaluateTrigger()  ──────► Badge?      │
+│   Kudo received ─────►  KUDOS_RECEIVED     ──────► team-spirit │
+│   PR merged ─────────►  PULL_REQUESTS      ──────► first-pr    │
 │   Code review ───────►  CODE_REVIEWS       ──────► code-reviewer│
 │                                                                 │
 │              ┌──────────────────────────────┐                   │
@@ -444,75 +444,75 @@ Sincroniza estadísticas de GitHub y evalúa badges.
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-### Triggers Soportados
+### Supported Triggers
 
-| Trigger | Descripción | Ejemplo Badge |
+| Trigger | Description | Example Badge |
 |---------|-------------|---------------|
-| `KUDOS_RECEIVED` | Recibir X kudos | Team Spirit (50) |
-| `KUDOS_SENT` | Enviar X kudos | Feedback Friend (20) |
-| `CODE_REVIEWS` | Hacer X code reviews | Code Reviewer (100) |
-| `PULL_REQUESTS` | Crear X PRs | First PR (1), Code Ninja (10) |
-| `ISSUES_CLOSED` | Cerrar X issues | Bug Hunter (20) |
-| `STREAK_DAYS` | X días activo | 1 Year (365), 3 Years (1095) |
-| `FIRST_ACTION` | Primera acción | Hello World, First Commit |
-| `MANUAL` | Solo manual | Tech Lead, Architect |
-| `GITHUB_COMMIT` | Commits sincronizados | First Commit (1), Code Ninja (50) |
-| `GITHUB_PR` | PRs sincronizados | First PR (1) |
-| `GITHUB_REVIEW` | Reviews sincronizados | First Review (1), Code Reviewer (10) |
-| `MANUAL_PEER_AWARD` | Otorgado por compañero | Resonancia |
-| `INVESTMENT` | Por inversión/donación | Patron Seed, Patron Growth, Patron Bloom |
-| `PEER_AWARDS_COUNT` | X peer awards recibidos | Vínculo Fuerte (3), Alma del Equipo (10) |
+| `KUDOS_RECEIVED` | Receive X kudos | Team Spirit (50) |
+| `KUDOS_SENT` | Send X kudos | Feedback Friend (20) |
+| `CODE_REVIEWS` | Perform X code reviews | Code Reviewer (100) |
+| `PULL_REQUESTS` | Create X PRs | First PR (1), Code Ninja (10) |
+| `ISSUES_CLOSED` | Close X issues | Bug Hunter (20) |
+| `STREAK_DAYS` | X days active | 1 Year (365), 3 Years (1095) |
+| `FIRST_ACTION` | First action | Hello World, First Commit |
+| `MANUAL` | Manual only | Tech Lead, Architect |
+| `GITHUB_COMMIT` | Synced commits | First Commit (1), Code Ninja (50) |
+| `GITHUB_PR` | Synced PRs | First PR (1) |
+| `GITHUB_REVIEW` | Synced reviews | First Review (1), Code Reviewer (10) |
+| `MANUAL_PEER_AWARD` | Awarded by a peer | Resonancia |
+| `INVESTMENT` | By investment/donation | Patron Seed, Patron Growth, Patron Bloom |
+| `PEER_AWARDS_COUNT` | X peer awards received | Vínculo Fuerte (3), Alma del Equipo (10) |
 
-### Uso Programático
+### Programmatic Usage
 
 ```typescript
 import { BadgeEngine } from '@/lib/badge-engine'
 
-// Evaluar todos los badges automáticos de un usuario
+// Evaluate all automatic badges for a user
 const results = await BadgeEngine.evaluateUserBadges(userId)
 
-// Evaluar un trigger específico
+// Evaluate a specific trigger
 const badges = await BadgeEngine.evaluateTrigger(userId, TriggerType.KUDOS_RECEIVED)
 
-// Otorgar badge manualmente
-const result = await BadgeEngine.awardBadge(userId, 'code-ninja', 'admin', 'Razón')
+// Award badge manually
+const result = await BadgeEngine.awardBadge(userId, 'code-ninja', 'admin', 'Reason')
 
-// Obtener progreso hacia badges
+// Get progress toward badges
 const progress = await BadgeEngine.getBadgeProgress(userId)
 
-// === NUEVOS: Medallas Peer-to-Peer ===
+// === NEW: Peer-to-Peer Badges ===
 
-// Otorgar medalla de Resonancia a un compañero (máx 2/año)
+// Award a Resonancia badge to a peer (max 2/year)
 const peerResult = await BadgeEngine.awardPeerBadge(
   fromUserId, 
   toUserId, 
-  'Gracias por aguantarme en el despliegue del viernes'
+  'Thanks for backing me up during the Friday deployment'
 )
 
-// Consultar medallas de Resonancia restantes este año
+// Check remaining Resonancia badges this year
 const remaining = await BadgeEngine.getRemainingPeerAwards(userId)
-// → 2 (si no ha dado ninguna) | 1 | 0
+// → 2 (if none given yet) | 1 | 0
 
-// === NUEVOS: Medallas Patron (Inversión) ===
+// === NEW: Patron Badges (Investment) ===
 
-// Otorgar medalla de Patron tras donación
+// Award a Patron badge after a donation
 const patronResult = await BadgeEngine.awardPatronBadge(
   userId,
   'growth',           // 'seed' | 'growth' | 'bloom'
-  'stripe_pay_123',   // Referencia de pago (opcional)
-  'reforestation'     // Impacto elegido (opcional)
+  'stripe_pay_123',   // Payment reference (optional)
+  'reforestation'     // Chosen impact (optional)
 )
 ```
 
 ---
 
-## Servicios de Backend
+## Backend Services
 
 ### Notification Service
 
-El servicio de notificaciones permite crear y gestionar notificaciones en tiempo real para los usuarios.
+The notification service allows creating and managing real-time notifications for users.
 
-**Ubicación:** `backend/src/services/notificationService.js`
+**Location:** `backend/src/services/notificationService.js`
 
 ```javascript
 import { 
@@ -524,46 +524,46 @@ import {
   countUnread 
 } from '../services/notificationService.js'
 
-// Tipos de notificación disponibles
-NotificationType.KUDO_RECEIVED    // Usuario recibió un kudo
-NotificationType.BADGE_EARNED     // Usuario ganó un badge
-NotificationType.BADGE_PROGRESS   // Progreso hacia un badge
-NotificationType.INVITE_RECEIVED  // Invitación a organización
-NotificationType.SYSTEM           // Anuncio del sistema
+// Available notification types
+NotificationType.KUDO_RECEIVED    // User received a kudo
+NotificationType.BADGE_EARNED     // User earned a badge
+NotificationType.BADGE_PROGRESS   // Progress toward a badge
+NotificationType.INVITE_RECEIVED  // Organization invitation
+NotificationType.SYSTEM           // System announcement
 
-// Notificar kudo recibido
+// Notify kudo received
 await notifyKudoReceived({
   toUserId: 'user123',
   fromUsername: 'jeremy-sud',
   kudoId: 'kudo456',
-  message: 'Excelente trabajo en el PR!',
+  message: 'Great work on the PR!',
   category: 'COLLABORATION'
 })
 
-// Notificar badge ganado
+// Notify badge earned
 await notifyBadgeEarned({
   userId: 'user123',
   badge: { id: 'badge456', name: 'Code Ninja', slug: 'code-ninja', tier: 'GOLD' }
 })
 
-// Obtener notificaciones de un usuario
+// Get notifications for a user
 const notifications = await getNotificationsByUser(userId, { 
   limit: 20, 
   unreadOnly: true 
 })
 
-// Marcar notificaciones como leídas
+// Mark notifications as read
 await markAsRead(['notif1', 'notif2'], userId)
 
-// Contar notificaciones no leídas
+// Count unread notifications
 const count = await countUnread(userId)
 ```
 
 ### Audit Log Service
 
-El servicio de audit log registra acciones importantes para cumplimiento y debugging.
+The audit log service records important actions for compliance and debugging.
 
-**Ubicación:** `backend/src/services/auditLogService.js`
+**Location:** `backend/src/services/auditLogService.js`
 
 ```javascript
 import { 
@@ -575,33 +575,33 @@ import {
   getAuditLogs 
 } from '../services/auditLogService.js'
 
-// Acciones auditadas
-AuditAction.KUDO_CREATED      // Creación de kudos
-AuditAction.BADGE_AWARDED     // Otorgamiento de badges
-AuditAction.USER_ROLE_CHANGED // Cambios de rol
-AuditAction.GITHUB_SYNC       // Sincronizaciones de GitHub
+// Audited actions
+AuditAction.KUDO_CREATED      // Kudo creation
+AuditAction.BADGE_AWARDED     // Badge awarding
+AuditAction.USER_ROLE_CHANGED // Role changes
+AuditAction.GITHUB_SYNC       // GitHub syncs
 
-// Registrar creación de kudo (usado internamente en rutas)
+// Log kudo creation (used internally in routes)
 await logKudoCreated({
   userId: req.user.id,
   kudoId: 'kudo123',
   receiverId: 'user456',
   category: 'CODING',
-  req  // Para extraer IP y User-Agent
+  req  // To extract IP and User-Agent
 })
 
-// Registrar otorgamiento de badge
+// Log badge awarding
 await logBadgeAwarded({
   awarderId: req.user.id,
   userId: 'user456',
   badgeId: 'badge123',
   userBadgeId: 'ub789',
   badgeName: 'Code Ninja',
-  reason: 'Excelente calidad de código',
+  reason: 'Excellent code quality',
   req
 })
 
-// Consultar audit logs con filtros
+// Query audit logs with filters
 const logs = await getAuditLogs({
   userId: 'user123',
   action: AuditAction.BADGE_AWARDED,
@@ -613,17 +613,17 @@ const logs = await getAuditLogs({
 
 ---
 
-## Base de Datos
+## Database
 
 ### Schema (Prisma)
 
 ```prisma
-// Usuarios y Organizaciones
+// Users and Organizations
 model User {
   id            String    @id @default(cuid())
   email         String    @unique
   username      String    @unique
-  // ... relaciones con badges, kudos, org, team
+  // ... relations with badges, kudos, org, team
 }
 
 model Organization {
@@ -634,7 +634,7 @@ model Organization {
   teams Team[]
 }
 
-// Sistema de Kudos
+// Kudos System
 model Kudo {
   id        String @id @default(cuid())
   message   String
@@ -643,7 +643,7 @@ model Kudo {
   category  KudoCategory?
 }
 
-// Sistema de Badges
+// Badge System
 model Badge {
   id           String        @id @default(cuid())
   slug         String        @unique
@@ -666,8 +666,8 @@ model UserBadge {
 enum BadgeCategory {
   COLABORACION, CODIGO, LIDERAZGO, INNOVACION, 
   CULTURA, ONBOARDING, COMUNICACION, CALIDAD, ESPECIALES,
-  COMMUNITY,    // Medallas sociales/vínculo peer-to-peer
-  PREMIUM       // Medallas de inversión/patron
+  COMMUNITY,    // Social / peer-to-peer badges
+  PREMIUM       // Investment / patron badges
 }
 
 enum BadgeTier { BRONZE, SILVER, GOLD }
@@ -678,48 +678,48 @@ enum TriggerType {
   FIRST_ACTION, MANUAL,
   // GitHub triggers
   GITHUB_COMMIT, GITHUB_PR, GITHUB_REVIEW,
-  // Economía social
-  MANUAL_PEER_AWARD,  // Otorgado por un compañero (Resonancia)
-  INVESTMENT,         // Otorgado por inversión/donación (Patron)
-  PEER_AWARDS_COUNT   // Cantidad de medallas peer-to-peer recibidas
+  // Social economy
+  MANUAL_PEER_AWARD,  // Awarded by a peer (Resonancia)
+  INVESTMENT,         // Awarded by investment/donation (Patron)
+  PEER_AWARDS_COUNT   // Number of peer-to-peer badges received
 }
 ```
 
-### Comandos de BD
+### Database Commands
 
 ```bash
-# Generar cliente Prisma
+# Generate Prisma client
 npm run db:generate
 
-# Aplicar schema a la BD
+# Apply schema to the DB
 npm run db:push
 
-# Ejecutar migraciones
+# Run migrations
 npm run db:migrate
 
-# Poblar con datos iniciales (97 badges)
+# Seed with initial data (97 badges)
 npm run db:seed
 
-# Abrir Prisma Studio (GUI)
+# Open Prisma Studio (GUI)
 npm run db:studio
 ```
 
 ---
 
-## Catálogo de Medallas
+## Badge Catalog
 
-### Sistema de Tiers
+### Tier System
 
-| Tier | Icono | Color Anillo | Significado |
-|------|-------|--------------|-------------|
-| **Bronze** | 🥉 | `#CD7F32` | Logro inicial, primer hito alcanzado |
-| **Silver** | 🥈 | `#C0C0C0` | Competencia demostrada consistentemente |
-| **Gold** | 🥇 | `#FFD700` | Maestría, excelencia reconocida |
+| Tier | Icon | Ring Color | Meaning |
+|------|------|------------|---------|
+| **Bronze** | 🥉 | `#CD7F32` | Initial achievement, first milestone reached |
+| **Silver** | 🥈 | `#C0C0C0` | Consistently demonstrated competence |
+| **Gold** | 🥇 | `#FFD700` | Mastery, recognized excellence |
 
-### Categorías
+### Categories
 
-| Categoría | Emoji | Colores (Gradient) | Cantidad |
-|-----------|-------|-------------------|----------|
+| Category | Emoji | Colors (Gradient) | Count |
+|----------|-------|-------------------|-------|
 | **Onboarding** | 🟢 | `#10B981` → `#059669` | 10 |
 | **Coding** | 🔵 | `#3B82F6` → `#1D4ED8` | 21 |
 | **DevOps** | 🟣 | `#8B5CF6` → `#6D28D9` | 10 |
@@ -732,221 +732,221 @@ npm run db:studio
 | **Community** | ❤️ | `#F472B6` → `#EC4899` | 4 |
 | **Premium** | 💎 | `#A78BFA` → `#7C3AED` | 4 |
 
-> 📖 Ver [ECONOMY.md](ECONOMY.md) para detalles sobre medallas Community (Peer-to-Peer) y Premium (Inversión).
+> 📖 See [ECONOMY.md](ECONOMY.md) for details on Community (Peer-to-Peer) and Premium (Investment) badges.
 
-### Referencia Completa por Categoría
+### Complete Category Reference
 
 #### 🟢 Onboarding (10)
 
-| ID | Label | Tier | Descripción | Auto-Award |
+| ID | Label | Tier | Description | Auto-Award |
 |----|-------|------|-------------|------------|
-| `hello-world` | Hello World | 🥉 | Primer día en el equipo | ✅ |
-| `first-commit` | First Commit | 🥉 | Primer commit al repositorio | ✅ |
-| `first-pr` | First PR | 🥉 | Primer Pull Request aprobado | ✅ |
-| `first-review` | First Review | 🥉 | Primera code review realizada | ✅ |
-| `week-one` | Week One | 🥉 | Una semana en el equipo | ✅ |
-| `month-one` | Month One | 🥈 | Un mes en el equipo | ✅ |
-| `quarter-one` | Quarter One | 🥈 | Tres meses en el equipo | ✅ |
-| `half-year` | Half Year | 🥈 | Seis meses en el equipo | ✅ |
-| `year-one` | Year One | 🥇 | Un año en el equipo | ✅ |
-| `veteran` | Veteran | 🥇 | Tres años en el equipo | ✅ |
+| `hello-world` | Hello World | 🥉 | First day on the team | ✅ |
+| `first-commit` | First Commit | 🥉 | First commit to the repository | ✅ |
+| `first-pr` | First PR | 🥉 | First approved Pull Request | ✅ |
+| `first-review` | First Review | 🥉 | First code review performed | ✅ |
+| `week-one` | Week One | 🥉 | One week on the team | ✅ |
+| `month-one` | Month One | 🥈 | One month on the team | ✅ |
+| `quarter-one` | Quarter One | 🥈 | Three months on the team | ✅ |
+| `half-year` | Half Year | 🥈 | Six months on the team | ✅ |
+| `year-one` | Year One | 🥇 | One year on the team | ✅ |
+| `veteran` | Veteran | 🥇 | Three years on the team | ✅ |
 
 #### 🔵 Coding (21)
 
-| ID | Label | Tier | Descripción | Auto-Award |
+| ID | Label | Tier | Description | Auto-Award |
 |----|-------|------|-------------|------------|
-| `code-ninja` | Code Ninja | 🥈 | 50+ commits limpios | ✅ |
-| `bug-hunter` | Bug Hunter | 🥈 | Encuentra bugs antes de producción | ❌ |
-| `bug-slayer` | Bug Slayer | 🥇 | 50+ bugs resueltos | ✅ |
-| `refactor-master` | Refactor Master | 🥈 | Mejora código legacy de forma segura | ❌ |
-| `algorithm-ace` | Algorithm Ace | 🥇 | Algoritmos óptimos para problemas complejos | ❌ |
-| `clean-code` | Clean Code | 🥈 | Código legible y mantenible | ❌ |
-| `full-stack-hero` | Full Stack Hero | 🥇 | Domina frontend y backend | ❌ |
-| `api-master` | API Master | 🥈 | APIs bien diseñadas y documentadas | ❌ |
-| `database-wizard` | Database Wizard | 🥈 | Optimización de queries y esquemas | ❌ |
-| `security-champion` | Security Champion | 🥇 | Implementa seguridad proactivamente | ❌ |
-| `ai-pioneer` | AI Pioneer | 🥇 | Lidera integración de IA/ML | ❌ |
-| `performance-guru` | Performance Guru | 🥇 | Optimización de performance | ❌ |
-| `test-master` | Test Master | 🥈 | Cobertura de tests ejemplar | ❌ |
+| `code-ninja` | Code Ninja | 🥈 | 50+ clean commits | ✅ |
+| `bug-hunter` | Bug Hunter | 🥈 | Finds bugs before production | ❌ |
+| `bug-slayer` | Bug Slayer | 🥇 | 50+ bugs resolved | ✅ |
+| `refactor-master` | Refactor Master | 🥈 | Safely improves legacy code | ❌ |
+| `algorithm-ace` | Algorithm Ace | 🥇 | Optimal algorithms for complex problems | ❌ |
+| `clean-code` | Clean Code | 🥈 | Readable and maintainable code | ❌ |
+| `full-stack-hero` | Full Stack Hero | 🥇 | Masters both frontend and backend | ❌ |
+| `api-master` | API Master | 🥈 | Well-designed and documented APIs | ❌ |
+| `database-wizard` | Database Wizard | 🥈 | Query and schema optimization | ❌ |
+| `security-champion` | Security Champion | 🥇 | Proactively implements security | ❌ |
+| `ai-pioneer` | AI Pioneer | 🥇 | Leads AI/ML integration | ❌ |
+| `performance-guru` | Performance Guru | 🥇 | Performance optimization | ❌ |
+| `test-master` | Test Master | 🥈 | Exemplary test coverage | ❌ |
 | `commit-century` | Commit Century | 🥈 | 100 commits | ✅ |
 | `commit-500` | Commit 500 | 🥇 | 500 commits | ✅ |
 | `commit-1000` | Commit Thousand | 🥇 | 1000 commits | ✅ |
-| `pr-champion` | PR Champion | 🥈 | 50+ PRs mergeadas | ✅ |
+| `pr-champion` | PR Champion | 🥈 | 50+ merged PRs | ✅ |
 | `review-guru` | Review Guru | 🥈 | 100+ code reviews | ✅ |
-| `hotfix-hero` | Hotfix Hero | 🥈 | Resuelve emergencias rápidamente | ❌ |
-| `mobile-master` | Mobile Master | 🥈 | Experto en desarrollo móvil | ❌ |
-| `frontend-wizard` | Frontend Wizard | 🥈 | Maestría en UI/UX técnico | ❌ |
+| `hotfix-hero` | Hotfix Hero | 🥈 | Resolves emergencies quickly | ❌ |
+| `mobile-master` | Mobile Master | 🥈 | Expert in mobile development | ❌ |
+| `frontend-wizard` | Frontend Wizard | 🥈 | Mastery in technical UI/UX | ❌ |
 
 #### 🟣 DevOps (10)
 
-| ID | Label | Tier | Descripción | Auto-Award |
+| ID | Label | Tier | Description | Auto-Award |
 |----|-------|------|-------------|------------|
-| `pipeline-pro` | Pipeline Pro | 🥈 | CI/CD pipelines rápidos y confiables | ❌ |
-| `docker-captain` | Docker Captain | 🥈 | Containerización eficiente | ❌ |
-| `kubernetes-knight` | K8s Knight | 🥇 | Orquestación avanzada | ❌ |
+| `pipeline-pro` | Pipeline Pro | 🥈 | Fast and reliable CI/CD pipelines | ❌ |
+| `docker-captain` | Docker Captain | 🥈 | Efficient containerization | ❌ |
+| `kubernetes-knight` | K8s Knight | 🥇 | Advanced orchestration | ❌ |
 | `cloud-deployer` | Cloud Deployer | 🥇 | Zero-downtime deployments | ❌ |
-| `cicd-master` | CI/CD Master | 🥇 | Automatización total del ciclo | ❌ |
+| `cicd-master` | CI/CD Master | 🥇 | Full cycle automation | ❌ |
 | `terraform-titan` | Terraform Titan | 🥇 | Infrastructure as Code | ❌ |
-| `incident-commander` | Incident Commander | 🥇 | Manejo de incidentes críticos | ❌ |
-| `deploy-master` | Deploy Master | 🥈 | 50+ deployments exitosos | ✅ |
+| `incident-commander` | Incident Commander | 🥇 | Critical incident management | ❌ |
+| `deploy-master` | Deploy Master | 🥈 | 50+ successful deployments | ✅ |
 | `sre-specialist` | SRE Specialist | 🥇 | Site Reliability Engineering | ❌ |
-| `monitoring-maven` | Monitoring Maven | 🥈 | Observabilidad y alertas | ❌ |
+| `monitoring-maven` | Monitoring Maven | 🥈 | Observability and alerting | ❌ |
 
 #### 🩷 Collaboration (16)
 
-| ID | Label | Tier | Descripción | Auto-Award |
+| ID | Label | Tier | Description | Auto-Award |
 |----|-------|------|-------------|------------|
-| `mentor` | Mentor | 🥉 | Guía a nuevos miembros del equipo | ❌ |
-| `mentor-master` | Mentor Master | 🥇 | Ha guiado a 20+ colegas | ❌ |
-| `team-spirit` | Team Spirit | 🥈 | Mantiene la moral del equipo | ❌ |
-| `code-reviewer` | Code Reviewer | 🥈 | Reviews detalladas y constructivas | ❌ |
-| `pair-programmer` | Pair Programmer | 🥈 | Pair programming efectivo | ❌ |
-| `team-player` | Team Player | 🥈 | Colaborador excepcional | ❌ |
-| `helpful-hero` | Helpful Hero | 🥈 | Siempre disponible para ayudar | ❌ |
-| `hackathon-hero` | Hackathon Hero | 🥇 | Destaca en hackathons | ❌ |
-| `customer-champion` | Customer Champion | 🥈 | Enfocado en necesidades del cliente | ❌ |
-| `bridge-builder` | Bridge Builder | 🥈 | Conecta equipos y departamentos | ❌ |
-| `problem-solver` | Problem Solver | 🥈 | Resuelve problemas complejos | ❌ |
-| `crisis-averted` | Crisis Averted | 🥇 | Salvó un deployment crítico | ❌ |
-| `knowledge-sharer` | Knowledge Sharer | 🥈 | Comparte conocimiento activamente | ❌ |
-| `onboarding-guru` | Onboarding Guru | 🥈 | Excelente onboarding de nuevos | ❌ |
-| `feedback-champion` | Feedback Champion | 🥈 | Feedback constructivo constante | ❌ |
-| `culture-carrier` | Culture Carrier | 🥇 | Embajador de la cultura | ❌ |
+| `mentor` | Mentor | 🥉 | Guides new team members | ❌ |
+| `mentor-master` | Mentor Master | 🥇 | Has mentored 20+ colleagues | ❌ |
+| `team-spirit` | Team Spirit | 🥈 | Keeps team morale high | ❌ |
+| `code-reviewer` | Code Reviewer | 🥈 | Detailed and constructive reviews | ❌ |
+| `pair-programmer` | Pair Programmer | 🥈 | Effective pair programming | ❌ |
+| `team-player` | Team Player | 🥈 | Exceptional collaborator | ❌ |
+| `helpful-hero` | Helpful Hero | 🥈 | Always available to help | ❌ |
+| `hackathon-hero` | Hackathon Hero | 🥇 | Excels in hackathons | ❌ |
+| `customer-champion` | Customer Champion | 🥈 | Focused on customer needs | ❌ |
+| `bridge-builder` | Bridge Builder | 🥈 | Connects teams and departments | ❌ |
+| `problem-solver` | Problem Solver | 🥈 | Solves complex problems | ❌ |
+| `crisis-averted` | Crisis Averted | 🥇 | Saved a critical deployment | ❌ |
+| `knowledge-sharer` | Knowledge Sharer | 🥈 | Actively shares knowledge | ❌ |
+| `onboarding-guru` | Onboarding Guru | 🥈 | Excellent onboarding of newcomers | ❌ |
+| `feedback-champion` | Feedback Champion | 🥈 | Consistent constructive feedback | ❌ |
+| `culture-carrier` | Culture Carrier | 🥇 | Culture ambassador | ❌ |
 
 #### 🟡 Leadership (10)
 
-| ID | Label | Tier | Descripción | Auto-Award |
+| ID | Label | Tier | Description | Auto-Award |
 |----|-------|------|-------------|------------|
-| `tech-lead` | Tech Lead | 🥇 | Lidera decisiones técnicas | ❌ |
-| `architect` | Architect | 🥇 | Arquitectura sólida y escalable | ❌ |
-| `sprint-hero` | Sprint Hero | 🥈 | Entrega excepcional en sprints | ❌ |
-| `visionary` | Visionary | 🥇 | Visión estratégica del producto | ❌ |
-| `innovator` | Innovator | 🥇 | Ideas transformadoras implementadas | ❌ |
-| `mvp-month` | MVP of Month | 🥇 | Reconocido como MVP del mes | ❌ |
-| `decision-maker` | Decision Maker | 🥈 | Toma decisiones efectivas | ❌ |
-| `project-lead` | Project Lead | 🥇 | Lidera proyectos exitosamente | ❌ |
-| `change-agent` | Change Agent | 🥈 | Impulsa cambios positivos | ❌ |
-| `founder` | Founder | 🥇 | Fundador del sistema | ❌ |
+| `tech-lead` | Tech Lead | 🥇 | Leads technical decisions | ❌ |
+| `architect` | Architect | 🥇 | Solid and scalable architecture | ❌ |
+| `sprint-hero` | Sprint Hero | 🥈 | Exceptional sprint delivery | ❌ |
+| `visionary` | Visionary | 🥇 | Strategic product vision | ❌ |
+| `innovator` | Innovator | 🥇 | Transformative ideas implemented | ❌ |
+| `mvp-month` | MVP of Month | 🥇 | Recognized as MVP of the month | ❌ |
+| `decision-maker` | Decision Maker | 🥈 | Makes effective decisions | ❌ |
+| `project-lead` | Project Lead | 🥇 | Successfully leads projects | ❌ |
+| `change-agent` | Change Agent | 🥈 | Drives positive change | ❌ |
+| `founder` | Founder | 🥇 | System founder | ❌ |
 
 #### 📚 Documentation (7)
 
-| ID | Label | Tier | Descripción | Auto-Award |
+| ID | Label | Tier | Description | Auto-Award |
 |----|-------|------|-------------|------------|
-| `docs-hero` | Docs Hero | 🥉 | Documentación clara para el equipo | ❌ |
-| `docs-contributor` | Docs Contributor | 🥉 | Contribuye a documentación | ✅ |
-| `tutorial-creator` | Tutorial Creator | 🥈 | Crea tutoriales útiles | ❌ |
-| `open-source-contributor` | Open Source | 🥈 | Contribuciones open source | ❌ |
-| `wiki-warrior` | Wiki Warrior | 🥈 | Mantiene la wiki actualizada | ❌ |
-| `readme-ranger` | README Ranger | 🥈 | READMEs ejemplares | ❌ |
-| `api-designer` | API Designer | 🥈 | APIs bien documentadas | ❌ |
+| `docs-hero` | Docs Hero | 🥉 | Clear documentation for the team | ❌ |
+| `docs-contributor` | Docs Contributor | 🥉 | Contributes to documentation | ✅ |
+| `tutorial-creator` | Tutorial Creator | 🥈 | Creates useful tutorials | ❌ |
+| `open-source-contributor` | Open Source | 🥈 | Open source contributions | ❌ |
+| `wiki-warrior` | Wiki Warrior | 🥈 | Keeps the wiki up to date | ❌ |
+| `readme-ranger` | README Ranger | 🥈 | Exemplary READMEs | ❌ |
+| `api-designer` | API Designer | 🥈 | Well-documented APIs | ❌ |
 
 #### 🌱 Growth (5)
 
-| ID | Label | Tier | Descripción | Auto-Award |
+| ID | Label | Tier | Description | Auto-Award |
 |----|-------|------|-------------|------------|
-| `fast-learner` | Fast Learner | 🥈 | Aprende rápidamente | ❌ |
-| `conference-speaker` | Conference Speaker | 🥇 | Presenta en conferencias | ❌ |
-| `lifelong-learner` | Lifelong Learner | 🥈 | Aprendizaje continuo | ❌ |
-| `skill-builder` | Skill Builder | 🥈 | Desarrolla nuevas habilidades | ❌ |
-| `eco-coder` | Eco Coder | 🥈 | Código eficiente y sostenible | ❌ |
+| `fast-learner` | Fast Learner | 🥈 | Learns quickly | ❌ |
+| `conference-speaker` | Conference Speaker | 🥇 | Presents at conferences | ❌ |
+| `lifelong-learner` | Lifelong Learner | 🥈 | Continuous learning | ❌ |
+| `skill-builder` | Skill Builder | 🥈 | Develops new skills | ❌ |
+| `eco-coder` | Eco Coder | 🥈 | Efficient and sustainable code | ❌ |
 
 #### ❤️ Milestones (9)
 
-| ID | Label | Tier | Criterio | Auto-Award |
+| ID | Label | Tier | Criteria | Auto-Award |
 |----|-------|------|----------|------------|
-| `kudo-starter` | Kudo Starter | 🥉 | 10 kudos recibidos | ✅ |
-| `kudo-collector` | Kudo Collector | 🥈 | 50 kudos recibidos | ✅ |
-| `kudo-legend` | Kudo Legend | 🥇 | 100 kudos recibidos | ✅ |
-| `badge-collector` | Badge Collector | 🥈 | 10 badges obtenidos | ✅ |
-| `badge-legend` | Badge Legend | 🥇 | 20 badges obtenidos | ✅ |
-| `streak-master` | Streak Master | 🥈 | 30 días de actividad continua | ✅ |
-| `yearly-mvp` | Yearly MVP | 🥇 | MVP del año | ❌ |
-| `all-star` | All Star | 🥇 | Badge en cada categoría | ✅ |
+| `kudo-starter` | Kudo Starter | 🥉 | 10 kudos received | ✅ |
+| `kudo-collector` | Kudo Collector | 🥈 | 50 kudos received | ✅ |
+| `kudo-legend` | Kudo Legend | 🥇 | 100 kudos received | ✅ |
+| `badge-collector` | Badge Collector | 🥈 | 10 badges earned | ✅ |
+| `badge-legend` | Badge Legend | 🥇 | 20 badges earned | ✅ |
+| `streak-master` | Streak Master | 🥈 | 30 days of continuous activity | ✅ |
+| `yearly-mvp` | Yearly MVP | 🥇 | MVP of the year | ❌ |
+| `all-star` | All Star | 🥇 | Badge in every category | ✅ |
 | `completionist` | Completionist | 🥇 | 50+ badges | ✅ |
 
 ---
 
-## Sistema de Auto-Award
+## Auto-Award System
 
-### Descripción
+### Description
 
-El sistema de Auto-Award verifica automáticamente las métricas de GitHub de los colaboradores registrados y otorga medallas basándose en su actividad.
+The Auto-Award system automatically verifies the GitHub metrics of registered collaborators and awards badges based on their activity.
 
-### Configuración
+### Configuration
 
 ```yaml
 # .github/workflows/auto-award.yml
 name: 🏅 BOOMFLOW Auto-Award
 on:
   schedule:
-    - cron: '0 6 * * *'  # Diario a las 6:00 AM UTC
+    - cron: '0 6 * * *'  # Daily at 6:00 AM UTC
   workflow_dispatch:
 ```
 
-### Métricas Verificadas
+### Verified Metrics
 
-| Métrica | Fuente | Medallas Relacionadas |
-|---------|--------|----------------------|
+| Metric | Source | Related Badges |
+|--------|--------|----------------|
 | **Commits** | GitHub API | first-commit, code-ninja, commit-century, commit-500, commit-1000 |
-| **PRs Mergeadas** | GitHub API | first-pr, pr-champion |
+| **Merged PRs** | GitHub API | first-pr, pr-champion |
 | **Code Reviews** | GitHub API | first-review, review-guru |
-| **Issues Cerradas** | GitHub API | bug-slayer |
-| **Tiempo en Equipo** | `joinedAt` en user.json | week-one, month-one, quarter-one, half-year, year-one, veteran |
+| **Closed Issues** | GitHub API | bug-slayer |
+| **Time on Team** | `joinedAt` in user.json | week-one, month-one, quarter-one, half-year, year-one, veteran |
 | **Deployments** | GitHub Deployments API | deploy-master |
 
-### Reglas de Auto-Award
+### Auto-Award Rules
 
 ```javascript
-// scripts/auto-award.js - Ejemplos de reglas
+// scripts/auto-award.js - Rule examples
 
 const AUTO_AWARD_RULES = [
   {
     badgeId: 'first-commit',
-    description: 'Primer commit realizado',
+    description: 'First commit made',
     check: (metrics) => metrics.commits >= 1
   },
   {
     badgeId: 'code-ninja',
-    description: '50+ commits limpios',
+    description: '50+ clean commits',
     check: (metrics) => metrics.commits >= 50
   },
   {
     badgeId: 'year-one',
-    description: 'Un año en el equipo',
+    description: 'One year on the team',
     check: (metrics, userData) => daysSinceJoined(userData) >= 365
   }
 ];
 ```
 
-### Ejecución Manual
+### Manual Execution
 
 ```bash
-# Ejecutar verificación de auto-award
+# Run auto-award check
 node scripts/auto-award.js
 
-# Con token de GitHub (necesario para API calls)
+# With GitHub token (required for API calls)
 GITHUB_TOKEN=ghp_xxx node scripts/auto-award.js
 ```
 
 ---
 
-## Webhooks en Tiempo Real
+## Real-time Webhooks
 
-### Descripción
+### Description
 
-El sistema de webhooks detecta eventos de GitHub en tiempo real y puede pre-evaluar medallas.
+The webhook system detects GitHub events in real time and can pre-evaluate badges.
 
-### Eventos Soportados
+### Supported Events
 
-| Evento GitHub | Trigger | Medallas Potenciales |
-|---------------|---------|---------------------|
-| `pull_request.closed` + merged | PR mergeada | first-pr, pr-champion |
-| `pull_request_review.submitted` | Review completada | first-review, review-guru |
-| `issues.closed` | Issue cerrada | bug-slayer |
-| `release.published` | Release publicado | deploy-master |
-| `push` | Push a main | first-commit |
+| GitHub Event | Trigger | Potential Badges |
+|--------------|---------|------------------|
+| `pull_request.closed` + merged | Merged PR | first-pr, pr-champion |
+| `pull_request_review.submitted` | Review completed | first-review, review-guru |
+| `issues.closed` | Issue closed | bug-slayer |
+| `release.published` | Release published | deploy-master |
+| `push` | Push to main | first-commit |
 
-### Configuración del Workflow
+### Workflow Configuration
 
 ```yaml
 # .github/workflows/event-processor.yml
@@ -964,7 +964,7 @@ on:
     branches: [main]
 ```
 
-### Script de Procesamiento
+### Processing Script
 
 ```javascript
 // scripts/process-event.js
@@ -982,28 +982,28 @@ const EVENT_RULES = {
 
 ---
 
-## CLI de Administración
+## Administration CLI
 
-### Comandos Disponibles
+### Available Commands
 
 ```bash
-# Otorgar medalla
-node scripts/badge-admin.js grant <usuario> <badge-id>
+# Award badge
+node scripts/badge-admin.js grant <user> <badge-id>
 
-# Ejemplo
+# Example
 node scripts/badge-admin.js grant jeremy-sud architect
 
-# Revocar medalla (solo admins)
-node scripts/badge-admin.js revoke <usuario> <badge-id>
+# Revoke badge (admins only)
+node scripts/badge-admin.js revoke <user> <badge-id>
 
-# Listar medallas de un usuario
-node scripts/badge-admin.js list <usuario>
+# List badges for a user
+node scripts/badge-admin.js list <user>
 
-# Ver estadísticas globales
+# View global statistics
 node scripts/stats.js
 ```
 
-### Permisos Requeridos
+### Required Permissions
 
 ```javascript
 // config/admins.json
@@ -1021,17 +1021,17 @@ node scripts/stats.js
 }
 ```
 
-### Salida del Script de Stats
+### Stats Script Output
 
 ```
 ┌────────────────────────────────────────────────────────────────────────┐
-│                    🌸 BOOMFLOW - Panel de Estadísticas                 │
+│                    🌸 BOOMFLOW - Statistics Panel                      │
 ├────────────────────────────────────────────────────────────────────────┤
-│  Colaboradores: 2                                                      │
-│  Total Medallas Otorgadas: 16                                          │
-│  Promedio por Usuario: 8.0                                             │
+│  Collaborators: 2                                                      │
+│  Total Badges Awarded: 16                                              │
+│  Average per User: 8.0                                                 │
 ├────────────────────────────────────────────────────────────────────────┤
-│  📊 Usuario        │ Medallas │ Última Actividad                       │
+│  📊 User            │ Badges   │ Last Activity                         │
 │  ─────────────────────────────────────────────────────────────────────│
 │  @jeremy-sud       │    6     │ 2026-02-15 (tech-lead)                 │
 │  @ursolcr          │   10     │ 2026-02-15 (sprint-hero)               │
@@ -1042,17 +1042,17 @@ node scripts/stats.js
 
 ## GitHub Action
 
-### Instalación
+### Installation
 
-Agregar a `.github/workflows/boomflow.yml` en tu repositorio de perfil:
+Add to `.github/workflows/boomflow.yml` in your profile repository:
 
 ```yaml
 name: BOOMFLOW Badge Sync
 
 on:
   schedule:
-    - cron: "0 0 * * *"  # Diario a medianoche
-  workflow_dispatch:      # Trigger manual
+    - cron: "0 0 * * *"  # Daily at midnight
+  workflow_dispatch:      # Manual trigger
 
 jobs:
   sync-badges:
@@ -1072,131 +1072,131 @@ jobs:
 
 ### Inputs
 
-| Input | Requerido | Default | Descripción |
-|-------|-----------|---------|-------------|
-| `boomflow_token` | ✅ | - | Personal access token con permisos `repo` |
-| `github_username` | ❌ | `github.actor` | Usuario objetivo para sincronizar |
-| `org_name` | ❌ | `SistemasUrsol` | Organización |
+| Input | Required | Default | Description |
+|-------|----------|---------|-------------|
+| `boomflow_token` | ✅ | - | Personal access token with `repo` permissions |
+| `github_username` | ❌ | `github.actor` | Target user to sync |
+| `org_name` | ❌ | `SistemasUrsol` | Organization |
 
-### Marcadores en README
+### README Markers
 
-El action busca y reemplaza el contenido entre estos marcadores:
+The action finds and replaces the content between these markers:
 
 ```markdown
 <!-- BOOMFLOW-BADGES-START -->
-[Las medallas se insertan aquí automáticamente]
+[Badges are automatically inserted here]
 <!-- BOOMFLOW-BADGES-END -->
 ```
 
-### Sincronización Manual
+### Manual Sync
 
 ```bash
-# Desde el repo BOOMFLOW
-node scripts/sync-profile.js <username> <ruta-readme> [--view=modo]
+# From the BOOMFLOW repo
+node scripts/sync-profile.js <username> <readme-path> [--view=mode]
 
-# Ejemplo
+# Example
 node scripts/sync-profile.js jeremy-sud /home/user/jeremy-sud/README.md
 ```
 
 ---
 
-## Sistema de Vistas Adaptativas
+## Adaptive View System
 
-El script de sincronización detecta automáticamente la cantidad de medallas y ajusta la visualización para mantener los perfiles limpios y legibles.
+The sync script automatically detects the number of badges and adjusts the display to keep profiles clean and readable.
 
-### Modos de Vista
+### View Modes
 
-| Vista | Medallas | Descripción |
-|-------|----------|-------------|
-| **Normal** | 1-12 | Tabla completa con íconos 48px, nombres y tier |
-| **Compact** | 13-30 | Íconos 32px en filas de 8, ordenados por tier |
-| **Mini** | 31+ | Secciones colapsables `<details>` agrupadas por tier |
+| View | Badges | Description |
+|------|--------|-------------|
+| **Normal** | 1-12 | Full table with 48px icons, names, and tier |
+| **Compact** | 13-30 | 32px icons in rows of 8, sorted by tier |
+| **Mini** | 31+ | Collapsible `<details>` sections grouped by tier |
 
-### Umbrales
+### Thresholds
 
 ```javascript
-const THRESHOLD_COMPACT = 12;  // Más de 12 → vista compacta
-const THRESHOLD_MINI = 30;     // Más de 30 → vista mini
+const THRESHOLD_COMPACT = 12;  // More than 12 → compact view
+const THRESHOLD_MINI = 30;     // More than 30 → mini view
 ```
 
-### Vista Normal (1-12 medallas)
+### Normal View (1-12 badges)
 
-Muestra una tabla detallada ideal para pocos reconocimientos:
+Displays a detailed table, ideal for few recognitions:
 
 ```markdown
-| Medalla | Nombre | Tier |
-|:-------:|--------|:----:|
+| Badge | Name | Tier |
+|:-----:|------|:----:|
 | <img src="..." width="48"> | Code Ninja | 🥈 Silver |
 ```
 
-### Vista Compacta (13-30 medallas)
+### Compact View (13-30 badges)
 
-Íconos más pequeños en filas horizontales, ordenados por tier (oro primero):
+Smaller icons in horizontal rows, sorted by tier (gold first):
 
 ```markdown
-### 🏅 Mis Medallas BOOMFLOW (25)
+### 🏅 My BOOMFLOW Badges (25)
 
 <img src="..." width="32" title="Gold Master"> <img src="..." width="32"> ...
 
-**Resumen:** 🥇 3 Gold | 🥈 12 Silver | 🥉 10 Bronze
+**Summary:** 🥇 3 Gold | 🥈 12 Silver | 🥉 10 Bronze
 ```
 
-### Vista Mini (31+ medallas)
+### Mini View (31+ badges)
 
-Secciones colapsables para perfiles con muchas medallas:
+Collapsible sections for profiles with many badges:
 
 ```markdown
-### 🏅 Mis Medallas BOOMFLOW (45)
+### 🏅 My BOOMFLOW Badges (45)
 
 <details>
-<summary>🥇 Gold (5 medallas)</summary>
+<summary>🥇 Gold (5 badges)</summary>
 <img src="..." width="28"> <img src="..." width="28"> ...
 </details>
 
 <details>
-<summary>🥈 Silver (20 medallas)</summary>
+<summary>🥈 Silver (20 badges)</summary>
 ...
 </details>
 ```
 
-### Forzar Vista Específica
+### Force a Specific View
 
-Usa el flag `--view` para anular la detección automática:
+Use the `--view` flag to override automatic detection:
 
 ```bash
-# Forzar vista compacta
+# Force compact view
 node scripts/sync-profile.js jeremy-sud README.md --view=compact
 
-# Forzar vista mini (útil para testing)
+# Force mini view (useful for testing)
 node scripts/sync-profile.js jeremy-sud README.md --view=mini
 
-# Forzar vista normal
+# Force normal view
 node scripts/sync-profile.js jeremy-sud README.md --view=normal
 ```
 
 ---
 
-## Sistema de Skins
+## Skins System
 
-BOOMFLOW permite personalizar la apariencia de las medallas con diferentes "skins" o estilos visuales.
+BOOMFLOW allows customizing the appearance of badges with different "skins" or visual styles.
 
-### Paquetes Disponibles
+### Available Packs
 
-| Skin | Descripción | Acceso |
+| Skin | Description | Access |
 |------|-------------|--------|
-| DEFAULT | Diseño original colorido | Gratis |
-| CRYSTAL | Estilo gema/cristal facetado | Gratis |
-| ACADEMIC | Escudo formal con laureles | Gratis |
-| MINIMALIST | Diseño limpio y simple | Gratis |
-| VINTAGE | Estilo retro con ornamentos | Gratis |
-| NEON | Cyberpunk con efectos de brillo | Premium |
+| DEFAULT | Original colorful design | Free |
+| CRYSTAL | Faceted gem/crystal style | Free |
+| ACADEMIC | Formal shield with laurels | Free |
+| MINIMALIST | Clean and simple design | Free |
+| VINTAGE | Retro style with ornaments | Free |
+| NEON | Cyberpunk with glow effects | Premium |
 
-### Cambiar Skin via API
+### Change Skin via API
 
 ```http
 GET /api/badges/skins
 ```
-**Respuesta:**
+**Response:**
 ```json
 {
   "skins": [
@@ -1213,14 +1213,14 @@ GET /api/badges/skins
 }
 ```
 
-### Crear Skins Personalizadas
+### Create Custom Skins
 
-Usa el generador interactivo:
+Use the interactive generator:
 ```bash
 node scripts/generate-custom-skin.js
 ```
 
-O en modo CLI:
+Or in CLI mode:
 ```bash
 node scripts/generate-custom-skin.js \
   --shape hexagon \
@@ -1228,22 +1228,22 @@ node scripts/generate-custom-skin.js \
   --effect glow \
   --icon gem \
   --text "EPIC" \
-  --name "Mi Skin"
+  --name "My Skin"
 ```
 
-**Opciones disponibles:**
+**Available options:**
 - `--shape`: circle, hexagon, shield, octagon, oval, diamond
 - `--palette`: ocean, forest, sunset, lavender, midnight, rose, gold, slate, neon, corporate
 - `--effect`: none, glow, shadow, gradient, noise
 - `--icon`: gem, star, badge, lightning, code, heart, trophy, rocket, none
 
-Para documentación completa sobre skins, ver [SKINS.md](SKINS.md).
+For complete skin documentation, see [SKINS.md](SKINS.md).
 
 ---
 
 ## API Reference
 
-### Endpoints (Backend en desarrollo)
+### Endpoints (Backend in development)
 
 #### Health Check
 
@@ -1259,7 +1259,7 @@ GET /api/health
 }
 ```
 
-#### Catálogo de Medallas
+#### Badge Catalog
 
 ```http
 GET /api/badges/catalog
@@ -1273,14 +1273,14 @@ GET /api/badges/catalog
     "label": "Code Ninja",
     "category": "coding",
     "tier": "silver",
-    "meta": "Nivel 2",
-    "description": "Código limpio, rápido y eficiente.",
+    "meta": "Level 2",
+    "description": "Clean, fast, and efficient code.",
     "svg": "badge-code-ninja.svg"
   }
 ]
 ```
 
-#### Medallas de Usuario
+#### User Badges
 
 ```http
 GET /api/user/{username}/badges
@@ -1302,20 +1302,20 @@ GET /api/user/{username}/badges
 
 ---
 
-## Modelos de Datos
+## Data Models
 
-### Badge (Catálogo)
+### Badge (Catalog)
 
 ```typescript
 interface Badge {
-  id: string;           // Identificador único (kebab-case)
-  emoji: string;        // Emoji de display
-  label: string;        // Nombre legible
-  category: Category;   // Categoría
+  id: string;           // Unique identifier (kebab-case)
+  emoji: string;        // Display emoji
+  label: string;        // Human-readable name
+  category: Category;   // Category
   tier: Tier;           // bronze | silver | gold
-  meta: string;         // Label del tier (Nivel 1, 2, 3)
-  description: string;  // Descripción completa
-  svg: string;          // Nombre del archivo SVG
+  meta: string;         // Tier label (Level 1, 2, 3)
+  description: string;  // Full description
+  svg: string;          // SVG file name
 }
 
 type Category = 
@@ -1337,17 +1337,17 @@ type Tier = 'bronze' | 'silver' | 'gold';
 ```typescript
 interface UserData {
   username: string;      // GitHub username
-  displayName: string;   // Nombre para mostrar
-  role?: string;         // Rol en el equipo
-  org: string;           // Organización
-  joinedAt: string;      // ISO date de ingreso
-  badges: UserBadge[];   // Medallas otorgadas
+  displayName: string;   // Display name
+  role?: string;         // Team role
+  org: string;           // Organization
+  joinedAt: string;      // ISO date of joining
+  badges: UserBadge[];   // Awarded badges
 }
 
 interface UserBadge {
-  id: string;            // ID de la medalla
-  awardedAt: string;     // ISO date de otorgamiento
-  awardedBy: string;     // Username que otorgó o "system"
+  id: string;            // Badge ID
+  awardedAt: string;     // ISO date of awarding
+  awardedBy: string;     // Username who awarded or "system"
 }
 ```
 
@@ -1378,18 +1378,18 @@ type Permission =
 
 ---
 
-## Especificación SVG
+## SVG Specification
 
-### Dimensiones
+### Dimensions
 
-| Elemento | Valor |
-|----------|-------|
+| Element | Value |
+|---------|-------|
 | Canvas | 128x128 px |
-| Anillo exterior (tier) | 58px radio |
-| Círculo interior (categoría) | 50px radio |
-| Icono central | 40x40 px |
+| Outer ring (tier) | 58px radius |
+| Inner circle (category) | 50px radius |
+| Center icon | 40x40 px |
 
-### Colores de Tier (Anillo)
+### Tier Colors (Ring)
 
 ```css
 /* Bronze */
@@ -1402,7 +1402,7 @@ stroke: #C0C0C0;
 stroke: #FFD700;
 ```
 
-### Gradientes de Categoría
+### Category Gradients
 
 ```xml
 <!-- Coding (Blue) -->
@@ -1418,7 +1418,7 @@ stroke: #FFD700;
 </linearGradient>
 ```
 
-### Plantilla SVG Base
+### Base SVG Template
 
 ```xml
 <svg viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
@@ -1453,37 +1453,37 @@ stroke: #FFD700;
 
 ## Troubleshooting
 
-### Medallas no aparecen en el perfil
+### Badges not appearing on the profile
 
-1. Verificar que los marcadores existan en el README:
+1. Verify that the markers exist in the README:
    ```markdown
    <!-- BOOMFLOW-BADGES-START -->
    <!-- BOOMFLOW-BADGES-END -->
    ```
 
-2. Verificar que el token tenga permisos `repo`
+2. Verify that the token has `repo` permissions
 
-3. Ejecutar sync manual:
+3. Run manual sync:
    ```bash
    node scripts/sync-profile.js <username> <readme-path>
    ```
 
-### Auto-Award no otorga medallas
+### Auto-Award not awarding badges
 
-1. Verificar que el usuario esté registrado en `users/*.json`
-2. Verificar que `GITHUB_TOKEN` esté configurado
-3. Ejecutar manualmente para ver errores:
+1. Verify that the user is registered in `users/*.json`
+2. Verify that `GITHUB_TOKEN` is configured
+3. Run manually to see errors:
    ```bash
    GITHUB_TOKEN=ghp_xxx node scripts/auto-award.js
    ```
 
-### Error de permisos al otorgar medallas
+### Permission error when awarding badges
 
-Solo usuarios en `config/admins.json` pueden otorgar medallas manualmente.
+Only users listed in `config/admins.json` can award badges manually.
 
 ---
 
 <p align="center">
   <strong>🌸 BOOMFLOW v2.1.0</strong><br/>
-  <sub>Documentación Técnica — Sistemas Ursol</sub>
+  <sub>Technical Documentation — Sistemas Ursol</sub>
 </p>
