@@ -115,6 +115,6 @@ export function generateToken(userId) {
   return jwt.sign(
     { userId },
     JWT_SECRET,
-    { expiresIn: '7d' }
+    { expiresIn: '1h' }
   )
 }

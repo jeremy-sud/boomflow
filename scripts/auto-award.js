@@ -18,7 +18,6 @@
 
 const fs = require('fs');
 const path = require('path');
-const https = require('https');
 
 // Configuration
 const USERS_DIR = path.join(__dirname, '../users');
@@ -243,36 +242,19 @@ function badgeExists(badgeId) {
 // ============================================================================
 
 function githubRequest(endpoint) {
-  return new Promise((resolve, reject) => {
-    const options = {
-      hostname: 'api.github.com',
-      path: endpoint,
-      method: 'GET',
-      headers: {
-        'User-Agent': 'BOOMFLOW-AutoAward',
-        'Accept': 'application/vnd.github.v3+json',
-      }
-    };
+  const url = `https://api.github.com${endpoint}`;
+  const headers = {
+    'User-Agent': 'BOOMFLOW-AutoAward',
+    'Accept': 'application/vnd.github.v3+json',
+  };
 
-    if (GITHUB_TOKEN) {
-      options.headers['Authorization'] = `token ${GITHUB_TOKEN}`;
-    }
+  if (GITHUB_TOKEN) {
+    headers['Authorization'] = `token ${GITHUB_TOKEN}`;
+  }
 
-    const req = https.request(options, (res) => {
-      let data = '';
-      res.on('data', chunk => data += chunk);
-      res.on('end', () => {
-        try {
-          resolve(JSON.parse(data));
-        } catch {
-          resolve(data);
-        }
-      });
-    });
-
-    req.on('error', reject);
-    req.end();
-  });
+  return fetch(url, { headers })
+    .then(res => res.json())
+    .catch(() => ({}));
 }
 
 async function fetchUserMetrics(username) {

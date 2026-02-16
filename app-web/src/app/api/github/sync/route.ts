@@ -35,6 +35,7 @@ export async function POST() {
   const username = session.user.username || session.user.name || ''
   
   try {
+    // accessToken is passed directly — never log or expose it
     const syncService = new GitHubSyncService(
       session.accessToken,
       session.user.id,

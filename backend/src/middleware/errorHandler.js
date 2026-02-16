@@ -2,8 +2,16 @@
  * Global error handler middleware
  */
 
+import { logger } from '../lib/logger.js'
+
 export function errorHandler(err, req, res, next) {
-  console.error('Error:', err)
+  logger.error('Request error', {
+    method: req.method,
+    path: req.path,
+    errorName: err.name,
+    errorCode: err.code,
+    message: err.message,
+  })
 
   // Zod validation errors
   if (err.name === 'ZodError') {

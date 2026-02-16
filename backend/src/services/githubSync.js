@@ -3,9 +3,15 @@
  * Handles syncing badges to GitHub profiles
  */
 
-import axios from 'axios'
+import { logger } from '../lib/logger.js'
 
 const GITHUB_API = 'https://api.github.com'
+
+const ghHeaders = (token) => ({
+  Authorization: `token ${token}`,
+  Accept: 'application/vnd.github.v3+json',
+  'Content-Type': 'application/json',
+})
 
 /**
  * Update user's badge JSON file in BOOMFLOW repo
@@ -20,17 +26,15 @@ export async function syncUserBadgesToGitHub(username, userData, githubToken) {
     // Get current file (if exists) to get its SHA
     let sha = null
     try {
-      const { data: existing } = await axios.get(
+      const existingRes = await fetch(
         `${GITHUB_API}/repos/${repoOwner}/${repoName}/contents/${filePath}`,
-        {
-          headers: {
-            Authorization: `token ${githubToken}`,
-            Accept: 'application/vnd.github.v3+json'
-          }
-        }
+        { headers: ghHeaders(githubToken) }
       )
-      sha = existing.sha
-    } catch (e) {
+      if (existingRes.ok) {
+        const existing = await existingRes.json()
+        sha = existing.sha
+      }
+    } catch {
       // File doesn't exist yet, that's OK
     }
 
@@ -40,21 +44,26 @@ export async function syncUserBadgesToGitHub(username, userData, githubToken) {
     ).toString('base64')
 
     // Create or update file
-    const { data } = await axios.put(
+    const res = await fetch(
       `${GITHUB_API}/repos/${repoOwner}/${repoName}/contents/${filePath}`,
       {
-        message: `Update badges for ${username}`,
-        content,
-        sha, // Include SHA if updating existing file
-        branch: 'main'
-      },
-      {
-        headers: {
-          Authorization: `token ${githubToken}`,
-          Accept: 'application/vnd.github.v3+json'
-        }
+        method: 'PUT',
+        headers: ghHeaders(githubToken),
+        body: JSON.stringify({
+          message: `Update badges for ${username}`,
+          content,
+          sha, // Include SHA if updating existing file
+          branch: 'main'
+        })
       }
     )
+
+    if (!res.ok) {
+      const errData = await res.json().catch(() => ({}))
+      throw new Error(errData.message || `GitHub API error: ${res.status}`)
+    }
+
+    const data = await res.json()
 
     return {
       success: true,
@@ -62,10 +71,8 @@ export async function syncUserBadgesToGitHub(username, userData, githubToken) {
       url: data.content.html_url
     }
   } catch (error) {
-    console.error('GitHub sync error:', error.response?.data || error.message)
-    throw new Error(
-      error.response?.data?.message || 'Failed to sync to GitHub'
-    )
+    logger.error('GitHub sync error', { username, message: error.message })
+    throw new Error(error.message || 'Failed to sync to GitHub')
   }
 }
 
@@ -74,26 +81,27 @@ export async function syncUserBadgesToGitHub(username, userData, githubToken) {
  */
 export async function triggerProfileSync(username, githubToken) {
   try {
-    // Trigger workflow dispatch on user's profile repo
-    await axios.post(
+    const res = await fetch(
       `${GITHUB_API}/repos/${username}/${username}/dispatches`,
       {
-        event_type: 'boomflow-sync',
-        client_payload: {
-          timestamp: new Date().toISOString()
-        }
-      },
-      {
-        headers: {
-          Authorization: `token ${githubToken}`,
-          Accept: 'application/vnd.github.v3+json'
-        }
+        method: 'POST',
+        headers: ghHeaders(githubToken),
+        body: JSON.stringify({
+          event_type: 'boomflow-sync',
+          client_payload: {
+            timestamp: new Date().toISOString()
+          }
+        })
       }
     )
 
+    if (!res.ok && res.status !== 204) {
+      throw new Error(`Dispatch failed: ${res.status}`)
+    }
+
     return { success: true }
   } catch (error) {
-    console.error('Profile sync trigger error:', error.response?.data || error.message)
+    logger.error('Profile sync trigger error', { username, message: error.message })
     throw new Error('Failed to trigger profile sync')
   }
 }
@@ -102,24 +110,23 @@ export async function triggerProfileSync(username, githubToken) {
  * Get user's GitHub profile info
  */
 export async function getGitHubProfile(githubToken) {
-  try {
-    const { data } = await axios.get(`${GITHUB_API}/user`, {
-      headers: {
-        Authorization: `token ${githubToken}`,
-        Accept: 'application/vnd.github.v3+json'
-      }
-    })
+  const res = await fetch(`${GITHUB_API}/user`, {
+    headers: ghHeaders(githubToken)
+  })
 
-    return {
-      id: data.id,
-      login: data.login,
-      name: data.name,
-      avatarUrl: data.avatar_url,
-      email: data.email,
-      bio: data.bio
-    }
-  } catch (error) {
+  if (!res.ok) {
     throw new Error('Failed to fetch GitHub profile')
+  }
+
+  const data = await res.json()
+
+  return {
+    id: data.id,
+    login: data.login,
+    name: data.name,
+    avatarUrl: data.avatar_url,
+    email: data.email,
+    bio: data.bio
   }
 }
 

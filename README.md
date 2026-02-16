@@ -11,7 +11,7 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/version-3.0.0-blue.svg" alt="Version"/>
+  <img src="https://img.shields.io/badge/version-0.1.0-blue.svg" alt="Version"/>
   <img src="https://img.shields.io/badge/badges-97-gold.svg" alt="Badges"/>
   <img src="https://img.shields.io/badge/Next.js-16-black.svg" alt="Next.js"/>
   <img src="https://img.shields.io/badge/Prisma-7-2D3748.svg" alt="Prisma"/>
@@ -29,6 +29,8 @@
 - [Documentation](#-documentation)
 - [Web Dashboard](#-web-dashboard-v30)
 - [Administration](#-administration)
+- [Why Boomflow?](#-why-boomflow)
+- [Plans for Companies](#-plans-for-companies)
 - [About Sistemas Ursol](#-about-sistemas-ursol)
 
 ---
@@ -375,7 +377,19 @@ MIT — Public code for transparency and educational reference.
 
 ---
 
-## 💼 Plans for Companies
+## � Why Boomflow?
+
+Every engineering org runs on two systems. **System 1** is visible — commits, PRs, deploys. **System 2** is invisible — the engineer who unblocks three people before lunch, reviews every PR with real feedback, onboards every new hire.
+
+System 2 keeps your company alive. But it has no dashboard, no metrics, no proof it ever happened. The people running it eventually leave.
+
+**Boomflow makes System 2 visible.**
+
+👉 [Read the full case — Why Boomflow](WHY_BOOMFLOW.md)
+
+---
+
+## �💼 Plans for Companies
 
 Boomflow offers commercial plans for companies that want to use the platform with their teams — from Pro to Enterprise.
 The open-source core is used by Sistemas Ursol and the community, but is not a commercial plan.

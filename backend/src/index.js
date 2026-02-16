@@ -14,6 +14,7 @@ import badgesRoutes from './routes/badges.js'
 import usersRoutes from './routes/users.js'
 import syncRoutes from './routes/sync.js'
 import { errorHandler } from './middleware/errorHandler.js'
+import { logger } from './lib/logger.js'
 
 // Load environment variables
 dotenv.config()
@@ -64,20 +65,20 @@ app.use(errorHandler)
 
 // Start server
 const server = app.listen(PORT, () => {
-  console.log(`🚀 BOOMFLOW API running on port ${PORT}`)
-  console.log(`📊 Health: http://localhost:${PORT}/health`)
+  logger.info('BOOMFLOW API started', { port: PORT })
+  logger.info('Health endpoint', { url: `http://localhost:${PORT}/health` })
 })
 
 // Graceful shutdown
 function shutdown(signal) {
-  console.log(`\n${signal} received. Shutting down gracefully...`)
+  logger.info('Shutdown signal received', { signal })
   server.close(() => {
-    console.log('✅ HTTP server closed')
+    logger.info('HTTP server closed')
     process.exit(0)
   })
   // Force exit after 10 seconds
   setTimeout(() => {
-    console.error('⚠️  Forced shutdown after timeout')
+    logger.error('Forced shutdown after timeout')
     process.exit(1)
   }, 10000)
 }
