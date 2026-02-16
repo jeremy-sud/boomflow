@@ -252,7 +252,7 @@ model Organization {
   name        String
   slug        String   @unique
   logoUrl     String?
-  plan        Plan     @default(FREE)
+  plan        Plan     @default(INTERNAL)
   
   users       User[]
   teams       Team[]
@@ -331,8 +331,9 @@ enum Role {
 }
 
 enum Plan {
-  FREE
+  INTERNAL  // Boomflow Open — Sistemas Ursol & community (not a commercial plan)
   PRO
+  SCALE
   ENTERPRISE
 }
 
@@ -460,18 +461,20 @@ Available triggers:
 
 ### Plans
 
-| Feature | Open ($0) | Pro ($149/mo) | Scale ($499/mo) | Enterprise ($1,499/mo) |
-|---------|-----------|---------------|-----------------|------------------------|
-| Monthly Active Collaborators | 10 | Up to 50 MAC | Up to 200 MAC | Up to 500 MAC |
-| Kudos/month | 50 | Unlimited | Unlimited | Unlimited |
-| Global badges | ✅ | ✅ | ✅ | ✅ |
-| Custom badges | ❌ | ✅ | ✅ | ✅ |
-| GitHub Sync | ✅ | ✅ | ✅ | ✅ |
-| Slack/Discord | ❌ | ✅ | ✅ | ✅ |
-| Analytics | Basic | Advanced | Advanced | Premium |
-| SSO/SAML | ❌ | ❌ | ❌ | ✅ |
-| Dedicated API | ❌ | ❌ | ✅ | ✅ |
-| Support | Community | Email | Priority | Dedicated |
+> **Note:** Boomflow Open is the free open-source core used by Sistemas Ursol and the community — it is not a commercial plan. The plans below are for companies.
+
+| Feature | Pro ($149/mo) | Scale ($499/mo) | Enterprise ($1,499/mo) |
+|---------|---------------|-----------------|------------------------|
+| Monthly Active Collaborators | Up to 50 MAC | Up to 200 MAC | 500+ MAC |
+| Kudos/month | Unlimited | Unlimited | Unlimited |
+| Global badges | ✅ | ✅ | ✅ |
+| Custom badges | ✅ | ✅ | ✅ |
+| GitHub Sync | ✅ | ✅ | ✅ |
+| Slack/Discord | ✅ | ✅ | ✅ |
+| Analytics | Advanced | Advanced | Premium |
+| SSO/SAML | ❌ | ✅ | ✅ |
+| Dedicated API | ❌ | ✅ | ✅ |
+| Support | Email | Priority | Dedicated |
 
 ---
 

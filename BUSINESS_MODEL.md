@@ -74,6 +74,8 @@ Boomflow creates a new category. It does not compete with:
 
 Lives in the public repository. It is the lab, the showcase, and the philosophical foundation.
 
+> **Note:** Boomflow Open is **not a commercial plan**. It is the open-source core used internally by Sistemas Ursol and available to the community. The commercial plans for companies (Pro, Scale, Enterprise) are built on top of this core.
+
 **Includes:**
 
 | Component | Current Location | Purpose |
@@ -281,65 +283,62 @@ mac_enforcement:
 ├─────────────────────────────────────────────────────────────────────────────┤
 │                                                                             │
 │  ┌───────────────┐   ┌───────────────┐   ┌───────────────┐                 │
-│  │  🌱 OPEN      │   │  🌿 PRO       │   │  🌸 SCALE     │                 │
+│  │  � PRO       │   │  🌸 SCALE     │   │  🏢 ENTERPRISE│                 │
 │  │               │   │               │   │               │                 │
-│  │  $0/mo        │   │  $149/mo      │   │  $499/mo      │                 │
-│  │               │   │  up to 50 MAC │   │  up to 200 MAC│                 │
-│  │  GitHub-only  │   │               │   │               │                 │
-│  │  1 org        │   │  All Open +   │   │  All Pro +    │                 │
-│  │  Unlimited    │   │  Multi-tenant │   │  SSO/SAML     │                 │
-│  │  users        │   │  Analytics    │   │  Dedicated API│                 │
-│  │               │   │  Slack bot    │   │  HRIS connect │                 │
-│  │  Badge engine │   │  Custom badge │   │  Attrition    │                 │
-│  │  GitHub sync  │   │  Reports      │   │  prediction   │                 │
-│  │  Full catalog │   │  Email support│   │  99.9% SLA    │                 │
-│  │  Peer awards  │   │  NEON skin    │   │  Priority     │                 │
-│  │               │   │               │   │  support      │                 │
-│  │               │   │               │   │  Audit logs   │                 │
+│  │  $149/mo      │   │  $499/mo      │   │  $1,499/mo    │                 │
+│  │  up to 50 MAC │   │  up to 200 MAC│   │  500+ MAC     │                 │
+│  │               │   │               │   │               │                 │
+│  │  Open Core +  │   │  All Pro +    │   │  All Scale +  │                 │
+│  │  Multi-tenant │   │  SSO/SAML     │   │  On-premise   │                 │
+│  │  Analytics    │   │  Dedicated API│   │  Dedicated    │                 │
+│  │  Slack bot    │   │  HRIS connect │   │  support      │                 │
+│  │  Custom badge │   │  Attrition    │   │  Custom       │                 │
+│  │  Reports      │   │  prediction   │   │  integrations │                 │
+│  │  Email support│   │  99.9% SLA    │   │  Training     │                 │
+│  │  NEON skin    │   │  Priority     │   │  included     │                 │
+│  │               │   │  support      │   │               │                 │
+│  │               │   │  Audit logs   │   │               │                 │
 │  └───────────────┘   └───────────────┘   └───────────────┘                 │
-│                                                                             │
-│  ┌─────────────────────────────────────────────────────────┐               │
-│  │  🏢 ENTERPRISE                                          │               │
-│  │                                                         │               │
-│  │  $1,499/mo  │  up to 500 MAC                            │               │
-│  │                                                         │               │
-│  │  All Scale + on-premise option + dedicated support      │               │
-│  │  + custom integrations + training included              │               │
-│  └─────────────────────────────────────────────────────────┘               │
 │                                                                             │
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
 
+> **Note:** Boomflow Open is the free open-source core used by Sistemas Ursol and the community.
+> It includes the badge engine, GitHub sync, full catalog, and peer awards (single org, GitHub-only).
+> It is **not a commercial plan**. Companies wanting to use Boomflow should choose Pro or above.
+
 ### 4.3 Detailed Feature Breakdown by Plan
 
-| Feature | Open | Pro | Scale | Enterprise |
-|---------|------|-----|-------|------------|
-| Badge engine core | ✅ | ✅ | ✅ | ✅ |
-| 89+ badge catalog | ✅ | ✅ | ✅ | ✅ |
-| GitHub integration | ✅ | ✅ | ✅ | ✅ |
-| Peer-to-peer awards | ✅ | ✅ | ✅ | ✅ |
-| GitHub profile sync | ✅ | ✅ | ✅ | ✅ |
-| 5 free skins | ✅ | ✅ | ✅ | ✅ |
-| Activity feed | ✅ | ✅ | ✅ | ✅ |
-| Basic leaderboard | ✅ | ✅ | ✅ | ✅ |
-| **Multi-tenant** | — | ✅ | ✅ | ✅ |
-| **Analytics dashboard** | — | ✅ | ✅ | ✅ |
-| **Custom badges** | — | ✅ | ✅ | ✅ |
-| **Slack/Discord bot** | — | ✅ | ✅ | ✅ |
-| **Exportable reports** | — | ✅ | ✅ | ✅ |
-| **Premium NEON skin** | — | ✅ | ✅ | ✅ |
-| **Email support** | — | ✅ | ✅ | ✅ |
-| **SSO/SAML** | — | — | ✅ | ✅ |
-| **Dedicated API** | — | — | ✅ | ✅ |
-| **HRIS connectors** | — | — | ✅ | ✅ |
-| **Attrition prediction** | — | — | ✅ | ✅ |
-| **Collaboration maps** | — | — | ✅ | ✅ |
-| **99.9% SLA** | — | — | ✅ | ✅ |
-| **Audit & compliance** | — | — | ✅ | ✅ |
-| **On-premise option** | — | — | — | ✅ |
-| **Dedicated support** | — | — | — | ✅ |
-| **Custom integrations** | — | — | — | ✅ |
-| **Training included** | — | — | — | ✅ |
+> **Note:** Boomflow Open is not a commercial plan — it is the open-source core used by Sistemas Ursol and the community. The plans below are for companies that want to use Boomflow with their teams.
+
+| Feature | Pro | Scale | Enterprise |
+|---------|-----|-------|------------|
+| Badge engine core | ✅ | ✅ | ✅ |
+| 89+ badge catalog | ✅ | ✅ | ✅ |
+| GitHub integration | ✅ | ✅ | ✅ |
+| Peer-to-peer awards | ✅ | ✅ | ✅ |
+| GitHub profile sync | ✅ | ✅ | ✅ |
+| 5 free skins | ✅ | ✅ | ✅ |
+| Activity feed | ✅ | ✅ | ✅ |
+| Basic leaderboard | ✅ | ✅ | ✅ |
+| **Multi-tenant** | ✅ | ✅ | ✅ |
+| **Analytics dashboard** | ✅ | ✅ | ✅ |
+| **Custom badges** | ✅ | ✅ | ✅ |
+| **Slack/Discord bot** | ✅ | ✅ | ✅ |
+| **Exportable reports** | ✅ | ✅ | ✅ |
+| **Premium NEON skin** | ✅ | ✅ | ✅ |
+| **Email support** | ✅ | ✅ | ✅ |
+| **SSO/SAML** | — | ✅ | ✅ |
+| **Dedicated API** | — | ✅ | ✅ |
+| **HRIS connectors** | — | ✅ | ✅ |
+| **Attrition prediction** | — | ✅ | ✅ |
+| **Collaboration maps** | — | ✅ | ✅ |
+| **99.9% SLA** | — | ✅ | ✅ |
+| **Audit & compliance** | — | ✅ | ✅ |
+| **On-premise option** | — | — | ✅ |
+| **Dedicated support** | — | — | ✅ |
+| **Custom integrations** | — | — | ✅ |
+| **Training included** | — | — | ✅ |
 
 ### 4.4 Why Fixed Flat Pricing?
 
@@ -390,10 +389,10 @@ fixed_pricing_advantages:
 │  │ A team of 15-50 people tries Pro                                         │
 │  │ Internal champion demonstrates value to leadership                       │
 │  │                                                                          │
-│  STAGE 1: OPEN                                                              │
-│  ██████████  $0                                                             │
+│  STAGE 1: DISCOVERY (Boomflow Open)                                         │
+│  ██████████  Free (open-source, not a commercial plan)                      │
 │  │ A developer discovers Boomflow on GitHub                                 │
-│  │ Uses it in their Ursol team or personal project                          │
+│  │ Uses it at Sistemas Ursol or explores the open-source project            │
 │  │ Thinks: "this should exist at my company"                                │
 │                                                                             │
 └─────────────────────────────────────────────────────────────────────────────┘
@@ -403,16 +402,16 @@ fixed_pricing_advantages:
 
 | From → To | Trigger | Boomflow Action |
 |-----------|---------|----------------|
-| Open → Pro | Developer brings Boomflow to their company | Landing page: "Bring Boomflow to your team" + 30-day trial |
+| Discovery → Pro | Developer brings Boomflow to their company | Landing page: "Bring Boomflow to your team" + 30-day trial |
 | Pro → Scale | Needs SSO or requests API access | Sales assist: personalized analytics demo |
-| Scale → Enterprise | 200+ people or regulated sector | Consultative call, custom proposal |
+| Scale → Enterprise | 500+ people or regulated sector | Consultative call, custom proposal |
 | Any → Strategic | Wants cultural transformation | Free 45-min diagnostic → proposal |
 
 ### Ladder Health Metrics
 
 ```yaml
 north_star_metrics:
-  stage_1_open:
+  stage_1_discovery:
     - github_stars: "target 500 in year 1"
     - forks: "target 50 in year 1"
     - external_contributors: "target 10 in year 1"
@@ -707,7 +706,7 @@ assumptions:
 │                                                                             │
 │   ░ = Pro ($149/mo)                                                         │
 │   ▒ = Scale ($499/mo)                                                       │
-│   ▓ = Enterprise ($1,499/mo)                                                │
+│   ▓ = Enterprise ($1,499/mo, 500+ MAC)                                      │
 │   █ = Mix all tiers                                                         │
 │                                                                             │
 └─────────────────────────────────────────────────────────────────────────────┘
@@ -779,7 +778,7 @@ path_to_seven_figures:
   clients_needed:
     pro_50mac: "~80 clients × $149 = $11,920/mo"
     scale_200mac: "~40 clients × $499 = $19,960/mo"
-    enterprise_500mac: "~10 clients × $1,499 = $14,990/mo"
+    enterprise_500plus_mac: "~10 clients × $1,499 = $14,990/mo"
     total_mrr: "~$46,870/mo (core tiers, mix shifts over time)"
     total_clients: "~130 clients"
     
@@ -1018,11 +1017,11 @@ slide_5_traction:
   points:
     - "Sistemas Ursol: live production case"
     - "89 badges, 9 categories, automatic engine"
-    - "Open source with active community"
+    - "Open-source core with active community (Sistemas Ursol as live case)"
 
 slide_6_business_model:
   title: "Open Core + SaaS + Strategic Implementation"
-  subtitle: "Open builds community. Pro builds revenue. Strategic builds transformation."
+  subtitle: "Open-source core powers community. Pro/Scale/Enterprise power revenue. Strategic powers transformation."
 
 slide_7_market:
   title: "Market: $12.6B in Employee Experience Software (2025)"
@@ -1111,7 +1110,7 @@ year_1_channels:
 |--------------|----------------|--------|
 | Badge Engine | `app-web/src/lib/badge-engine.ts` | ✅ Production |
 | Multi-tenancy (Organizations) | `app-web/prisma/schema.prisma` — model Organization | ✅ Schema ready |
-| Plans (FREE, PRO, ENTERPRISE) | ROADMAP.md — enum Plan | ⚠️ Roadmap only |
+| Plans (PRO, SCALE, ENTERPRISE) | ROADMAP.md — enum Plan | ⚠️ Roadmap only |
 | Peer Awards | `app-web/src/app/api/badges/peer-award/` | ✅ API implemented |
 | GitHub Integration | `github-action/`, `scripts/process-event.js` | ✅ Production |
 | Audit Logs | `backend/src/services/auditLogService.js` | ✅ Service created |

@@ -375,6 +375,15 @@ MIT — Public code for transparency and educational reference.
 
 ---
 
+## 💼 Plans for Companies
+
+Boomflow offers commercial plans for companies that want to use the platform with their teams — from Pro to Enterprise.
+The open-source core is used by Sistemas Ursol and the community, but is not a commercial plan.
+
+👉 [View available plans](BUSINESS_MODEL.md)
+
+---
+
 <p align="center">
   <strong>🌸 BOOMFLOW</strong><br/>
   <sub>Recognizing talent, one badge at a time.</sub>
