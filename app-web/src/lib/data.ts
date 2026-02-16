@@ -136,14 +136,14 @@ export const BADGE_CATALOG: Badge[] = [
   { id: 'disruptor', name: 'Disruptor', emoji: '💥', tier: 'gold', category: 'innovation', description: 'Game-changing ideas.', howToGet: 'Propose a transformative change' },
   
   // SPECIAL (8)
-  { id: 'ursol-founder', name: 'Ursol Founder', emoji: '⭐', tier: 'gold', category: 'special', description: 'Fundador de Sistemas Ursol.', howToGet: 'Ser fundador de la organización' },
-  { id: 'anniversary-1', name: '1 Year', emoji: '🎂', tier: 'bronze', category: 'special', description: '1 año en Sistemas Ursol.', howToGet: 'Cumplir 1 año en la org' },
-  { id: 'anniversary-3', name: '3 Years', emoji: '🎉', tier: 'silver', category: 'special', description: '3 años en Sistemas Ursol.', howToGet: 'Cumplir 3 años en la org' },
-  { id: 'anniversary-5', name: '5 Years', emoji: '🏅', tier: 'gold', category: 'special', description: '5 años en Sistemas Ursol.', howToGet: 'Cumplir 5 años en la org' },
-  { id: 'boomflow-creator', name: 'BOOMFLOW Creator', emoji: '🚀', tier: 'gold', category: 'special', description: 'Creador del sistema BOOMFLOW.', howToGet: 'Crear BOOMFLOW' },
-  { id: 'first-100', name: 'First 100', emoji: '💯', tier: 'silver', category: 'special', description: 'Entre los primeros 100 usuarios.', howToGet: 'Unirse entre los primeros 100' },
-  { id: 'mvp', name: 'MVP', emoji: '🌟', tier: 'gold', category: 'special', description: 'Most Valuable Player del trimestre.', howToGet: 'Ser elegido MVP del trimestre' },
-  { id: 'legend', name: 'Legend', emoji: '🏛️', tier: 'gold', category: 'special', description: 'Contribución legendaria al equipo.', howToGet: 'Reconocimiento unánime del equipo' },
+  { id: 'ursol-founder', name: 'Ursol Founder', emoji: '⭐', tier: 'gold', category: 'special', description: 'Founder of Sistemas Ursol.', howToGet: 'Be co-founder of the organization' },
+  { id: 'anniversary-1', name: '1 Year', emoji: '🎂', tier: 'bronze', category: 'special', description: '1 year at Sistemas Ursol.', howToGet: 'Complete 1 year in the org' },
+  { id: 'anniversary-3', name: '3 Years', emoji: '🎉', tier: 'silver', category: 'special', description: '3 years at Sistemas Ursol.', howToGet: 'Complete 3 years in the org' },
+  { id: 'anniversary-5', name: '5 Years', emoji: '🏅', tier: 'gold', category: 'special', description: '5 years at Sistemas Ursol.', howToGet: 'Complete 5 years in the org' },
+  { id: 'boomflow-creator', name: 'BOOMFLOW Creator', emoji: '🚀', tier: 'gold', category: 'special', description: 'Creator of the BOOMFLOW system.', howToGet: 'Create BOOMFLOW' },
+  { id: 'first-100', name: 'First 100', emoji: '💯', tier: 'silver', category: 'special', description: 'Among the first 100 users.', howToGet: 'Join among the first 100' },
+  { id: 'mvp', name: 'MVP', emoji: '🌟', tier: 'gold', category: 'special', description: 'Most Valuable Player of the quarter.', howToGet: 'Be chosen as quarterly MVP' },
+  { id: 'legend', name: 'Legend', emoji: '🏛️', tier: 'gold', category: 'special', description: 'Legendary contribution to the team.', howToGet: 'Unanimous team recognition' },
 ];
 
 // ============================================
@@ -154,18 +154,18 @@ export const CATEGORIES = [
   { id: 'onboarding', name: 'Onboarding', emoji: '🟢', color: 'emerald' },
   { id: 'coding', name: 'Coding', emoji: '🔵', color: 'blue' },
   { id: 'devops', name: 'DevOps', emoji: '🟣', color: 'purple' },
-  { id: 'collaboration', name: 'Colaboración', emoji: '🟡', color: 'yellow' },
-  { id: 'leadership', name: 'Liderazgo', emoji: '🔴', color: 'red' },
-  { id: 'documentation', name: 'Documentación', emoji: '⚪', color: 'zinc' },
-  { id: 'quality', name: 'Calidad', emoji: '🟤', color: 'amber' },
-  { id: 'innovation', name: 'Innovación', emoji: '🟠', color: 'orange' },
-  { id: 'special', name: 'Especiales', emoji: '⭐', color: 'pink' },
+  { id: 'collaboration', name: 'Collaboration', emoji: '🟡', color: 'yellow' },
+  { id: 'leadership', name: 'Leadership', emoji: '🔴', color: 'red' },
+  { id: 'documentation', name: 'Documentation', emoji: '⚪', color: 'zinc' },
+  { id: 'quality', name: 'Quality', emoji: '🟤', color: 'amber' },
+  { id: 'innovation', name: 'Innovation', emoji: '🟠', color: 'orange' },
+  { id: 'special', name: 'Special', emoji: '⭐', color: 'pink' },
 ];
 
 export const TIERS = [
-  { id: 'gold', name: 'Oro', emoji: '🥇', color: 'from-yellow-400 to-amber-600' },
-  { id: 'silver', name: 'Plata', emoji: '🥈', color: 'from-zinc-300 to-zinc-500' },
-  { id: 'bronze', name: 'Bronce', emoji: '🥉', color: 'from-orange-400 to-orange-700' },
+  { id: 'gold', name: 'Gold', emoji: '🥇', color: 'from-yellow-400 to-amber-600' },
+  { id: 'silver', name: 'Silver', emoji: '🥈', color: 'from-zinc-300 to-zinc-500' },
+  { id: 'bronze', name: 'Bronze', emoji: '🥉', color: 'from-orange-400 to-orange-700' },
 ];
 
 // ============================================
@@ -219,7 +219,7 @@ export const ACTIVITY_FEED: Activity[] = [
     type: 'kudo_sent',
     userId: '1',
     targetUserId: '2',
-    message: '¡Excelente trabajo en el dashboard de BOOMFLOW!',
+    message: 'Excellent work on the BOOMFLOW dashboard!',
     timestamp: '2026-02-15T09:15:00Z',
   },
   {
@@ -234,14 +234,14 @@ export const ACTIVITY_FEED: Activity[] = [
     type: 'kudo_sent',
     userId: '2',
     targetUserId: '1',
-    message: 'Gracias por la mentoría en arquitectura de sistemas',
+    message: 'Thanks for the mentoring on systems architecture',
     timestamp: '2026-02-14T14:20:00Z',
   },
   {
     id: '5',
     type: 'milestone',
     userId: '1',
-    message: '¡ursolcr alcanzó 150 kudos recibidos!',
+    message: 'ursolcr reached 150 kudos received!',
     timestamp: '2026-02-13T11:00:00Z',
   },
   {
@@ -256,7 +256,7 @@ export const ACTIVITY_FEED: Activity[] = [
     type: 'kudo_sent',
     userId: '1',
     targetUserId: '2',
-    message: 'Gran refactor del módulo de autenticación',
+    message: 'Great refactor of the authentication module',
     timestamp: '2026-02-11T10:00:00Z',
   },
   {
@@ -304,11 +304,11 @@ export function formatTimeAgo(timestamp: string): string {
   const diffHours = Math.floor(diffMs / 3600000);
   const diffDays = Math.floor(diffMs / 86400000);
 
-  if (diffMins < 1) return 'Ahora';
-  if (diffMins < 60) return `Hace ${diffMins}m`;
-  if (diffHours < 24) return `Hace ${diffHours}h`;
-  if (diffDays < 7) return `Hace ${diffDays}d`;
-  return date.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' });
+  if (diffMins < 1) return 'Now';
+  if (diffMins < 60) return `${diffMins}m ago`;
+  if (diffHours < 24) return `${diffHours}h ago`;
+  if (diffDays < 7) return `${diffDays}d ago`;
+  return date.toLocaleDateString('en-US', { day: 'numeric', month: 'short' });
 }
 
 // Stats para el leaderboard
