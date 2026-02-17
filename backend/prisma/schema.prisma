@@ -73,7 +73,7 @@ model User {
   
   // GitHub integration
   githubId      String?   @unique
-  githubToken   String?   // Encrypted
+  githubToken   String?   // Encrypted at rest with AES-256-GCM (see src/lib/encryption.js)
   
   // Role in the system
   role          Role      @default(MEMBER)

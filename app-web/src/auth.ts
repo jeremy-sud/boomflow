@@ -16,9 +16,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         },
       },
       // Map GitHub data to User model
+      // Note: Do NOT return `id` here — let PrismaAdapter generate a cuid().
+      // The GitHub numeric ID is stored separately in `githubId`.
       profile(profile) {
         return {
-          id: profile.id.toString(),
           email: profile.email,
           name: profile.name || profile.login,
           username: profile.login,

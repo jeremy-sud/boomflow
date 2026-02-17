@@ -1,58 +1,81 @@
 'use client';
 
-import { useState } from 'react';
-import { USERS, CATEGORIES, getUserBadges } from '@/lib/data';
+import { useState, useEffect } from 'react';
 
-type SortBy = 'kudos' | 'badges' | 'streak' | 'given';
+type SortBy = 'kudos_received' | 'badges' | 'kudos_sent';
+
+interface LeaderboardEntry {
+  rank: number;
+  user: {
+    id: string;
+    name: string | null;
+    username: string;
+    image: string | null;
+  };
+  count: number;
+}
 
 export default function LeaderboardPage() {
-  const [sortBy, setSortBy] = useState<SortBy>('kudos');
+  const [sortBy, setSortBy] = useState<SortBy>('kudos_received');
+  const [entries, setEntries] = useState<LeaderboardEntry[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const sortedUsers = [...USERS].sort((a, b) => {
-    switch (sortBy) {
-      case 'kudos':
-        return b.kudosReceived - a.kudosReceived;
-      case 'badges':
-        return b.badges.length - a.badges.length;
-      case 'streak':
-        return b.streak - a.streak;
-      case 'given':
-        return b.kudosGiven - a.kudosGiven;
-      default:
-        return 0;
-    }
-  });
+  useEffect(() => {
+    let cancelled = false;
+    setLoading(true);
+    setError(null);
 
-  // Calculate totals
-  const totals = {
-    kudos: USERS.reduce((sum, u) => sum + u.kudosReceived, 0),
-    badges: USERS.reduce((sum, u) => sum + u.badges.length, 0),
-    given: USERS.reduce((sum, u) => sum + u.kudosGiven, 0),
-  };
+    fetch(`/api/leaderboard?type=${sortBy}&limit=50`)
+      .then(res => {
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        return res.json();
+      })
+      .then(data => {
+        if (!cancelled) {
+          setEntries(data.leaderboard ?? []);
+          setLoading(false);
+        }
+      })
+      .catch(err => {
+        if (!cancelled) {
+          setError(err.message);
+          setLoading(false);
+        }
+      });
+
+    return () => { cancelled = true; };
+  }, [sortBy]);
+
+  // Calculate totals from current entries
+  const totalCount = entries.reduce((sum, e) => sum + e.count, 0);
 
   return (
     <div className="max-w-5xl mx-auto space-y-6">
       {/* Header */}
       <div>
         <h1 className="text-3xl font-bold text-gradient">Leaderboard</h1>
-        <p className="text-zinc-500 mt-1">Top collaborators at Sistemas Ursol</p>
+        <p className="text-zinc-500 mt-1">Top collaborators</p>
       </div>
 
       {/* Stats Overview */}
       <div className="grid grid-cols-3 gap-4">
         <div className="glass-panel rounded-xl p-6 text-center">
           <span className="text-4xl">💜</span>
-          <p className="text-3xl font-bold mt-2 text-purple-400">{totals.kudos}</p>
-          <p className="text-sm text-zinc-500">Total Kudos</p>
+          <p className="text-3xl font-bold mt-2 text-purple-400">{totalCount}</p>
+          <p className="text-sm text-zinc-500">
+            {sortBy === 'kudos_received' ? 'Total Kudos Received' :
+             sortBy === 'kudos_sent' ? 'Total Kudos Sent' : 'Total Badges'}
+          </p>
         </div>
         <div className="glass-panel rounded-xl p-6 text-center">
           <span className="text-4xl">🏅</span>
-          <p className="text-3xl font-bold mt-2 text-yellow-400">{totals.badges}</p>
-          <p className="text-sm text-zinc-500">Badges awarded</p>
+          <p className="text-3xl font-bold mt-2 text-yellow-400">{entries.length}</p>
+          <p className="text-sm text-zinc-500">Ranked members</p>
         </div>
         <div className="glass-panel rounded-xl p-6 text-center">
           <span className="text-4xl">👥</span>
-          <p className="text-3xl font-bold mt-2 text-blue-400">{USERS.length}</p>
+          <p className="text-3xl font-bold mt-2 text-blue-400">{entries.length}</p>
           <p className="text-sm text-zinc-500">Active members</p>
         </div>
       </div>
@@ -60,10 +83,9 @@ export default function LeaderboardPage() {
       {/* Sort Options */}
       <div className="flex gap-2">
         {[
-          { id: 'kudos' as SortBy, label: 'Kudos received', icon: '💜' },
+          { id: 'kudos_received' as SortBy, label: 'Kudos received', icon: '💜' },
           { id: 'badges' as SortBy, label: 'Badges', icon: '🏅' },
-          { id: 'streak' as SortBy, label: 'Streak', icon: '🔥' },
-          { id: 'given' as SortBy, label: 'Kudos given', icon: '💚' },
+          { id: 'kudos_sent' as SortBy, label: 'Kudos sent', icon: '💚' },
         ].map(option => (
           <button
             key={option.id}
@@ -82,157 +104,102 @@ export default function LeaderboardPage() {
 
       {/* Leaderboard Table */}
       <div className="glass-panel rounded-2xl overflow-hidden">
-        {/* Top 3 Podium */}
-        <div className="p-6 bg-gradient-to-b from-yellow-500/10 to-transparent">
-          <div className="flex justify-center items-end gap-4">
-            {/* 2nd Place */}
-            {sortedUsers[1] && (
-              <PodiumCard user={sortedUsers[1]} position={2} sortBy={sortBy} />
-            )}
-            {/* 1st Place */}
-            {sortedUsers[0] && (
-              <PodiumCard user={sortedUsers[0]} position={1} sortBy={sortBy} />
-            )}
-            {/* 3rd Place */}
-            {sortedUsers[2] && (
-              <PodiumCard user={sortedUsers[2]} position={3} sortBy={sortBy} />
-            )}
-          </div>
-        </div>
-
-        {/* Rest of Rankings */}
-        <div className="divide-y divide-white/5">
-          {sortedUsers.slice(3).map((user, index) => (
-            <RankingRow 
-              key={user.id} 
-              user={user} 
-              position={index + 4} 
-              sortBy={sortBy}
-            />
-          ))}
-        </div>
-
-        {sortedUsers.length <= 3 && (
-          <div className="p-8 text-center text-zinc-500">
-            <p>Invite more collaborators to see more rankings!</p>
-          </div>
-        )}
-      </div>
-
-      {/* Category Leaders */}
-      <div className="glass-panel rounded-2xl p-6">
-        <h2 className="text-xl font-bold mb-6">🏆 Leaders by Category</h2>
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-          {CATEGORIES.slice(0, 6).map(category => {
-            // Find user with most badges in this category
-            const leader = [...USERS].sort((a, b) => {
-              const aBadges = getUserBadges(a).filter(badge => badge.category === category.id).length;
-              const bBadges = getUserBadges(b).filter(badge => badge.category === category.id).length;
-              return bBadges - aBadges;
-            })[0];
-
-            const leaderBadgeCount = leader ? getUserBadges(leader).filter(b => b.category === category.id).length : 0;
-
-            return (
-              <div key={category.id} className="p-4 rounded-xl bg-white/5">
-                <div className="flex items-center gap-2 mb-3">
-                  <span className="text-xl">{category.emoji}</span>
-                  <span className="font-medium text-sm">{category.name}</span>
-                </div>
-                {leader && leaderBadgeCount > 0 ? (
-                  <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-xs font-bold">
-                      {leader.displayName[0].toUpperCase()}
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium">{leader.displayName}</p>
-                      <p className="text-xs text-zinc-500">{leaderBadgeCount} badges</p>
-                    </div>
-                  </div>
-                ) : (
-                  <p className="text-xs text-zinc-500">No leader yet</p>
-                )}
+        {loading ? (
+          <div className="p-12 text-center text-zinc-500">Loading…</div>
+        ) : error ? (
+          <div className="p-12 text-center text-red-400">Failed to load leaderboard: {error}</div>
+        ) : entries.length === 0 ? (
+          <div className="p-12 text-center text-zinc-500">No data yet. Start giving kudos!</div>
+        ) : (
+          <>
+            {/* Top 3 Podium */}
+            <div className="p-6 bg-gradient-to-b from-yellow-500/10 to-transparent">
+              <div className="flex justify-center items-end gap-4">
+                {entries[1] && <PodiumCard entry={entries[1]} position={2} />}
+                {entries[0] && <PodiumCard entry={entries[0]} position={1} />}
+                {entries[2] && <PodiumCard entry={entries[2]} position={3} />}
               </div>
-            );
-          })}
-        </div>
+            </div>
+
+            {/* Rest of Rankings */}
+            <div className="divide-y divide-white/5">
+              {entries.slice(3).map(entry => (
+                <RankingRow key={entry.user.id} entry={entry} />
+              ))}
+            </div>
+
+            {entries.length <= 3 && (
+              <div className="p-8 text-center text-zinc-500">
+                <p>Invite more collaborators to see more rankings!</p>
+              </div>
+            )}
+          </>
+        )}
       </div>
     </div>
   );
 }
 
-function PodiumCard({ user, position, sortBy }: {
-  user: typeof USERS[0];
+function PodiumCard({ entry, position }: {
+  entry: LeaderboardEntry;
   position: number;
-  sortBy: SortBy;
 }) {
   const heights = { 1: 'h-32', 2: 'h-24', 3: 'h-20' };
   const medals = { 1: '🥇', 2: '🥈', 3: '🥉' };
   const sizes = { 1: 'w-20 h-20 text-2xl', 2: 'w-16 h-16 text-xl', 3: 'w-16 h-16 text-xl' };
 
-  const getValue = () => {
-    switch (sortBy) {
-      case 'kudos': return user.kudosReceived;
-      case 'badges': return user.badges.length;
-      case 'streak': return user.streak;
-      case 'given': return user.kudosGiven;
-    }
-  };
-
-  const getLabel = () => {
-    switch (sortBy) {
-      case 'kudos': return 'kudos';
-      case 'badges': return 'badges';
-      case 'streak': return 'days';
-      case 'given': return 'given';
-    }
-  };
+  const displayName = entry.user.name || entry.user.username;
 
   return (
     <div className={`flex flex-col items-center ${position === 1 ? 'order-2' : position === 2 ? 'order-1' : 'order-3'}`}>
       <span className="text-3xl mb-2">{medals[position as keyof typeof medals]}</span>
-      <div className={`rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold ${sizes[position as keyof typeof sizes]}`}>
-        {user.displayName[0].toUpperCase()}
-      </div>
-      <p className="font-bold mt-2">{user.displayName}</p>
-      <p className="text-sm text-zinc-500">@{user.username}</p>
+      {entry.user.image ? (
+        <img
+          src={entry.user.image}
+          alt={displayName}
+          className={`rounded-full object-cover ${sizes[position as keyof typeof sizes]}`}
+        />
+      ) : (
+        <div className={`rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold ${sizes[position as keyof typeof sizes]}`}>
+          {displayName[0].toUpperCase()}
+        </div>
+      )}
+      <p className="font-bold mt-2">{displayName}</p>
+      <p className="text-sm text-zinc-500">@{entry.user.username}</p>
       <div className={`w-24 ${heights[position as keyof typeof heights]} bg-gradient-to-t from-yellow-600/30 to-yellow-400/30 rounded-t-lg mt-4 flex items-end justify-center pb-2`}>
         <div className="text-center">
-          <p className="text-xl font-bold">{getValue()}</p>
-          <p className="text-xs text-zinc-400">{getLabel()}</p>
+          <p className="text-xl font-bold">{entry.count}</p>
         </div>
       </div>
     </div>
   );
 }
 
-function RankingRow({ user, position, sortBy }: {
-  user: typeof USERS[0];
-  position: number;
-  sortBy: SortBy;
+function RankingRow({ entry }: {
+  entry: LeaderboardEntry;
 }) {
-  const getValue = () => {
-    switch (sortBy) {
-      case 'kudos': return user.kudosReceived;
-      case 'badges': return user.badges.length;
-      case 'streak': return user.streak;
-      case 'given': return user.kudosGiven;
-    }
-  };
+  const displayName = entry.user.name || entry.user.username;
 
   return (
     <div className="flex items-center gap-4 p-4 hover:bg-white/5 transition-colors">
-      <span className="w-8 text-center text-zinc-500 font-mono">#{position}</span>
-      <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold">
-        {user.displayName[0].toUpperCase()}
-      </div>
+      <span className="w-8 text-center text-zinc-500 font-mono">#{entry.rank}</span>
+      {entry.user.image ? (
+        <img
+          src={entry.user.image}
+          alt={displayName}
+          className="w-10 h-10 rounded-full object-cover"
+        />
+      ) : (
+        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold">
+          {displayName[0].toUpperCase()}
+        </div>
+      )}
       <div className="flex-1">
-        <p className="font-medium">{user.displayName}</p>
-        <p className="text-sm text-zinc-500">@{user.username}</p>
+        <p className="font-medium">{displayName}</p>
+        <p className="text-sm text-zinc-500">@{entry.user.username}</p>
       </div>
       <div className="text-right">
-        <p className="font-bold">{getValue()}</p>
-        <p className="text-xs text-zinc-500">{user.badges.length} badges</p>
+        <p className="font-bold">{entry.count}</p>
       </div>
     </div>
   );

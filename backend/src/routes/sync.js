@@ -8,6 +8,7 @@ import { prisma } from '../lib/prisma.js'
 import { authenticate } from '../middleware/auth.js'
 import { asyncHandler } from '../middleware/errorHandler.js'
 import { syncUserBadgesToGitHub } from '../services/githubSync.js'
+import { decrypt } from '../lib/encryption.js'
 
 const router = Router()
 
@@ -67,10 +68,11 @@ router.post('/github', authenticate, asyncHandler(async (req, res) => {
     }))
   }
 
-  // Try to sync if user has GitHub token
+  // Try to sync if user has GitHub token (stored encrypted)
   if (user.githubToken) {
     try {
-      await syncUserBadgesToGitHub(user.username, userData, user.githubToken)
+      const plainToken = decrypt(user.githubToken)
+      await syncUserBadgesToGitHub(user.username, userData, plainToken)
       
       res.json({
         success: true,

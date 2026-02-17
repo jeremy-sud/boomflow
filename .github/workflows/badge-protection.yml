@@ -1,5 +1,11 @@
 name: "🛡️ BOOMFLOW Badge Protection"
 
+# This workflow validates badge/config changes in PRs and pushes.
+# For full protection, enable "Require status checks" in GitHub branch protection
+# settings for the `main` branch and add "🔐 Validate Badge Permissions" as required.
+# On push events (direct commits), this workflow alerts but cannot revert.
+# See: https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-a-branch-protection-rule
+
 on:
   pull_request:
     paths:
