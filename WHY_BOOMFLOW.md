@@ -1,6 +1,6 @@
 # Why Boomflow
 
-> This document is for the person who needs to decide whether Boomflow is worth their time, their team's time, and their budget.
+> This document explains the problem Boomflow solves and why it matters. Boomflow is currently an internal tool used by Sistemas Ursol.
 >
 > No features. No screenshots. Just the problem, the cost of ignoring it, and what changes when you stop ignoring it.
 
@@ -129,8 +129,8 @@ Here's the answer.
 **Conservative math:**
 
 - Preventing **3 departures per year** at $25,000 each = **$75,000 saved**.
-- Boomflow Scale plan = **$499/month = $5,988/year**.
-- **ROI: 12.5x in attrition cost reduction alone.**
+- The cost of running Boomflow internally is minimal (open-source, self-hosted).
+- **The ROI of making collaboration visible is significant**, even before counting faster onboarding, better promotion decisions, and eliminating expensive engagement surveys.
 
 That's before counting:
 - Faster onboarding.
@@ -226,10 +226,10 @@ It makes sure you have it.
 
 | If you're a... | Do this |
 |----------------|---------|
-| **CTO / VP Engineering** | [Read the Business Model](BUSINESS_MODEL.md) — full pricing, ROI framework, implementation packages |
+| **CTO / VP Engineering** | [Read the Business Model](BUSINESS_MODEL.md) — our exploratory thinking on how this could scale |
 | **Developer** | [Read the README](README.md) — see the open-source core, try it on your own GitHub profile |
-| **HR / People Ops** | [Read the 90-Day Protocol](BUSINESS_MODEL.md#6-90-day-roi-demonstration) — how to measure impact in your organization |
-| **Team Lead / Engineering Manager** | [See the Badge Catalog](CATALOGO.md) — understand what behaviors are captured and rewarded |
+| **HR / People Ops** | [Read the Economy model](ECONOMY.md) — understand how recognition categories work |
+| **Team Lead / Engineering Manager** | [See the Badge Catalog](CATALOG.md) — understand what behaviors are captured and rewarded |
 
 ### Contact
 

@@ -13,9 +13,9 @@
 
 1. [System Philosophy](#system-philosophy)
 2. [Bond Badges (Peer-to-Peer)](#-bond-badges-peer-to-peer)
-3. [Investment Badges (Premium/Patron)](#-investment-badges-premiumpatron)
+3. [Investment Badges (Future Concept)](#-investment-badges-future-concept)
 4. [Benefits by Category](#benefits-by-category)
-5. [Protection against "Pay-to-Win"](#-protection-against-pay-to-win)
+5. [Integrity of Merit Badges](#-integrity-of-merit-badges)
 6. [Technical Implementation](#technical-implementation)
 
 ---
@@ -83,7 +83,13 @@ restrictions:
 
 ---
 
-## 💎 Investment Badges (Premium/Patron)
+## 💎 Investment Badges (Future Concept)
+
+> **⚠️ STATUS: NOT ACTIVE — These badges are not currently implemented.**
+>
+> The following is an exploratory concept for how community investment could be recognized in Boomflow. It is not available and has no timeline for implementation. We are keeping this section as a reference for future design discussions.
+>
+> **Key concern:** Any badge that can be obtained through payment risks undermining the credibility of the entire badge system. If a "Patron Bloom" badge sits next to a "Code Ninja" badge, and one was earned through months of work while the other was earned through a $50 donation, the system’s integrity is damaged. Solving this cleanly is a hard design problem.
 
 ### The Concept: Tangible Commitment
 
@@ -144,7 +150,7 @@ The badge becomes a **receipt** that "Ursol and I helped."
 | 🔵 Coding | Technical merit | Professional recognition |
 | 🟣 DevOps | Technical merit | Professional recognition |
 | ❤️ Community | Social bond | Human connection |
-| 💎 Premium | Investment | Real benefits |
+| 💎 Premium | Investment (future) | Community support |
 
 ### Disconnect Time
 
@@ -166,7 +172,7 @@ The badge becomes a **receipt** that "Ursol and I helped."
 
 ---
 
-## ⚠️ Protection against "Pay-to-Win"
+## ⚠️ Integrity of Merit Badges
 
 ### The Risk
 
@@ -281,7 +287,7 @@ if (fromUserId === toUserId) {
 | ❤️ Milestones | ❤️ | Cumulative | Automatic |
 | ⭐ Special | ⭐ | Special | Automatic |
 | ❤️ **Community** | ❤️ | **Social** | **Peer-to-Peer** |
-| 💎 **Premium** | 💎 | **Investment** | **Donation** |
+| 💎 **Premium** | 💎 | **Investment (future)** | **Donation** |
 
 ---
 

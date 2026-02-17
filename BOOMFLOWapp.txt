@@ -17,10 +17,10 @@ An algorithm that connects someone who wants to learn Python with someone on the
 The "Failure Resume" and Learnings:
 A section where leaders share their mistakes and what they learned, normalizing error and reducing workplace anxiety.
 
-3. Business Model (Ethical Monetization)
-To generate revenue without betraying its essence, these strategies can be applied:
+3. Business Model (Future Considerations)
+To generate revenue without betraying its essence, these strategies could potentially be explored in the future (none are currently active):
 
-Subscription for "Happiness and Retention": Companies pay because a happy employee is 30% more productive and, above all, because losing talent costs them thousands of dollars in new hires.
+Internal Use for Retention: A happy employee is 30% more productive and losing talent costs thousands in new hires. Boomflow is currently used internally by Sistemas Ursol to address this.
 
 Wellness Benefits Marketplace: Integrate third-party services (online therapy, yoga sessions, courses) and take a commission for each service booked through the app.
 

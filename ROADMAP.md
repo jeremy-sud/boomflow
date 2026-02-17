@@ -12,7 +12,7 @@
 - [Data Model](#data-model)
 - [API Design](#api-design)
 - [Integrations](#integrations)
-- [Monetization](#monetization)
+- [Future Expansion (Exploratory)](#future-expansion-exploratory)
 - [Timeline](#timeline)
 
 ---
@@ -207,11 +207,11 @@ Kudos (recognition) → Accumulation → Badges → GitHub Profile
 
 ### Phase 5: Enterprise — Ongoing
 
-**Goal:** Features for large companies
+**Goal:** Features for larger deployments (exploratory)
 
 - [ ] SSO/SAML
 - [ ] Dedicated API with rate limits
-- [ ] SLA and premium support
+- [ ] SLA and support tiers
 - [ ] On-premise deployment option
 - [ ] Audit and compliance
 
@@ -331,10 +331,11 @@ enum Role {
 }
 
 enum Plan {
-  INTERNAL  // Boomflow Open — Sistemas Ursol & community (not a commercial plan)
-  PRO
-  SCALE
-  ENTERPRISE
+  INTERNAL  // Boomflow — Sistemas Ursol internal use
+  // Future expansion tiers (not active):
+  // PRO
+  // SCALE
+  // ENTERPRISE
 }
 
 enum Category {
@@ -457,24 +458,23 @@ Available triggers:
 
 ---
 
-## 💰 Monetization
+## � Future Expansion (Exploratory)
 
-### Plans
+> **⚠️ Boomflow is currently an internal tool for Sistemas Ursol. There are no commercial plans available.**
+>
+> We are exploring the possibility of offering Boomflow to other organizations, but commercializing badge/recognition systems carries significant reputational risk. If badges can be "bought" through a subscription, they lose their value as verifiable achievements.
+>
+> The ideas below are hypothetical and may or may not be implemented:
 
-> **Note:** Boomflow Open is the free open-source core used by Sistemas Ursol and the community — it is not a commercial plan. The plans below are for companies.
+| Feature | Potential Scope |
+|---------|----------------|
+| Multi-organization support | Allow external orgs to run their own instance |
+| Custom badge creation | Let orgs define their own badges |
+| SSO/SAML integration | Enterprise auth |
+| Advanced analytics | Collaboration health metrics |
+| Dedicated API | Programmatic access |
 
-| Feature | Pro ($149/mo) | Scale ($499/mo) | Enterprise ($1,499/mo) |
-|---------|---------------|-----------------|------------------------|
-| Monthly Active Collaborators | Up to 50 MAC | Up to 200 MAC | 500+ MAC |
-| Kudos/month | Unlimited | Unlimited | Unlimited |
-| Global badges | ✅ | ✅ | ✅ |
-| Custom badges | ✅ | ✅ | ✅ |
-| GitHub Sync | ✅ | ✅ | ✅ |
-| Slack/Discord | ✅ | ✅ | ✅ |
-| Analytics | Advanced | Advanced | Premium |
-| SSO/SAML | ❌ | ✅ | ✅ |
-| Dedicated API | ❌ | ✅ | ✅ |
-| Support | Email | Priority | Dedicated |
+See [BUSINESS_MODEL.md](BUSINESS_MODEL.md) for our early-stage thinking on this topic.
 
 ---
 

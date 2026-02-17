@@ -30,7 +30,6 @@
 - [Web Dashboard](#-web-dashboard-v30)
 - [Administration](#-administration)
 - [Why Boomflow?](#-why-boomflow)
-- [Plans for Companies](#-plans-for-companies)
 - [About Sistemas Ursol](#-about-sistemas-ursol)
 
 ---
@@ -98,7 +97,7 @@ BOOMFLOW transforms professional recognition into **verifiable assets** displaye
 | ❤️ **Milestones** | 9 | Cumulative achievements | Kudo Legend, Streak Master |
 | ⭐ **Special** | 1 | Unique recognition | All Star |
 | ❤️ **Community** | 4 | Peer-to-peer bonds | Resonance, Team Soul |
-| 💎 **Premium** | 4 | Patron investment | Patron Seed, Patron Bloom |
+| 💎 **Premium** | 4 | Community investment (future) | Patron Seed, Patron Bloom |
 
 ### Tier System
 
@@ -208,7 +207,7 @@ BOOMFLOW/
 | [SKINS.md](SKINS.md) | Badge visual customization | 🎨 Everyone |
 | [DOCS.md](DOCS.md) | Complete technical reference | 👨‍💻 Developers |
 | [ARCHITECTURE.md](ARCHITECTURE.md) | System design | 👨‍💻 Developers |
-| [BUSINESS_MODEL.md](BUSINESS_MODEL.md) | B2B SaaS business model | 📊 Stakeholders |
+| [BUSINESS_MODEL.md](BUSINESS_MODEL.md) | Future expansion ideas (exploratory) | 📊 Internal |
 
 ---
 
@@ -389,16 +388,13 @@ System 2 keeps your company alive. But it has no dashboard, no metrics, no proof
 
 ---
 
-## �💼 Plans for Companies
+## 🔮 Future Plans
 
-Boomflow offers commercial plans for companies that want to use the platform with their teams — from Pro to Enterprise.
-The open-source core is used by Sistemas Ursol and the community, but is not a commercial plan.
+> **Boomflow is currently an internal tool built by and for Sistemas Ursol.** It is not available as a paid product.
 
-<p align="center">
-  <img src="assets/promoboomflow.png" alt="Boomflow Plans — Pro $149/mes, Scale $499/mes, Enterprise $1499/mes" width="520" />
-</p>
+We are exploring the possibility of offering Boomflow to other organizations in the future, but this is not straightforward. Professional recognition systems carry inherent reputational risk — if badges can be "purchased" through a commercial plan, their credibility as verifiable achievements drops to zero. Any future expansion would need to solve this trust problem first.
 
-👉 [View available plans](BUSINESS_MODEL.md)
+For now, Boomflow remains an open-source internal tool. See [BUSINESS_MODEL.md](BUSINESS_MODEL.md) for our early-stage thinking on this topic.
 
 ---
 

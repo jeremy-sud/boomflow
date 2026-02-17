@@ -187,14 +187,18 @@ function applySkinToUser(username, skinId) {
     throw new Error(`Skin not found: ${skinId}`);
   }
   
-  // Premium skin access control
+  // Premium skin access control (currently disabled — all skins available)
+  // When/if commercial plans are introduced, this would gate access.
   if (skin.isPremium) {
-    const userData = readUserFile(username);
-    const userPlan = (userData.plan || 'INTERNAL').toUpperCase();
-    const allowedPlans = ['PRO', 'SCALE', 'ENTERPRISE'];
-    if (!allowedPlans.includes(userPlan)) {
-      throw new Error(`Skin "${skin.name}" requires a Pro, Scale, or Enterprise plan. Current plan: ${userPlan}`);
-    }
+    // For now, log a notice but allow access
+    console.log(`ℹ️  Skin "${skin.name}" is marked as premium but all skins are currently available.`);
+    // Future: uncomment to enforce plan-based access
+    // const userData = readUserFile(username);
+    // const userPlan = (userData.plan || 'INTERNAL').toUpperCase();
+    // const allowedPlans = ['PRO', 'SCALE', 'ENTERPRISE'];
+    // if (!allowedPlans.includes(userPlan)) {
+    //   throw new Error(`Skin "${skin.name}" requires a Pro, Scale, or Enterprise plan. Current plan: ${userPlan}`);
+    // }
   }
   
   const userData = readUserFile(username);

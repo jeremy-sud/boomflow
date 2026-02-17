@@ -22,7 +22,7 @@ async function main() {
       name: 'SistemasUrsol',
       slug: 'sistemas-ursol',
       description: 'Desarrollo de software a medida',
-      plan: 'PRO'
+      plan: 'INTERNAL'
     }
   })
   console.log(`✅ Organization: ${org.name}`)

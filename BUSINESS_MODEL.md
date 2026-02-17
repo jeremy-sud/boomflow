@@ -1,9 +1,20 @@
-# 💼 BOOMFLOW — Business Model
+# 💼 BOOMFLOW — Business Model (Exploratory)
+
+> **⚠️ STATUS: EXPLORATORY / NOT ACTIVE**
+>
+> This document contains **early-stage ideas** about how Boomflow could potentially be offered to other organizations. **None of this is currently implemented or available.**
+>
+> Boomflow is an **internal tool built by and for Sistemas Ursol**. It is not sold, licensed, or offered as a commercial product to any external company.
+>
+> **Why this is hard:** Any company that "buys" a badge system risks destroying the very credibility those badges represent. If badges can be purchased through a subscription plan, they stop being verifiable achievements and become marketing assets — which defeats the entire purpose. We are keeping this document as a reference for future exploration, but commercialization is not on our near-term roadmap.
+>
+> The pricing, plans, and projections below are **hypothetical exercises**, not active offerings.
+
+---
 
 <p align="center">
+  <img src="https://img.shields.io/badge/Status-Exploratory_/_Not_Active-red.svg" alt="Not Active"/>
   <img src="https://img.shields.io/badge/Category-Collaborative_Performance_Infrastructure-8B5CF6.svg" alt="CPI"/>
-  <img src="https://img.shields.io/badge/Model-Open_Core_+_SaaS-blue.svg" alt="Model"/>
-  <img src="https://img.shields.io/badge/Target-7_Figure_ARR-gold.svg" alt="Target"/>
 </p>
 
 > **Boomflow is not a gamification tool.**

@@ -22,10 +22,11 @@ enum Role {
 }
 
 enum Plan {
-  INTERNAL    // Open / community (non-commercial)
-  PRO
-  SCALE
-  ENTERPRISE
+  INTERNAL    // Sistemas Ursol internal use
+  // Future expansion tiers (not active):
+  // PRO
+  // SCALE
+  // ENTERPRISE
 }
 
 enum Category {
@@ -117,9 +118,9 @@ model Organization {
   logoUrl     String?
   website     String?
   
-  // Billing
+  // Expansion (not active)
   plan        Plan     @default(INTERNAL)
-  stripeCustomerId String?
+  stripeCustomerId String?  // Reserved for future use
   
   // Settings
   settings    Json     @default("{}")

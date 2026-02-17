@@ -223,11 +223,7 @@ Each badge has a tier that indicates its difficulty or importance:
 
 ---
 
-## 💎 Premium (Patron) (4 badges)
-
-*Badges of investment and commitment to the Ursol community*
-
-> ⚠️ **These badges have a special aesthetic** (shiny border) to distinguish them from technical merit badges. They never compete with skill badges.
+## 💎 Premium (Patron) — Future Concept (4 badges)\n\n*Badges of investment and commitment to the Ursol community*\n\n> ⚠️ **These badges are not currently active.** They represent a future concept for recognizing community investment. The design intentionally uses a special aesthetic (shiny border) to distinguish them from technical merit badges, so they never compete with skill badges. See [ECONOMY.md](ECONOMY.md) for the full design discussion.
 
 | Badge | Tier | Meaning | How to earn |
 |-------|------|---------|-------------|

@@ -734,7 +734,7 @@ npm run db:studio
 | **Community** | ❤️ | `#F472B6` → `#EC4899` | 4 |
 | **Premium** | 💎 | `#A78BFA` → `#7C3AED` | 4 |
 
-> 📖 See [ECONOMY.md](ECONOMY.md) for details on Community (Peer-to-Peer) and Premium (Investment) badges.
+> 📖 See [ECONOMY.md](ECONOMY.md) for details on Community (Peer-to-Peer) badges. Premium (Investment) badges are a future concept, not currently active.
 
 ### Complete Category Reference
 
@@ -1191,7 +1191,7 @@ BOOMFLOW allows customizing the appearance of badges with different "skins" or v
 | ACADEMIC | Formal shield with laurels | Free |
 | MINIMALIST | Clean and simple design | Free |
 | VINTAGE | Retro style with ornaments | Free |
-| NEON | Cyberpunk with glow effects | Premium |
+| NEON | Cyberpunk with glow effects | All (future premium) |
 
 ### Change Skin via API
 

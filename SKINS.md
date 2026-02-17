@@ -43,7 +43,7 @@ Futuristic design with neon glow effects on a dark background.
 - **File:** `assets/skins/skin-neon-template.svg`
 - **Colors:** Neon pink, cyan, black background
 - **Shape:** Octagon with glow
-- **Access:** **Premium** (requires patron badge)
+- **Access:** Available to all (reserved for future premium tier)
 
 ---
 
@@ -224,7 +224,7 @@ Yes, all skins are compatible with all badges. The central icon adapts automatic
 Create your own! Use the `generate-custom-skin.js` script or manually design an SVG following the specifications.
 
 ### Do premium skins cost money?
-Not directly. Premium skins are unlocked by earning "PREMIUM" type badges (project patron/investor).
+Not currently. All skins are available to all users. The `isPremium` flag in the database exists for potential future use, but is not enforced. The NEON skin was originally designed as exclusive, but all skins are currently accessible to everyone.
 
 ### Can I share my custom skins?
 Absolutely! You can contribute your skins to the repository via a Pull Request. See [CONTRIBUTING.md](CONTRIBUTING.md).
