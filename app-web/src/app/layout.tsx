@@ -3,7 +3,6 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { auth } from "@/auth";
 import Sidebar from "@/components/Sidebar";
-import { getUserByUsername } from "@/lib/data";
 import { ToastProvider } from "@/components/Toast";
 
 const geistSans = Geist({
@@ -29,9 +28,8 @@ export default async function RootLayout({
   const session = await auth();
   const user = session?.user;
   
-  // Get user badge count (from mock data for now)
-  const userData = user?.username ? getUserByUsername(user.username) : null;
-  const badgeCount = userData?.badges.length || 0;
+  // Badge count comes from session callback (loaded from DB)
+  const badgeCount = user?.badges?.length ?? 0;
 
   return (
     <html lang="en">

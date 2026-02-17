@@ -1,19 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@/auth'
 import prisma from '@/lib/prisma'
 import type { Prisma } from '@/generated/prisma'
 
-// GET /api/badges - Full badge catalog (requires authentication)
+// GET /api/badges - Full badge catalog (public)
 export async function GET(request: NextRequest) {
   try {
-    const session = await auth()
-    if (!session?.user?.id) {
-      return NextResponse.json(
-        { error: 'Not authenticated' },
-        { status: 401 }
-      )
-    }
-
     const searchParams = request.nextUrl.searchParams
     const category = searchParams.get('category')
     const tier = searchParams.get('tier')

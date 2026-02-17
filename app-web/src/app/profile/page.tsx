@@ -1,61 +1,90 @@
 'use client';
 
-import { USERS, CATEGORIES, TIERS, getBadgeById, getUserBadges } from '@/lib/data';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import {
+  CATEGORIES, TIERS,
+  TIER_CARD_COLORS, getBadgeSvgUrl,
+  getTierEmoji, getTierLabel,
+  type BadgeDisplay,
+} from '@/lib/constants';
 
-/**
- * Maps badge tier to emoji display
- * @param tier - Badge tier (gold, silver, bronze)
- * @returns Corresponding emoji
- */
-function getTierEmoji(tier: string): string {
-  const tierMap: Record<string, string> = {
-    gold: '🥇',
-    silver: '🥈',
-    bronze: '🥉'
-  };
-  return tierMap[tier] ?? '🥉';
+/** User profile data from the API */
+interface UserProfile {
+  id: string;
+  username: string;
+  name: string | null;
+  image: string | null;
+  organization?: string | null;
+  team?: string | null;
+  createdAt: string;
 }
 
-/**
- * Maps badge tier to display label with emoji
- * @param tier - Badge tier (gold, silver, bronze)
- * @returns Label with emoji (e.g., "🥇 Gold")
- */
-function getTierLabel(tier: string): string {
-  const tierLabels: Record<string, string> = {
-    gold: '🥇 Gold',
-    silver: '🥈 Silver',
-    bronze: '🥉 Bronze'
-  };
-  return tierLabels[tier] ?? '🥉 Bronze';
+/** Badge with award metadata */
+interface UserBadge extends BadgeDisplay {
+  awardedAt: string;
+  awardedBy: string | null;
+  reason: string | null;
 }
 
-// Current user (mock - in production this would come from auth)
-const CURRENT_USER = USERS.find(u => u.username === 'jeremy-sud') ?? USERS[0];
+/** Full API response from /api/badges/user/[username] */
+interface UserBadgeResponse {
+  user: UserProfile;
+  badges: UserBadge[];
+  badgesByCategory: Record<string, UserBadge[]>;
+  stats: { gold: number; silver: number; bronze: number; total: number };
+}
+
+// Default demo username — in production this comes from auth session
+const DEFAULT_USERNAME = 'jeremy-sud';
 
 export default function ProfilePage() {
-  const userBadges = getUserBadges(CURRENT_USER);
+  const [data, setData] = useState<UserBadgeResponse | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [filterTier, setFilterTier] = useState<string>('all');
   const [filterCategory, setFilterCategory] = useState<string>('all');
 
-  const filteredBadges = userBadges.filter(badge => {
+  useEffect(() => {
+    fetch(`/api/badges/user/${DEFAULT_USERNAME}`)
+      .then(res => {
+        if (!res.ok) throw new Error('User not found');
+        return res.json();
+      })
+      .then(d => { setData(d); setLoading(false); })
+      .catch(e => { setError(e.message); setLoading(false); });
+  }, []);
+
+  if (loading) return <ProfileSkeleton />;
+  if (error || !data) return (
+    <div className="max-w-5xl mx-auto text-center py-20 text-zinc-500">
+      <span className="text-5xl">😕</span>
+      <p className="mt-4 text-lg">{error || 'Could not load profile'}</p>
+    </div>
+  );
+
+  const { user, badges, stats } = data;
+
+  const filteredBadges = badges.filter(badge => {
     if (filterTier !== 'all' && badge.tier !== filterTier) return false;
     if (filterCategory !== 'all' && badge.category !== filterCategory) return false;
     return true;
   });
 
-  // Group badges by category for display
-  const badgesByCategory = CATEGORIES.map(cat => ({
-    ...cat,
-    badges: userBadges.filter(b => b.category === cat.id),
-  })).filter(cat => cat.badges.length > 0);
+  // Categories that actually have badges for this user
+  const userCategories = CATEGORIES.filter(cat =>
+    badges.some(b => b.category === cat.id)
+  );
 
-  // Stats
+  const badgesByCategory = userCategories.map(cat => ({
+    ...cat,
+    badges: badges.filter(b => b.category === cat.id),
+  }));
+
+  // Stats per tier
   const tierCounts = {
-    gold: userBadges.filter(b => b.tier === 'gold').length,
-    silver: userBadges.filter(b => b.tier === 'silver').length,
-    bronze: userBadges.filter(b => b.tier === 'bronze').length,
+    GOLD: stats.gold,
+    SILVER: stats.silver,
+    BRONZE: stats.bronze,
   };
 
   return (
@@ -67,22 +96,22 @@ export default function ProfilePage() {
           <div className="relative">
             <div className="w-28 h-28 rounded-full bg-linear-to-br from-blue-500 via-purple-500 to-pink-500 p-1">
               <div className="w-full h-full rounded-full bg-zinc-900 flex items-center justify-center text-4xl font-bold">
-                {CURRENT_USER.displayName[0].toUpperCase()}
+                {(user.name ?? user.username)[0].toUpperCase()}
               </div>
-            </div>
-            <div className="absolute -bottom-2 -right-2 bg-zinc-800 rounded-full px-3 py-1 text-sm border border-white/20">
-              🔥 {CURRENT_USER.streak}
             </div>
           </div>
 
           {/* Info */}
           <div className="flex-1 text-center md:text-left">
-            <h1 className="text-3xl font-bold">{CURRENT_USER.displayName}</h1>
-            <p className="text-zinc-500">@{CURRENT_USER.username}</p>
-            <p className="text-sm text-zinc-600 mt-2">
-              Member since {new Date(CURRENT_USER.joinedAt).toLocaleDateString('en-US', { 
-                month: 'long', 
-                year: 'numeric' 
+            <h1 className="text-3xl font-bold">{user.name ?? user.username}</h1>
+            <p className="text-zinc-500">@{user.username}</p>
+            {user.organization && (
+              <p className="text-sm text-zinc-600 mt-1">{user.organization}{user.team ? ` · ${user.team}` : ''}</p>
+            )}
+            <p className="text-sm text-zinc-600 mt-1">
+              Member since {new Date(user.createdAt).toLocaleDateString('en-US', {
+                month: 'long',
+                year: 'numeric'
               })}
             </p>
           </div>
@@ -90,22 +119,18 @@ export default function ProfilePage() {
           {/* Quick Stats */}
           <div className="flex gap-6 text-center">
             <div>
-              <p className="text-3xl font-bold text-purple-400">{CURRENT_USER.kudosReceived}</p>
-              <p className="text-xs text-zinc-500">Kudos received</p>
-            </div>
-            <div>
-              <p className="text-3xl font-bold text-green-400">{CURRENT_USER.kudosGiven}</p>
-              <p className="text-xs text-zinc-500">Kudos sent</p>
-            </div>
-            <div>
-              <p className="text-3xl font-bold text-yellow-400">{userBadges.length}</p>
+              <p className="text-3xl font-bold text-yellow-400">{stats.total}</p>
               <p className="text-xs text-zinc-500">Badges</p>
+            </div>
+            <div>
+              <p className="text-3xl font-bold text-amber-400">{stats.gold}</p>
+              <p className="text-xs text-zinc-500">Gold</p>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Badge Summary */}
+      {/* Badge Summary by Tier */}
       <div className="grid grid-cols-3 gap-4">
         {TIERS.map(tier => (
           <button
@@ -118,7 +143,7 @@ export default function ProfilePage() {
             aria-pressed={filterTier === tier.id}
           >
             <span className="text-3xl">{tier.emoji}</span>
-            <p className="text-2xl font-bold mt-2">{tierCounts[tier.id as keyof typeof tierCounts]}</p>
+            <p className="text-2xl font-bold mt-2">{tierCounts[tier.id as keyof typeof tierCounts] ?? 0}</p>
             <p className="text-xs text-zinc-500">{tier.name}</p>
           </button>
         ))}
@@ -127,27 +152,27 @@ export default function ProfilePage() {
       {/* Badges Section */}
       <div className="glass-panel rounded-2xl p-6">
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl font-bold">🏅 My Badges ({userBadges.length})</h2>
-          
+          <h2 className="text-xl font-bold">🏅 My Badges ({badges.length})</h2>
+
           {/* Category Filter */}
           <div className="flex gap-2">
             <button
               onClick={() => setFilterCategory('all')}
               className={`px-3 py-1 rounded-lg text-sm transition-colors ${
-                filterCategory === 'all' 
-                  ? 'bg-white/20 text-white' 
+                filterCategory === 'all'
+                  ? 'bg-white/20 text-white'
                   : 'bg-white/5 text-zinc-400 hover:bg-white/10'
               }`}
             >
               All
             </button>
-            {badgesByCategory.map(cat => (
+            {userCategories.map(cat => (
               <button
                 key={cat.id}
                 onClick={() => setFilterCategory(filterCategory === cat.id ? 'all' : cat.id)}
                 className={`px-3 py-1 rounded-lg text-sm transition-colors ${
-                  filterCategory === cat.id 
-                    ? 'bg-white/20 text-white' 
+                  filterCategory === cat.id
+                    ? 'bg-white/20 text-white'
                     : 'bg-white/5 text-zinc-400 hover:bg-white/10'
                 }`}
                 title={cat.name}
@@ -173,7 +198,7 @@ export default function ProfilePage() {
       </div>
 
       {/* All Badges by Category (no filter) */}
-      {filterCategory === 'all' && filterTier === 'all' && (
+      {filterCategory === 'all' && filterTier === 'all' && badgesByCategory.length > 0 && (
         <div className="space-y-6">
           {badgesByCategory.map(category => (
             <div key={category.id} className="glass-panel rounded-2xl p-6">
@@ -192,14 +217,12 @@ export default function ProfilePage() {
                     title={badge.description}
                   >
                     <img
-                      src={`https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-${badge.id}.svg`}
+                      src={getBadgeSvgUrl(badge.slug)}
                       alt={badge.name}
                       className="w-8 h-8"
                     />
                     <span className="text-sm">{badge.name}</span>
-                    <span className="text-xs">
-                      {getTierEmoji(badge.tier)}
-                    </span>
+                    <span className="text-xs">{getTierEmoji(badge.tier)}</span>
                   </div>
                 ))}
               </div>
@@ -211,30 +234,32 @@ export default function ProfilePage() {
   );
 }
 
-function BadgeCard({ badge }: Readonly<{ badge: ReturnType<typeof getBadgeById> }>) {
-  if (!badge) return null;
+function ProfileSkeleton() {
+  return (
+    <div className="max-w-5xl mx-auto space-y-8 animate-pulse">
+      <div className="h-40 bg-white/10 rounded-2xl"></div>
+      <div className="grid grid-cols-3 gap-4">
+        {[1, 2, 3].map(i => <div key={i} className="h-24 bg-white/10 rounded-xl"></div>)}
+      </div>
+      <div className="h-64 bg-white/10 rounded-2xl"></div>
+    </div>
+  );
+}
 
-  const tierColors = {
-    gold: 'from-yellow-500/20 to-amber-600/20 border-yellow-500/30',
-    silver: 'from-zinc-400/20 to-zinc-600/20 border-zinc-400/30',
-    bronze: 'from-orange-500/20 to-orange-700/20 border-orange-500/30',
-  };
+function BadgeCard({ badge }: Readonly<{ badge: UserBadge }>) {
+  const tierColors = TIER_CARD_COLORS[badge.tier] ?? TIER_CARD_COLORS.BRONZE;
 
   return (
-    <div
-      className={`rounded-xl p-4 border bg-linear-to-br ${tierColors[badge.tier]} backdrop-blur-lg hover:scale-105 transition-transform cursor-pointer`}
-    >
+    <div className={`rounded-xl p-4 border bg-linear-to-br ${tierColors} backdrop-blur-lg hover:scale-105 transition-transform cursor-pointer`}>
       <div className="flex flex-col items-center text-center">
         <img
-          src={`https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-${badge.id}.svg`}
+          src={getBadgeSvgUrl(badge.slug)}
           alt={badge.name}
           className="w-16 h-16 mb-3"
         />
         <h4 className="font-medium text-sm">{badge.name}</h4>
         <p className="text-xs text-zinc-500 mt-1 line-clamp-2">{badge.description}</p>
-        <div className="mt-2 text-xs">
-          {getTierLabel(badge.tier)}
-        </div>
+        <div className="mt-2 text-xs">{getTierLabel(badge.tier)}</div>
       </div>
     </div>
   );

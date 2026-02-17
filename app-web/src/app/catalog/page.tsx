@@ -1,11 +1,12 @@
 'use client';
 
-import { useState, useMemo, Suspense } from 'react';
+import { useState, useMemo, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { BADGE_CATALOG, CATEGORIES, TIERS, USERS, Badge } from '@/lib/data';
-
-// Current user (mock)
-const CURRENT_USER = USERS.find(u => u.username === 'jeremy-sud') ?? USERS[0];
+import {
+  CATEGORIES, TIERS, TIER_CARD_COLORS,
+  getBadgeSvgUrl, getCategoryMeta, getTierMeta,
+  type BadgeDisplay,
+} from '@/lib/constants';
 
 export default function CatalogPage() {
   return (
@@ -29,36 +30,47 @@ function CatalogSkeleton() {
   );
 }
 
+/** Badge from API plus howToGet */
+interface ApiBadge extends BadgeDisplay {
+  howToGet?: string | null;
+}
+
 function CatalogContent() {
   const searchParams = useSearchParams();
   const initialCategory = searchParams.get('category') || 'all';
-  
+
+  const [badges, setBadges] = useState<ApiBadge[]>([]);
+  const [loading, setLoading] = useState(true);
   const [filterCategory, setFilterCategory] = useState(initialCategory);
   const [filterTier, setFilterTier] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState('');
-  const [showOnlyOwned, setShowOnlyOwned] = useState(false);
-  const [selectedBadge, setSelectedBadge] = useState<Badge | null>(null);
+  const [selectedBadge, setSelectedBadge] = useState<ApiBadge | null>(null);
+
+  // Fetch badges from API
+  useEffect(() => {
+    fetch('/api/badges')
+      .then(res => res.json())
+      .then(data => {
+        setBadges(data.badges ?? []);
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
+  }, []);
 
   const filteredBadges = useMemo(() => {
-    return BADGE_CATALOG.filter(badge => {
-      // Category filter
+    return badges.filter(badge => {
       if (filterCategory !== 'all' && badge.category !== filterCategory) return false;
-      // Tier filter
       if (filterTier !== 'all' && badge.tier !== filterTier) return false;
-      // Owned filter
-      if (showOnlyOwned && !CURRENT_USER.badges.includes(badge.id)) return false;
-      // Search
       if (searchQuery) {
         const query = searchQuery.toLowerCase();
         return (
           badge.name.toLowerCase().includes(query) ||
-          badge.description.toLowerCase().includes(query) ||
-          badge.howToGet.toLowerCase().includes(query)
+          badge.description.toLowerCase().includes(query)
         );
       }
       return true;
     });
-  }, [filterCategory, filterTier, searchQuery, showOnlyOwned]);
+  }, [badges, filterCategory, filterTier, searchQuery]);
 
   // Group by category for display
   const badgesByCategory = useMemo(() => {
@@ -69,10 +81,11 @@ function CatalogContent() {
   }, [filteredBadges]);
 
   const stats = {
-    total: BADGE_CATALOG.length,
-    owned: CURRENT_USER.badges.length,
+    total: badges.length,
     filtered: filteredBadges.length,
   };
+
+  if (loading) return <CatalogSkeleton />;
 
   return (
     <div className="max-w-7xl mx-auto space-y-6">
@@ -81,7 +94,7 @@ function CatalogContent() {
         <div>
           <h1 className="text-3xl font-bold text-gradient">Badge Catalog</h1>
           <p className="text-zinc-500 mt-1">
-            {stats.filtered} of {stats.total} badges • {stats.owned} earned
+            {stats.filtered} of {stats.total} badges
           </p>
         </div>
       </div>
@@ -144,18 +157,6 @@ function CatalogContent() {
               </button>
             ))}
           </div>
-
-          {/* Owned Toggle */}
-          <button
-            onClick={() => setShowOnlyOwned(!showOnlyOwned)}
-            className={`px-4 py-2 rounded-lg text-sm transition-colors ${
-              showOnlyOwned
-                ? 'bg-green-600/30 text-green-400 border border-green-500/30'
-                : 'bg-white/5 text-zinc-400 hover:bg-white/10'
-            }`}
-          >
-            ✓ My badges
-          </button>
         </div>
       </div>
 
@@ -177,7 +178,6 @@ function CatalogContent() {
                   <CatalogBadgeCard
                     key={badge.id}
                     badge={badge}
-                    owned={CURRENT_USER.badges.includes(badge.id)}
                     onClick={() => setSelectedBadge(badge)}
                   />
                 ))}
@@ -192,7 +192,6 @@ function CatalogContent() {
             <CatalogBadgeCard
               key={badge.id}
               badge={badge}
-              owned={CURRENT_USER.badges.includes(badge.id)}
               onClick={() => setSelectedBadge(badge)}
             />
           ))}
@@ -211,7 +210,6 @@ function CatalogContent() {
       {selectedBadge && (
         <BadgeDetailModal
           badge={selectedBadge}
-          owned={CURRENT_USER.badges.includes(selectedBadge.id)}
           onClose={() => setSelectedBadge(null)}
         />
       )}
@@ -219,51 +217,38 @@ function CatalogContent() {
   );
 }
 
-function CatalogBadgeCard({ badge, owned, onClick }: {
-  badge: Badge;
-  owned: boolean;
+function CatalogBadgeCard({ badge, onClick }: {
+  badge: ApiBadge;
   onClick: () => void;
 }) {
-  const tierColors = {
-    gold: 'from-yellow-500/20 to-amber-600/20 border-yellow-500/30',
-    silver: 'from-zinc-400/20 to-zinc-600/20 border-zinc-400/30',
-    bronze: 'from-orange-500/20 to-orange-700/20 border-orange-500/30',
-  };
+  const tierColors = TIER_CARD_COLORS[badge.tier] ?? TIER_CARD_COLORS.BRONZE;
 
   return (
     <div
       onClick={onClick}
-      className={`relative rounded-xl p-4 border bg-gradient-to-br ${tierColors[badge.tier]} backdrop-blur-lg hover:scale-105 transition-all cursor-pointer ${
-        owned ? 'ring-2 ring-green-500/50' : 'opacity-70 hover:opacity-100'
-      }`}
+      className={`relative rounded-xl p-4 border bg-gradient-to-br ${tierColors} backdrop-blur-lg hover:scale-105 transition-all cursor-pointer`}
     >
-      {owned && (
-        <div className="absolute -top-2 -right-2 bg-green-500 rounded-full w-6 h-6 flex items-center justify-center text-xs">
-          ✓
-        </div>
-      )}
       <div className="flex flex-col items-center text-center">
         <img
-          src={`https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-${badge.id}.svg`}
+          src={getBadgeSvgUrl(badge.slug)}
           alt={badge.name}
-          className={`w-14 h-14 mb-2 ${!owned ? 'grayscale' : ''}`}
+          className="w-14 h-14 mb-2"
         />
         <h4 className="font-medium text-sm">{badge.name}</h4>
         <div className="mt-1 text-xs text-zinc-500">
-          {badge.tier === 'gold' ? '🥇' : badge.tier === 'silver' ? '🥈' : '🥉'}
+          {badge.tier === 'GOLD' ? '🥇' : badge.tier === 'SILVER' ? '🥈' : '🥉'}
         </div>
       </div>
     </div>
   );
 }
 
-function BadgeDetailModal({ badge, owned, onClose }: {
-  badge: Badge;
-  owned: boolean;
+function BadgeDetailModal({ badge, onClose }: {
+  badge: ApiBadge;
   onClose: () => void;
 }) {
-  const category = CATEGORIES.find(c => c.id === badge.category);
-  const tier = TIERS.find(t => t.id === badge.tier);
+  const category = getCategoryMeta(badge.category);
+  const tier = getTierMeta(badge.tier);
 
   return (
     <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={onClose}>
@@ -273,7 +258,7 @@ function BadgeDetailModal({ badge, owned, onClose }: {
       >
         <div className="flex flex-col items-center text-center">
           <img
-            src={`https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-${badge.id}.svg`}
+            src={getBadgeSvgUrl(badge.slug)}
             alt={badge.name}
             className="w-24 h-24 mb-4"
           />
@@ -288,21 +273,11 @@ function BadgeDetailModal({ badge, owned, onClose }: {
           </div>
 
           <p className="mt-4 text-zinc-300">{badge.description}</p>
-          
-          <div className="mt-4 p-4 rounded-lg bg-white/5 w-full">
-            <p className="text-xs text-zinc-500 uppercase tracking-wider mb-1">How to earn</p>
-            <p className="text-sm text-zinc-300">{badge.howToGet}</p>
-          </div>
 
-          {owned ? (
-            <div className="mt-4 flex items-center gap-2 text-green-400">
-              <span className="text-xl">✓</span>
-              <span>You already have this badge!</span>
-            </div>
-          ) : (
-            <div className="mt-4 flex items-center gap-2 text-zinc-500">
-              <span className="text-xl">🔒</span>
-              <span>Not yet earned</span>
+          {badge.howToGet && (
+            <div className="mt-4 p-4 rounded-lg bg-white/5 w-full">
+              <p className="text-xs text-zinc-500 uppercase tracking-wider mb-1">How to earn</p>
+              <p className="text-sm text-zinc-300">{badge.howToGet}</p>
             </div>
           )}
 

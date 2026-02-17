@@ -1,7 +1,11 @@
 'use client';
 
-import { USERS, ACTIVITY_FEED, getBadgeById, getUserById, formatTimeAgo, getBadgeStats } from '@/lib/data';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import {
+  CATEGORIES, formatTimeAgo,
+  type KudoDisplay,
+} from '@/lib/constants';
 
 /**
  * Maps leaderboard position to medal emoji
@@ -13,57 +17,92 @@ function getPositionEmoji(index: number): string {
   return positions[index] ?? '🏅';
 }
 
-// Current user (mock - in production this would come from auth)
-const CURRENT_USER = USERS.find(u => u.username === 'jeremy-sud') ?? USERS[0];
+interface LeaderboardUser {
+  rank: number;
+  user: { id: string; name: string | null; username: string; image: string | null };
+  count: number;
+}
+
+interface ApiBadge {
+  id: string;
+  slug: string;
+  name: string;
+  emoji: string | null;
+  description: string;
+  category: string;
+  tier: string;
+}
+
+interface DashboardData {
+  leaderboard: LeaderboardUser[];
+  recentKudos: KudoDisplay[];
+  badges: ApiBadge[];
+  loading: boolean;
+}
 
 export default function Home() {
-  const stats = getBadgeStats();
-  const recentActivity = ACTIVITY_FEED.slice(0, 5);
-  const topUsers = [...USERS].sort((a, b) => b.kudosReceived - a.kudosReceived).slice(0, 3);
+  const [data, setData] = useState<DashboardData>({
+    leaderboard: [],
+    recentKudos: [],
+    badges: [],
+    loading: true,
+  });
+
+  useEffect(() => {
+    // Fetch all dashboard data in parallel
+    Promise.allSettled([
+      fetch('/api/leaderboard?type=kudos_received&limit=3').then(r => r.json()),
+      fetch('/api/kudos?limit=5').then(r => r.json()),
+      fetch('/api/badges').then(r => r.json()),
+    ]).then(([leaderboardResult, kudosResult, badgesResult]) => {
+      setData({
+        leaderboard: leaderboardResult.status === 'fulfilled' ? leaderboardResult.value.leaderboard ?? [] : [],
+        recentKudos: kudosResult.status === 'fulfilled' ? kudosResult.value.kudos ?? [] : [],
+        badges: badgesResult.status === 'fulfilled' ? badgesResult.value.badges ?? [] : [],
+        loading: false,
+      });
+    });
+  }, []);
+
+  if (data.loading) return <DashboardSkeleton />;
+
+  // Build stats from real data
+  const totalBadges = data.badges.length;
+  const badgesByCategory = CATEGORIES.map(cat => ({
+    ...cat,
+    count: data.badges.filter(b => b.category === cat.id).length,
+  })).filter(c => c.count > 0);
 
   return (
     <div className="max-w-7xl mx-auto space-y-8">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-gradient">Dashboard</h1>
-          <p className="text-zinc-500 mt-1">Welcome back, {CURRENT_USER.displayName}</p>
-        </div>
-        <div className="text-right">
-          <p className="text-sm text-zinc-500">Current streak</p>
-          <p className="text-2xl font-bold text-orange-500">🔥 {CURRENT_USER.streak} days</p>
-        </div>
+      <div>
+        <h1 className="text-3xl font-bold text-gradient">Dashboard</h1>
+        <p className="text-zinc-500 mt-1">Welcome to BOOMFLOW</p>
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <StatCard
           icon="🏅"
-          label="My Badges"
-          value={CURRENT_USER.badges.length}
-          subtext={`of ${stats.total} available`}
+          label="Total Badges"
+          value={totalBadges}
+          subtext="available in catalog"
           color="blue"
         />
         <StatCard
           icon="💜"
-          label="Kudos Received"
-          value={CURRENT_USER.kudosReceived}
-          subtext="recognitions"
+          label="Recent Kudos"
+          value={data.recentKudos.length}
+          subtext="in the feed"
           color="purple"
         />
         <StatCard
-          icon="💚"
-          label="Kudos Sent"
-          value={CURRENT_USER.kudosGiven}
-          subtext="recognitions"
+          icon="🏆"
+          label="Top Recognizers"
+          value={data.leaderboard.length}
+          subtext="ranked users"
           color="green"
-        />
-        <StatCard
-          icon="📊"
-          label="System Total"
-          value={stats.total}
-          subtext="available badges"
-          color="zinc"
         />
       </div>
 
@@ -78,9 +117,13 @@ export default function Home() {
             </Link>
           </div>
           <div className="space-y-4">
-            {recentActivity.map((activity) => (
-              <ActivityItem key={activity.id} activity={activity} />
-            ))}
+            {data.recentKudos.length === 0 ? (
+              <p className="text-zinc-500 text-center py-8">No recent activity</p>
+            ) : (
+              data.recentKudos.map((kudo) => (
+                <ActivityItem key={kudo.id} kudo={kudo} />
+              ))
+            )}
           </div>
         </div>
 
@@ -93,64 +136,25 @@ export default function Home() {
             </Link>
           </div>
           <div className="space-y-4">
-            {topUsers.map((user, index) => (
-              <div key={user.id} className="flex items-center gap-3">
+            {data.leaderboard.map((entry) => (
+              <div key={entry.user.id} className="flex items-center gap-3">
                 <span className="text-2xl">
-                  {getPositionEmoji(index)}
+                  {getPositionEmoji(entry.rank - 1)}
                 </span>
                 <div className="w-10 h-10 rounded-full bg-linear-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold">
-                  {user.displayName[0].toUpperCase()}
+                  {(entry.user.name ?? entry.user.username)[0].toUpperCase()}
                 </div>
                 <div className="flex-1">
-                  <p className="font-medium">{user.displayName}</p>
-                  <p className="text-sm text-zinc-500">{user.badges.length} badges</p>
+                  <p className="font-medium">{entry.user.name ?? entry.user.username}</p>
+                  <p className="text-sm text-zinc-500">@{entry.user.username}</p>
                 </div>
                 <div className="text-right">
-                  <p className="font-bold text-purple-400">{user.kudosReceived}</p>
+                  <p className="font-bold text-purple-400">{entry.count}</p>
                   <p className="text-xs text-zinc-500">kudos</p>
                 </div>
               </div>
             ))}
           </div>
-        </div>
-      </div>
-
-      {/* My Badges Preview */}
-      <div className="glass-panel rounded-2xl p-6">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl font-bold">My Badges</h2>
-          <Link href="/profile" className="text-sm text-blue-400 hover:text-blue-300">
-            View profile →
-          </Link>
-        </div>
-        <div className="flex flex-wrap gap-4">
-          {CURRENT_USER.badges.slice(0, 8).map((badgeId) => {
-            const badge = getBadgeById(badgeId);
-            if (!badge) return null;
-            return (
-              <div
-                key={badge.id}
-                className="flex flex-col items-center p-3 rounded-xl bg-white/5 hover:bg-white/10 transition-colors"
-                title={badge.description}
-              >
-                <img
-                  src={`https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-${badge.id}.svg`}
-                  alt={badge.name}
-                  className="w-12 h-12"
-                />
-                <span className="text-xs mt-2 text-zinc-400">{badge.name}</span>
-              </div>
-            );
-          })}
-          {CURRENT_USER.badges.length > 8 && (
-            <Link
-              href="/profile"
-              className="flex flex-col items-center justify-center p-3 rounded-xl bg-white/5 hover:bg-white/10 transition-colors w-20 h-20"
-            >
-              <span className="text-2xl">+{CURRENT_USER.badges.length - 8}</span>
-              <span className="text-xs text-zinc-500">more</span>
-            </Link>
-          )}
         </div>
       </div>
 
@@ -163,7 +167,7 @@ export default function Home() {
           </Link>
         </div>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-          {stats.byCategory.map((cat) => (
+          {badgesByCategory.map((cat) => (
             <Link
               key={cat.id}
               href={`/catalog?category=${cat.id}`}
@@ -175,6 +179,21 @@ export default function Home() {
             </Link>
           ))}
         </div>
+      </div>
+    </div>
+  );
+}
+
+function DashboardSkeleton() {
+  return (
+    <div className="max-w-7xl mx-auto space-y-8 animate-pulse">
+      <div className="h-10 bg-white/10 rounded w-48"></div>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {[1, 2, 3].map(i => <div key={i} className="h-28 bg-white/10 rounded-2xl"></div>)}
+      </div>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="lg:col-span-2 h-64 bg-white/10 rounded-2xl"></div>
+        <div className="h-64 bg-white/10 rounded-2xl"></div>
       </div>
     </div>
   );
@@ -212,63 +231,25 @@ function StatCard({ icon, label, value, subtext, color }: StatCardProps) {
   );
 }
 
-/** Props for ActivityItem component */
-interface ActivityItemProps {
-  readonly activity: typeof ACTIVITY_FEED[0];
-}
-
 /**
- * Displays a single activity feed item
+ * Displays a single activity feed item (kudo)
  */
-function ActivityItem({ activity }: ActivityItemProps) {
-  const user = getUserById(activity.userId);
-  const targetUser = activity.targetUserId ? getUserById(activity.targetUserId) : null;
-  const badge = activity.badgeId ? getBadgeById(activity.badgeId) : null;
-
-  let content: React.ReactNode;
-  let icon: string;
-
-  switch (activity.type) {
-    case 'badge_earned':
-      icon = '🏅';
-      content = (
-        <>
-          <span className="font-medium">{user?.displayName}</span>
-          <span className="text-zinc-500"> earned the badge </span>
-          <span className="font-medium text-yellow-400">{badge?.name}</span>
-        </>
-      );
-      break;
-    case 'kudo_sent':
-      icon = '💜';
-      content = (
-        <>
-          <span className="font-medium">{user?.displayName}</span>
-          <span className="text-zinc-500"> sent a kudo to </span>
-          <span className="font-medium">{targetUser?.displayName}</span>
-          {activity.message && (
-            <p className="text-sm text-zinc-400 mt-1 italic">"{activity.message}"</p>
-          )}
-        </>
-      );
-      break;
-    case 'milestone':
-      icon = '🎉';
-      content = <span className="text-zinc-300">{activity.message}</span>;
-      break;
-    default:
-      icon = '📌';
-      content = <span className="text-zinc-500">Activity</span>;
-  }
-
+function ActivityItem({ kudo }: Readonly<{ kudo: KudoDisplay }>) {
   return (
     <div className="flex items-start gap-4 p-3 rounded-lg hover:bg-white/5 transition-colors">
-      <span className="text-xl mt-1">{icon}</span>
+      <span className="text-xl mt-1">💜</span>
       <div className="flex-1 min-w-0">
-        <div className="text-sm">{content}</div>
+        <div className="text-sm">
+          <span className="font-medium">{kudo.from.name ?? kudo.from.username}</span>
+          <span className="text-zinc-500"> sent a kudo to </span>
+          <span className="font-medium">{kudo.to.name ?? kudo.to.username}</span>
+          {kudo.message && (
+            <p className="text-sm text-zinc-400 mt-1 italic">&quot;{kudo.message}&quot;</p>
+          )}
+        </div>
       </div>
       <span className="text-xs text-zinc-600 whitespace-nowrap">
-        {formatTimeAgo(activity.timestamp)}
+        {formatTimeAgo(kudo.createdAt)}
       </span>
     </div>
   );

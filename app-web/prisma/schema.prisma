@@ -116,7 +116,9 @@ model Badge {
   id             String        @id @default(cuid())
   name           String
   slug           String        @unique
+  emoji          String?       // Display emoji (e.g., 👋, 🥷)
   description    String
+  howToGet       String?       // Human-readable earning instructions
   svgIcon        String        // Default SVG icon
   category       BadgeCategory
   tier           BadgeTier     @default(BRONZE)

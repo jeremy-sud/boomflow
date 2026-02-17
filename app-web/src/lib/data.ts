@@ -1,3 +1,15 @@
+/**
+ * @deprecated This file contains legacy mock data.
+ * All frontend pages have been migrated to use real API endpoints:
+ * - /api/badges (catalog)
+ * - /api/kudos (feed)
+ * - /api/badges/user/[username] (profile)
+ * - /api/leaderboard (rankings)
+ * 
+ * Static UI metadata (CATEGORIES, TIERS, formatTimeAgo) is now in constants.ts.
+ * This file is retained only for reference and will be removed in a future release.
+ */
+
 // Centralized mock data for BOOMFLOW Dashboard
 // In production this will come from the API/Database
 

@@ -1,27 +1,30 @@
 'use client';
 
-import { useState } from 'react';
-import { ACTIVITY_FEED, USERS, getBadgeById, getUserById, formatTimeAgo, Activity } from '@/lib/data';
-
-// Current user (mock)
-const CURRENT_USER = USERS.find(u => u.username === 'jeremy-sud') ?? USERS[0];
-
-type FilterType = 'all' | 'badges' | 'kudos' | 'milestones';
+import { useState, useEffect } from 'react';
+import { formatTimeAgo, type KudoDisplay } from '@/lib/constants';
 
 export default function FeedPage() {
-  const [filter, setFilter] = useState<FilterType>('all');
+  const [kudos, setKudos] = useState<KudoDisplay[]>([]);
+  const [loading, setLoading] = useState(true);
   const [kudoMessage, setKudoMessage] = useState('');
   const [selectedUser, setSelectedUser] = useState('');
   const [isSending, setIsSending] = useState(false);
   const [kudoStatus, setKudoStatus] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
-  const filteredActivity = ACTIVITY_FEED.filter(activity => {
-    if (filter === 'all') return true;
-    if (filter === 'badges') return activity.type === 'badge_earned';
-    if (filter === 'kudos') return activity.type === 'kudo_sent' || activity.type === 'kudo_received';
-    if (filter === 'milestones') return activity.type === 'milestone';
-    return true;
-  });
+  // Fetch kudos feed from API
+  useEffect(() => {
+    fetchKudos();
+  }, []);
+
+  const fetchKudos = () => {
+    fetch('/api/kudos?limit=50')
+      .then(res => res.json())
+      .then(data => {
+        setKudos(data.kudos ?? []);
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
+  };
 
   const handleSendKudo = async () => {
     if (!selectedUser || !kudoMessage.trim()) return;
@@ -33,9 +36,8 @@ export default function FeedPage() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          toUsername: selectedUser,
+          toUsername: selectedUser.trim(),
           message: kudoMessage.trim(),
-          category: 'COLLABORATION',
           isPublic: true,
         }),
       });
@@ -44,6 +46,8 @@ export default function FeedPage() {
         setKudoStatus({ type: 'success', text: `Kudo sent to ${selectedUser}!` });
         setKudoMessage('');
         setSelectedUser('');
+        // Refresh feed to show new kudo
+        fetchKudos();
       } else {
         const data = await res.json().catch(() => ({ error: 'Unknown error' }));
         setKudoStatus({ type: 'error', text: data.error || 'Failed to send kudo' });
@@ -52,7 +56,6 @@ export default function FeedPage() {
       setKudoStatus({ type: 'error', text: 'Network error — please try again' });
     } finally {
       setIsSending(false);
-      // Clear status after 4 seconds
       setTimeout(() => setKudoStatus(null), 4000);
     }
   };
@@ -72,20 +75,15 @@ export default function FeedPage() {
         </h2>
         <div className="space-y-4">
           <div>
-            <label htmlFor="kudo-recipient" className="text-sm text-zinc-500 mb-1 block">Who do you want to recognize?</label>
-            <select
+            <label htmlFor="kudo-recipient" className="text-sm text-zinc-500 mb-1 block">Username to recognize</label>
+            <input
               id="kudo-recipient"
+              type="text"
               value={selectedUser}
               onChange={(e) => setSelectedUser(e.target.value)}
+              placeholder="e.g. jeremy-sud"
               className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 focus:border-blue-500 focus:outline-none"
-            >
-              <option value="">Select a teammate</option>
-              {USERS.filter(u => u.id !== CURRENT_USER.id).map(user => (
-                <option key={user.id} value={user.username}>
-                  {user.displayName} (@{user.username})
-                </option>
-              ))}
-            </select>
+            />
           </div>
           <div>
             <label htmlFor="kudo-message" className="text-sm text-zinc-500 mb-1 block">Recognition message</label>
@@ -112,164 +110,85 @@ export default function FeedPage() {
         </div>
       </div>
 
-      {/* Filter Tabs */}
-      <div className="flex gap-2">
-        {[
-          { id: 'all', label: 'All', icon: '📋' },
-          { id: 'badges', label: 'Badges', icon: '🏅' },
-          { id: 'kudos', label: 'Kudos', icon: '💜' },
-          { id: 'milestones', label: 'Milestones', icon: '🎉' },
-        ].map(tab => (
-          <button
-            key={tab.id}
-            onClick={() => setFilter(tab.id as FilterType)}
-            className={`px-4 py-2 rounded-lg text-sm transition-colors flex items-center gap-2 ${
-              filter === tab.id
-                ? 'bg-white/20 text-white'
-                : 'bg-white/5 text-zinc-400 hover:bg-white/10'
-            }`}
-          >
-            <span>{tab.icon}</span>
-            {tab.label}
-          </button>
-        ))}
-      </div>
-
       {/* Activity Feed */}
-      <div className="glass-panel rounded-2xl divide-y divide-white/5">
-        {filteredActivity.length === 0 ? (
-          <div className="text-center py-12 text-zinc-500">
-            <span className="text-4xl">📭</span>
-            <p className="mt-4">No activity with this filter</p>
-          </div>
-        ) : (
-          filteredActivity.map(activity => (
-            <ActivityCard key={activity.id} activity={activity} />
-          ))
-        )}
-      </div>
+      {loading ? (
+        <div className="glass-panel rounded-2xl p-8 animate-pulse space-y-4">
+          {Array.from({ length: 5 }).map((_, i) => (
+            <div key={i} className="h-20 bg-white/5 rounded-lg"></div>
+          ))}
+        </div>
+      ) : kudos.length === 0 ? (
+        <div className="glass-panel rounded-2xl text-center py-12 text-zinc-500">
+          <span className="text-4xl">📭</span>
+          <p className="mt-4">No activity yet</p>
+          <p className="text-sm">Be the first to send a kudo!</p>
+        </div>
+      ) : (
+        <div className="glass-panel rounded-2xl divide-y divide-white/5">
+          {kudos.map(kudo => (
+            <KudoCard key={kudo.id} kudo={kudo} />
+          ))}
+        </div>
+      )}
 
       {/* Stats Summary */}
-      <div className="grid grid-cols-3 gap-4">
-        <div className="glass-panel rounded-xl p-4 text-center">
-          <span className="text-3xl">🏅</span>
-          <p className="text-2xl font-bold mt-2">
-            {ACTIVITY_FEED.filter(a => a.type === 'badge_earned').length}
-          </p>
-          <p className="text-xs text-zinc-500">Badges awarded</p>
+      {!loading && kudos.length > 0 && (
+        <div className="grid grid-cols-2 gap-4">
+          <div className="glass-panel rounded-xl p-4 text-center">
+            <span className="text-3xl">💜</span>
+            <p className="text-2xl font-bold mt-2">{kudos.length}</p>
+            <p className="text-xs text-zinc-500">Kudos in feed</p>
+          </div>
+          <div className="glass-panel rounded-xl p-4 text-center">
+            <span className="text-3xl">👥</span>
+            <p className="text-2xl font-bold mt-2">
+              {new Set(kudos.map(k => k.from.id)).size}
+            </p>
+            <p className="text-xs text-zinc-500">Active recognizers</p>
+          </div>
         </div>
-        <div className="glass-panel rounded-xl p-4 text-center">
-          <span className="text-3xl">💜</span>
-          <p className="text-2xl font-bold mt-2">
-            {ACTIVITY_FEED.filter(a => a.type === 'kudo_sent').length}
-          </p>
-          <p className="text-xs text-zinc-500">Kudos sent</p>
-        </div>
-        <div className="glass-panel rounded-xl p-4 text-center">
-          <span className="text-3xl">🎉</span>
-          <p className="text-2xl font-bold mt-2">
-            {ACTIVITY_FEED.filter(a => a.type === 'milestone').length}
-          </p>
-          <p className="text-xs text-zinc-500">Milestones reached</p>
-        </div>
-      </div>
+      )}
     </div>
   );
 }
 
-/** Props for ActivityCard component */
-interface ActivityCardProps {
-  readonly activity: Activity;
-}
-
 /**
- * Displays a single activity card in the feed
+ * Displays a single kudo card in the feed
  */
-function ActivityCard({ activity }: ActivityCardProps) {
-  const user = getUserById(activity.userId);
-  const targetUser = activity.targetUserId ? getUserById(activity.targetUserId) : null;
-  const badge = activity.badgeId ? getBadgeById(activity.badgeId) : null;
-
-  let icon: string;
-  let bgColor: string;
-
-  switch (activity.type) {
-    case 'badge_earned':
-      icon = '🏅';
-      bgColor = 'from-yellow-500/10 to-amber-600/10';
-      break;
-    case 'kudo_sent':
-    case 'kudo_received':
-      icon = '💜';
-      bgColor = 'from-purple-500/10 to-pink-600/10';
-      break;
-    case 'milestone':
-      icon = '🎉';
-      bgColor = 'from-green-500/10 to-emerald-600/10';
-      break;
-    default:
-      icon = '📌';
-      bgColor = 'from-zinc-500/10 to-zinc-600/10';
-  }
-
+function KudoCard({ kudo }: Readonly<{ kudo: KudoDisplay }>) {
   return (
-    <div className={`p-6 bg-gradient-to-r ${bgColor}`}>
+    <div className="p-6 bg-gradient-to-r from-purple-500/10 to-pink-600/10">
       <div className="flex items-start gap-4">
         {/* Icon */}
         <div className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center text-2xl shrink-0">
-          {icon}
+          💜
         </div>
 
         {/* Content */}
         <div className="flex-1 min-w-0">
-          {activity.type === 'badge_earned' && badge && (
-            <>
-              <p className="text-sm">
-                <span className="font-bold">{user?.displayName}</span>
-                <span className="text-zinc-500"> earned the badge </span>
-                <span className="font-bold text-yellow-400">{badge.name}</span>
-              </p>
-              <div className="mt-3 flex items-center gap-3">
-                <img
-                  src={`https://raw.githubusercontent.com/jeremy-sud/boomflow/main/assets/badge-${badge.id}.svg`}
-                  alt={badge.name}
-                  className="w-12 h-12"
-                />
-                <div>
-                  <p className="text-sm font-medium">{badge.name}</p>
-                  <p className="text-xs text-zinc-500">{badge.description}</p>
-                </div>
-              </div>
-            </>
+          <p className="text-sm">
+            <span className="font-bold">{kudo.from.name ?? kudo.from.username}</span>
+            <span className="text-zinc-500"> recognized </span>
+            <span className="font-bold">{kudo.to.name ?? kudo.to.username}</span>
+          </p>
+          {kudo.message && (
+            <div className="mt-3 p-3 rounded-lg bg-white/5 border-l-2 border-purple-500">
+              <p className="text-sm text-zinc-300 italic">&quot;{kudo.message}&quot;</p>
+            </div>
           )}
-
-          {activity.type === 'kudo_sent' && (
-            <>
-              <p className="text-sm">
-                <span className="font-bold">{user?.displayName}</span>
-                <span className="text-zinc-500"> recognized </span>
-                <span className="font-bold">{targetUser?.displayName}</span>
-              </p>
-              {activity.message && (
-                <div className="mt-3 p-3 rounded-lg bg-white/5 border-l-2 border-purple-500">
-                  <p className="text-sm text-zinc-300 italic">"{activity.message}"</p>
-                </div>
-              )}
-            </>
+          {kudo.category && (
+            <span className="inline-block mt-2 px-2 py-1 rounded-full bg-white/5 text-xs text-zinc-400">
+              {kudo.category.emoji} {kudo.category.name}
+            </span>
           )}
-
-          {activity.type === 'milestone' && (
-            <p className="text-sm text-zinc-300">{activity.message}</p>
-          )}
-
           <p className="text-xs text-zinc-600 mt-3">
-            {formatTimeAgo(activity.timestamp)}
+            {formatTimeAgo(kudo.createdAt)}
           </p>
         </div>
 
         {/* User Avatar */}
         <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold shrink-0">
-          {user?.displayName?.[0]?.toUpperCase() ?? '?'}
+          {(kudo.from.name ?? kudo.from.username)?.[0]?.toUpperCase() ?? '?'}
         </div>
       </div>
     </div>
