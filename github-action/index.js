@@ -11,10 +11,18 @@ const USERS_DIR = path.join(ACTION_DIR, "../users");
 // User's workspace (where their README lives) - uses GITHUB_WORKSPACE or cwd
 const WORKSPACE_DIR = process.env.GITHUB_WORKSPACE || process.cwd();
 
-// Derive repo base URL from GitHub context, fallback to default
-const GITHUB_REPOSITORY = process.env.GITHUB_REPOSITORY || "jeremy-sud/boomflow";
+// IMPORTANT: Badge SVG assets always live in the boomflow repo, NOT in the
+// repo where this action runs (e.g. a user's profile repo).
+// Do NOT use GITHUB_REPOSITORY here — it points to the calling repo.
+let BOOMFLOW_REPO = "jeremy-sud/boomflow";
+try {
+  const inputRepo = core.getInput("boomflow_repo");
+  if (inputRepo) BOOMFLOW_REPO = inputRepo;
+} catch {
+  // Running locally without action context
+}
 const REPO_BASE_URL =
-  `https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/main/assets`;
+  `https://raw.githubusercontent.com/${BOOMFLOW_REPO}/main/assets`;
 
 // Read org name from action input, fallback to default
 let ORG_NAME = "SistemasUrsol";

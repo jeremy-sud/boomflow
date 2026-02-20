@@ -15,6 +15,10 @@ inputs:
     description: "Organization name"
     required: false
     default: "SistemasUrsol"
+  boomflow_repo:
+    description: "The repository containing BOOMFLOW badge assets (owner/repo format)"
+    required: false
+    default: "jeremy-sud/boomflow"
 runs:
   using: "node20"
   main: "index.js"
